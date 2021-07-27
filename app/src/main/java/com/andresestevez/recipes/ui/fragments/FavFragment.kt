@@ -1,4 +1,4 @@
-package com.andresestevez.recipes.fragments
+package com.andresestevez.recipes.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater

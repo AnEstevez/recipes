@@ -1,4 +1,4 @@
-package com.andresestevez.recipes.adapters
+package com.andresestevez.recipes.ui.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

@@ -1,4 +1,4 @@
-package com.andresestevez.recipes.fragments
+package com.andresestevez.recipes.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,10 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.andresestevez.recipes.R
-import com.andresestevez.recipes.adapters.RecipesAdapter
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DefaultItemAnimator
+import com.andresestevez.recipes.ui.adapters.RecipesAdapter
 import com.andresestevez.recipes.databinding.FragmentSearchBinding
 import com.andresestevez.recipes.models.Recipe
+import com.andresestevez.recipes.ui.toast
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,6 +30,8 @@ class SearchFragment : Fragment() {
     private var _binding : FragmentSearchBinding? = null
     private val binding
         get() = _binding!!
+
+    private lateinit var adapter: RecipesAdapter
 
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -45,8 +51,15 @@ class SearchFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        initRecyclerView(inflater, container, false)
         return binding.root
     }
+
+    private fun initRecyclerView(inflater: LayoutInflater, container: ViewGroup?, b: Boolean) {
+        _binding = FragmentSearchBinding.inflate(inflater, container, b)
+        adapter = RecipesAdapter { context?.toast("${it.name}", Toast.LENGTH_SHORT) }
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -58,10 +71,25 @@ class SearchFragment : Fragment() {
             Recipe("Cocido Gallego", "https://www.themealdb.com/images/media/meals/2dsltq1560461468.jpg"),
             Recipe("Cocido Gallego", "https://www.themealdb.com/images/media/meals/2dsltq1560461468.jpg"),
             Recipe("Cocido Gallego", "https://www.themealdb.com/images/media/meals/2dsltq1560461468.jpg"),
-            Recipe("Cocido Gallego", "https://www.themealdb.com/images/media/meals/2dsltq1560461468.jpg"),)
-        binding.recycler.adapter = RecipesAdapter(recipesList) {
-            Toast.makeText()
+            Recipe("Cocido Gallego", "https://www.themealdb.com/images/media/meals/2dsltq1560461468.jpg"),
+            Recipe("Cocido Gallego", "https://www.themealdb.com/images/media/meals/2dsltq1560461468.jpg"),
+        Recipe("Calamares a la romana", "https://www.themealdb.com/images/media/meals/7ttta31593350374.jpg"),
+        Recipe("Steak Tartar", "https://www.themealdb.com/images/media/meals/1520081754.jpg"),
+        Recipe("Lasaña", "https://www.themealdb.com/images/media/meals/rvxxuy1468312893.jpg")
+            )
+        binding.recycler.adapter = adapter
+
+
+        lifecycleScope.launch {
+            var newRecipesList: List<Recipe> = emptyList()
+            for (recipe in recipesList) {
+                newRecipesList = listOf(recipe) + newRecipesList
+                adapter.items = newRecipesList
+                delay(1000)
+            }
         }
+
+
     }
 
     override fun onDestroyView() {
