@@ -3,20 +3,16 @@ package com.andresestevez.recipes.ui.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.ViewSearchItemBinding
 import com.andresestevez.recipes.models.Recipe
-import com.andresestevez.recipes.ui.basicDiffUtil
 import com.bumptech.glide.Glide
 
 class RecipesAdapter(private val recipeClickedListener: (Recipe) -> Unit) :
-    RecyclerView.Adapter<RecipesAdapter.ViewHolder>() {
-
-    var items: List<Recipe> by basicDiffUtil(
-        areItemsTheSame = { old, new -> old.thumbnail == new.thumbnail },
-        areContentsTheSame = { old, new -> old == new }
-    )
+    ListAdapter<Recipe, RecipesAdapter.ViewHolder>(DiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
@@ -25,12 +21,10 @@ class RecipesAdapter(private val recipeClickedListener: (Recipe) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val recipe = items[position]
+        val recipe = getItem(position)
         holder.bind(recipe)
         holder.itemView.setOnClickListener { recipeClickedListener(recipe) }
     }
-
-    override fun getItemCount(): Int = items.size
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = ViewSearchItemBinding.bind(view)
@@ -41,6 +35,12 @@ class RecipesAdapter(private val recipeClickedListener: (Recipe) -> Unit) :
                 Glide.with(root.context).load(recipe.thumbnail).into(imageViewBg)
             }
         }
+    }
+
+    private object DiffUtilCallback : DiffUtil.ItemCallback<Recipe>() {
+        override fun areItemsTheSame(oldItem: Recipe, newItem: Recipe): Boolean = oldItem.thumbnail == newItem.thumbnail
+
+        override fun areContentsTheSame(oldItem: Recipe, newItem: Recipe): Boolean = oldItem == newItem
     }
 
 }

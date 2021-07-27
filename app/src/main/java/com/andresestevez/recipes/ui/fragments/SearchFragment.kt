@@ -84,7 +84,7 @@ class SearchFragment : Fragment() {
             var newRecipesList: List<Recipe> = emptyList()
             for (recipe in recipesList) {
                 newRecipesList = listOf(recipe) + newRecipesList
-                adapter.items = newRecipesList
+                adapter.submitList(newRecipesList)
                 delay(1000)
             }
         }
