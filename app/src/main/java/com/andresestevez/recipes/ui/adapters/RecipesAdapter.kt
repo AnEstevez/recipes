@@ -3,31 +3,20 @@ package com.andresestevez.recipes.ui.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.ViewSearchItemBinding
 import com.andresestevez.recipes.models.Recipe
+import com.andresestevez.recipes.ui.basicDiffUtil
 import com.bumptech.glide.Glide
-import kotlin.properties.Delegates
 
 class RecipesAdapter(private val recipeClickedListener: (Recipe) -> Unit) :
     RecyclerView.Adapter<RecipesAdapter.ViewHolder>() {
 
-    var items: List<Recipe> by Delegates.observable(emptyList()) { _, old, new ->
-        DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-            override fun getOldListSize(): Int = old.size
-
-            override fun getNewListSize(): Int = new.size
-
-            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-                old[oldItemPosition].thumbnail == new[newItemPosition].thumbnail
-
-            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-                old[oldItemPosition] == new[newItemPosition]
-
-        }).dispatchUpdatesTo(this)
-    }
+    var items: List<Recipe> by basicDiffUtil(
+        areItemsTheSame = { old, new -> old.thumbnail == new.thumbnail },
+        areContentsTheSame = { old, new -> old == new }
+    )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
