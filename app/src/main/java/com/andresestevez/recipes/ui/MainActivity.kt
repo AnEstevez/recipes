@@ -1,13 +1,14 @@
-package com.andresestevez.recipes
+package com.andresestevez.recipes.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.andresestevez.recipes.adapters.ViewPagerAdapter
+import com.andresestevez.recipes.R
+import com.andresestevez.recipes.ui.adapters.ViewPagerAdapter
 import com.andresestevez.recipes.databinding.ActivityMainBinding
-import com.andresestevez.recipes.fragments.FavFragment
-import com.andresestevez.recipes.fragments.LocalRecipesFragment
-import com.andresestevez.recipes.fragments.SearchFragment
+import com.andresestevez.recipes.ui.fragments.FavFragment
+import com.andresestevez.recipes.ui.fragments.LocalRecipesFragment
+import com.andresestevez.recipes.ui.fragments.SearchFragment
 import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
