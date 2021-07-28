@@ -31,14 +31,14 @@ class RecipesAdapter(private val recipeClickedListener: (Recipe) -> Unit) :
 
         fun bind(recipe: Recipe) {
             with(binding) {
-                textViewRecipe.text = recipe.name
-                Glide.with(root.context).load(recipe.thumbnail).into(imageViewBg)
+                textViewRecipe.text = recipe.strMeal
+                Glide.with(root.context).load(recipe.strMealThumb).into(imageViewBg)
             }
         }
     }
 
     private object DiffUtilCallback : DiffUtil.ItemCallback<Recipe>() {
-        override fun areItemsTheSame(oldItem: Recipe, newItem: Recipe): Boolean = oldItem.thumbnail == newItem.thumbnail
+        override fun areItemsTheSame(oldItem: Recipe, newItem: Recipe): Boolean = oldItem.id == newItem.id
 
         override fun areContentsTheSame(oldItem: Recipe, newItem: Recipe): Boolean = oldItem == newItem
     }

@@ -36,7 +36,7 @@
             android:shadowRadius="3"
             android:textAllCaps="true"
             android:textColor="@color/white"
-            android:textStyle="normal"
+            android:textStyle="bold"
             tools:text="Churrasco"
             android:layout_gravity="bottom"/>
 

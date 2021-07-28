@@ -5,14 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.DefaultItemAnimator
-import com.andresestevez.recipes.ui.adapters.RecipesAdapter
+import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.FragmentSearchBinding
-import com.andresestevez.recipes.models.Recipe
+import com.andresestevez.recipes.models.TheMealDbClient
+import com.andresestevez.recipes.ui.adapters.RecipesAdapter
+import com.andresestevez.recipes.ui.hideKeyboard
 import com.andresestevez.recipes.ui.toast
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
@@ -25,7 +26,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [SearchFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class SearchFragment : Fragment() {
+class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private var _binding : FragmentSearchBinding? = null
     private val binding
@@ -51,45 +52,28 @@ class SearchFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
-        initRecyclerView(inflater, container, false)
+        initRecyclerView()
         return binding.root
     }
 
-    private fun initRecyclerView(inflater: LayoutInflater, container: ViewGroup?, b: Boolean) {
-        _binding = FragmentSearchBinding.inflate(inflater, container, b)
-        adapter = RecipesAdapter { context?.toast("${it.name}", Toast.LENGTH_SHORT) }
+    private fun initRecyclerView() {
+        adapter = RecipesAdapter { context?.toast("${it.strMeal}", Toast.LENGTH_SHORT) }
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var recipesList = listOf(Recipe("Cocido Gallego", "https://www.themealdb.com/images/media/meals/2dsltq1560461468.jpg"),
-            Recipe("Calamares a la romana", "https://www.themealdb.com/images/media/meals/7ttta31593350374.jpg"),
-            Recipe("Steak Tartar", "https://www.themealdb.com/images/media/meals/1520081754.jpg"),
-            Recipe("Lasaña", "https://www.themealdb.com/images/media/meals/rvxxuy1468312893.jpg"),
-            Recipe("Cocido Gallego", "https://www.themealdb.com/images/media/meals/2dsltq1560461468.jpg"),
-            Recipe("Cocido Gallego", "https://www.themealdb.com/images/media/meals/2dsltq1560461468.jpg"),
-            Recipe("Cocido Gallego", "https://www.themealdb.com/images/media/meals/2dsltq1560461468.jpg"),
-            Recipe("Cocido Gallego", "https://www.themealdb.com/images/media/meals/2dsltq1560461468.jpg"),
-            Recipe("Cocido Gallego", "https://www.themealdb.com/images/media/meals/2dsltq1560461468.jpg"),
-            Recipe("Cocido Gallego", "https://www.themealdb.com/images/media/meals/2dsltq1560461468.jpg"),
-        Recipe("Calamares a la romana", "https://www.themealdb.com/images/media/meals/7ttta31593350374.jpg"),
-        Recipe("Steak Tartar", "https://www.themealdb.com/images/media/meals/1520081754.jpg"),
-        Recipe("Lasaña", "https://www.themealdb.com/images/media/meals/rvxxuy1468312893.jpg")
-            )
+
         binding.recycler.adapter = adapter
+        binding.searchView.setOnQueryTextListener(this)
+    }
 
-
+    private fun searchRecipesByName(name: String = "beef") {
         lifecycleScope.launch {
-            var newRecipesList: List<Recipe> = emptyList()
-            for (recipe in recipesList) {
-                newRecipesList = listOf(recipe) + newRecipesList
-                adapter.submitList(newRecipesList)
-                delay(1000)
-            }
+            val mealsByName =
+                TheMealDbClient.service.listMealsByName(getString(R.string.api_key), name.lowercase())
+            adapter.submitList(mealsByName.meals)
         }
-
-
     }
 
     override fun onDestroyView() {
@@ -116,4 +100,15 @@ class SearchFragment : Fragment() {
                 }
             }
     }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        if (!query.isNullOrBlank()) {
+            searchRecipesByName(query)
+            binding.root.hideKeyboard()
+        }
+
+        return true
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean = true
 }
