@@ -1,19 +1,20 @@
 package com.andresestevez.recipes.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.FragmentSearchBinding
+import com.andresestevez.recipes.models.Recipe
 import com.andresestevez.recipes.models.TheMealDbClient
+import com.andresestevez.recipes.ui.DetailActivity
 import com.andresestevez.recipes.ui.adapters.RecipesAdapter
 import com.andresestevez.recipes.ui.hideKeyboard
-import com.andresestevez.recipes.ui.toast
 import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
@@ -34,16 +35,9 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private lateinit var adapter: RecipesAdapter
 
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
     }
 
     override fun onCreateView(
@@ -57,7 +51,14 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun initRecyclerView() {
-        adapter = RecipesAdapter { context?.toast("${it.strMeal}", Toast.LENGTH_SHORT) }
+        adapter = RecipesAdapter {navigateTo(it) }
+    }
+
+    private fun navigateTo(recipe: Recipe) {
+        val intent = Intent(this.context, DetailActivity::class.java)
+        intent.putExtra(DetailActivity.EXTRA_RECIPE, recipe)
+
+        startActivity(intent)
     }
 
 
@@ -68,7 +69,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
         binding.searchView.setOnQueryTextListener(this)
     }
 
-    private fun searchRecipesByName(name: String = "beef") {
+    private fun searchRecipesByName(name: String) {
         lifecycleScope.launch {
             val mealsByName =
                 TheMealDbClient.service.listMealsByName(getString(R.string.api_key), name.lowercase())
@@ -81,25 +82,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
         _binding = null
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SearchFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SearchFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
+
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         if (!query.isNullOrBlank()) {

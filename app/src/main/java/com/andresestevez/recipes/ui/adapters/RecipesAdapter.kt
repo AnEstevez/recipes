@@ -31,8 +31,8 @@ class RecipesAdapter(private val recipeClickedListener: (Recipe) -> Unit) :
 
         fun bind(recipe: Recipe) {
             with(binding) {
-                textViewRecipe.text = recipe.strMeal
-                Glide.with(root.context).load(recipe.strMealThumb).into(imageViewBg)
+                textViewRecipe.text = recipe.name
+                Glide.with(root.context).load(recipe.thumbnail).into(imageViewBg)
             }
         }
     }

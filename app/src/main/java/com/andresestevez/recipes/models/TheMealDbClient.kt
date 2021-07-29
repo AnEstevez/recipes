@@ -10,5 +10,5 @@ object TheMealDbClient {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    val service = retrofit.create(TheMealDbService::class.java)
+    val service: TheMealDbService = retrofit.create(TheMealDbService::class.java)
 }
