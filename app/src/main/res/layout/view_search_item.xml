@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardView"
-    android:layout_width="match_parent"
-    android:layout_height="230dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:layout_margin="0dp"
     android:clickable="true"
     android:focusable="true"
@@ -16,12 +16,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
+        <com.andresestevez.recipes.ui.AspectRatioImageView
             android:id="@+id/imageViewBg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:foreground="@drawable/black_shadow"
             android:scaleType="centerCrop"
+            app:ratio="1"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
         <TextView
