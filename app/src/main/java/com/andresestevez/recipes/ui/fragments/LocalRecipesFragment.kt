@@ -1,60 +1,142 @@
 package com.andresestevez.recipes.ui.fragments
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.location.Geocoder
+import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.andresestevez.recipes.R
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import com.andresestevez.recipes.databinding.FragmentLocalRecipesBinding
+import com.andresestevez.recipes.models.CountryCodeToNationality
+import com.andresestevez.recipes.models.Recipe
+import com.andresestevez.recipes.models.TheMealDbClient
+import com.andresestevez.recipes.ui.DetailActivity
+import com.andresestevez.recipes.ui.adapters.RecipesAdapter
+import com.andresestevez.recipes.ui.toast
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 
 /**
  * A simple [Fragment] subclass.
- * Use the [LocalRecipesFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
 class LocalRecipesFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    companion object {
+        private const val DEFAULT_COUNTRY_CODE = "XX"
     }
+
+    private var _binding: FragmentLocalRecipesBinding? = null
+    private val binding
+        get() = _binding!!
+
+    private lateinit var adapter: RecipesAdapter
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            requestLocalRecipes(isGranted)
+        }
+
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_local_recipes, container, false)
+        _binding = FragmentLocalRecipesBinding.inflate(inflater, container, false)
+        initRecyclerView()
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment LocalRecipesFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            LocalRecipesFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    private fun initRecyclerView() {
+        adapter = RecipesAdapter { navigateTo(it) }
     }
+
+    private fun navigateTo(recipe: Recipe) {
+        val intent = Intent(this.context, DetailActivity::class.java)
+        intent.putExtra(DetailActivity.EXTRA_RECIPE, recipe)
+
+        startActivity(intent)
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.recycler.adapter = adapter
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        context?.toast("ON RESUME FRAGMENT LOCAL RECIPES")
+        requestPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
+
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun requestLocalRecipes(isLocationGranted: Boolean) {
+        lifecycleScope.launch {
+            val countryCode = getCountryCode(isLocationGranted)
+            val nationality =
+                if (CountryCodeToNationality.values()
+                        .map { country -> country.name }
+                        .contains(countryCode))
+                    CountryCodeToNationality.valueOf(countryCode).nationality
+                else CountryCodeToNationality.XX.nationality
+            val mealsByNationality =
+                TheMealDbClient.service.listMealsByNationality(
+                    getString(R.string.api_key),
+                    nationality.lowercase()
+                )
+            adapter.submitList(mealsByNationality.meals)
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private suspend fun getCountryCode(isLocationGranted: Boolean): String =
+        suspendCancellableCoroutine { continuation ->
+            if (isLocationGranted) {
+                fusedLocationProviderClient.lastLocation.addOnCompleteListener {
+                    continuation.resume(getCountryCodeFromLocation(it?.result))
+                }
+            } else {
+                continuation.resume(DEFAULT_COUNTRY_CODE)
+            }
+
+        }
+
+    private fun getCountryCodeFromLocation(location: Location?): String {
+        if (location == null) {
+            return DEFAULT_COUNTRY_CODE
+        }
+
+        val geocoder = Geocoder(context)
+
+        return geocoder.getFromLocation(
+            location.latitude,
+            location.longitude,
+            1
+        )?.firstOrNull()?.countryCode ?: DEFAULT_COUNTRY_CODE
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 }
