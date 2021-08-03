@@ -15,7 +15,6 @@ import androidx.lifecycle.lifecycleScope
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.FragmentLocalRecipesBinding
 import com.andresestevez.recipes.models.CountryCodeToNationality
-import com.andresestevez.recipes.models.Recipe
 import com.andresestevez.recipes.models.TheMealDbClient
 import com.andresestevez.recipes.ui.DetailActivity
 import com.andresestevez.recipes.ui.adapters.RecipesAdapter
@@ -44,7 +43,11 @@ class LocalRecipesFragment : Fragment() {
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            requestLocalRecipes(isGranted)
+                when {
+                    isGranted -> requestLocalRecipes()
+                    shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION) ->
+                        context?.toast("Permission required to find local dishes")
+                }
         }
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -63,35 +66,31 @@ class LocalRecipesFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        adapter = RecipesAdapter { navigateTo(it) }
+        adapter = RecipesAdapter { navigateTo(it.id) }
     }
 
-    private fun navigateTo(recipe: Recipe) {
+    private fun navigateTo(recipeId: String) {
         val intent = Intent(this.context, DetailActivity::class.java)
-        intent.putExtra(DetailActivity.EXTRA_RECIPE, recipe)
+        intent.putExtra(DetailActivity.EXTRA_RECIPE_ID, recipeId)
 
         startActivity(intent)
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.recycler.adapter = adapter
-
     }
 
-    override fun onResume() {
-        super.onResume()
-        context?.toast("ON RESUME FRAGMENT LOCAL RECIPES")
+    override fun onStart() {
+        super.onStart()
         requestPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
-
     }
 
     @SuppressLint("MissingPermission")
-    private fun requestLocalRecipes(isLocationGranted: Boolean) {
+    private fun requestLocalRecipes() {
         lifecycleScope.launch {
-            val countryCode = getCountryCode(isLocationGranted)
+            val countryCode = getCountryCode()
             val nationality =
                 if (CountryCodeToNationality.values()
                         .map { country -> country.name }
@@ -108,16 +107,11 @@ class LocalRecipesFragment : Fragment() {
     }
 
     @SuppressLint("MissingPermission")
-    private suspend fun getCountryCode(isLocationGranted: Boolean): String =
+    private suspend fun getCountryCode(): String =
         suspendCancellableCoroutine { continuation ->
-            if (isLocationGranted) {
-                fusedLocationProviderClient.lastLocation.addOnCompleteListener {
-                    continuation.resume(getCountryCodeFromLocation(it?.result))
-                }
-            } else {
-                continuation.resume(DEFAULT_COUNTRY_CODE)
+            fusedLocationProviderClient.lastLocation.addOnCompleteListener {
+                continuation.resume(getCountryCodeFromLocation(it?.result))
             }
-
         }
 
     private fun getCountryCodeFromLocation(location: Location?): String {

@@ -11,4 +11,7 @@ interface TheMealDbService {
 
     @GET("{apiKey}/filter.php")
     suspend fun listMealsByNationality(@Path("apiKey") apiKey: String, @Query("a") nationality: String): RecipesDdResult
+
+    @GET("{apiKey}/lookup.php")
+    suspend fun findMealById(@Path("apiKey") apiKey: String, @Query("i") recipeId: String): RecipesDdResult
 }

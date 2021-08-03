@@ -41,12 +41,12 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun initRecyclerView() {
-        adapter = RecipesAdapter {navigateTo(it) }
+        adapter = RecipesAdapter {navigateTo(it.id) }
     }
 
-    private fun navigateTo(recipe: Recipe) {
+    private fun navigateTo(recipeId: String) {
         val intent = Intent(this.context, DetailActivity::class.java)
-        intent.putExtra(DetailActivity.EXTRA_RECIPE, recipe)
+        intent.putExtra(DetailActivity.EXTRA_RECIPE_ID, recipeId)
 
         startActivity(intent)
     }
@@ -59,7 +59,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
         binding.searchView.setOnQueryTextListener(this)
     }
 
-    private fun searchRecipesByName(name: String) {
+    private fun requestRecipesByName(name: String) {
         lifecycleScope.launch {
             val mealsByName =
                 TheMealDbClient.service.listMealsByName(getString(R.string.api_key), name.lowercase())
@@ -76,7 +76,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         if (!query.isNullOrBlank()) {
-            searchRecipesByName(query)
+            requestRecipesByName(query)
             binding.root.hideKeyboard()
         }
 

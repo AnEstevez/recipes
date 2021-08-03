@@ -2,4 +2,6 @@
     <string name="app_name">Recipes</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Local Dishes</string>
+    <string name="ingredients_section">Ingredients</string>
+    <string name="method_section">Method</string>
 </resources>
