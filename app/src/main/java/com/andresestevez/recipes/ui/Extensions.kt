@@ -8,11 +8,16 @@ import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.andresestevez.recipes.R
+import com.andresestevez.recipes.ui.adapters.ViewPagerAdapter
 import com.google.android.material.snackbar.Snackbar
 import kotlin.properties.Delegates
 
 fun Context.toast(message: String, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, message, duration).show()
+}
+
+fun <T> Activity.getChildFragment(adapter: ViewPagerAdapter, fragmentPosition: Int): T {
+    return adapter.createFragment(2) as T
 }
 
 fun Activity.snackBar(message: CharSequence, view: View? = findViewById(R.id.container), duration: Int = Snackbar.LENGTH_SHORT, action: String? =

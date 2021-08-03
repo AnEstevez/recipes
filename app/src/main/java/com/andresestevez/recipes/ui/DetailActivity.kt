@@ -26,27 +26,24 @@ class DetailActivity : AppCompatActivity() {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.toolbar)
-
         val recipeId = intent.getStringExtra(EXTRA_RECIPE_ID)
         val apiKey = this.applicationContext.getString(R.string.api_key)
         lifecycleScope.launch {
             recipeId?.let {
                 val result = TheMealDbClient.service.findMealById(apiKey, it)
                 val recipe = result.meals.firstOrNull()
+
                 recipe?.let {
                     with(binding) {
                         Glide.with(this@DetailActivity).load(it.thumbnail).into(imageView)
+                        toolbar.title = it.name
                         bindIngredients(ingredients, it)
                         instructions.text = it.instructions
                     }
                 }
             }
         }
-
     }
-
-
 
     private fun bindIngredients(ingredients: TextView, recipe: Recipe) {
         ingredients.text = buildSpannedString {
