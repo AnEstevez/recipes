@@ -2,12 +2,16 @@ package com.andresestevez.recipes.ui
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.andresestevez.recipes.R
+import com.andresestevez.recipes.models.CountryCodeToNationality
 import com.andresestevez.recipes.ui.adapters.ViewPagerAdapter
 import com.google.android.material.snackbar.Snackbar
 import kotlin.properties.Delegates
@@ -17,7 +21,14 @@ fun Context.toast(message: String, duration: Int = Toast.LENGTH_SHORT) {
 }
 
 fun <T> Activity.getChildFragment(adapter: ViewPagerAdapter, fragmentPosition: Int): T {
-    return adapter.createFragment(2) as T
+    return adapter.createFragment(fragmentPosition) as T
+}
+
+fun Context.openAppSettings() {
+    Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+        addCategory(Intent.CATEGORY_DEFAULT)
+        data = Uri.parse("package:$packageName")
+    }.let (::startActivity)
 }
 
 fun Activity.snackBar(message: CharSequence, view: View? = findViewById(R.id.container), duration: Int = Snackbar.LENGTH_SHORT, action: String? =

@@ -8,15 +8,12 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.FragmentSearchBinding
-import com.andresestevez.recipes.models.Recipe
-import com.andresestevez.recipes.models.TheMealDbClient
+import com.andresestevez.recipes.models.RecipesRepository
 import com.andresestevez.recipes.ui.DetailActivity
 import com.andresestevez.recipes.ui.adapters.RecipesAdapter
 import com.andresestevez.recipes.ui.hideKeyboard
 import kotlinx.coroutines.launch
-
 
 
 /**
@@ -29,6 +26,8 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
         get() = _binding!!
 
     private lateinit var adapter: RecipesAdapter
+
+    private val recipesRepository by lazy { RecipesRepository(requireActivity())  }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,7 +50,6 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
         startActivity(intent)
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -61,8 +59,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private fun requestRecipesByName(name: String) {
         lifecycleScope.launch {
-            val mealsByName =
-                TheMealDbClient.service.listMealsByName(getString(R.string.api_key), name.lowercase())
+            val mealsByName = recipesRepository.listRecipesByName(name)
             adapter.submitList(mealsByName.meals)
         }
     }
@@ -71,8 +68,6 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
         super.onDestroyView()
         _binding = null
     }
-
-
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         if (!query.isNullOrBlank()) {

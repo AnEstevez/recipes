@@ -4,4 +4,5 @@
     <string name="hello_blank_fragment">Local Dishes</string>
     <string name="ingredients_section">Ingredients</string>
     <string name="method_section">Method</string>
+    <string name="rationale_local_dishes">Permission required to find local dishes</string>
 </resources>
