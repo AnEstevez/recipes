@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment
 import com.andresestevez.recipes.databinding.FragmentSearchBinding
 import com.andresestevez.recipes.models.Recipe
 import com.andresestevez.recipes.models.RecipesRepository
-import com.andresestevez.recipes.ui.detail.DetailActivity
 import com.andresestevez.recipes.ui.common.hideKeyboard
+import com.andresestevez.recipes.ui.detail.DetailActivity
 import com.andresestevez.recipes.ui.main.RecipesAdapter
 
 
@@ -80,5 +80,13 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchPresent
 
     override fun hideKeyboard() {
         binding.root.hideKeyboard()
+    }
+
+    override fun showProgress() {
+        binding.progress.visibility = View.VISIBLE
+    }
+
+    override fun hideProgress() {
+        binding.progress.visibility = View.GONE
     }
 }

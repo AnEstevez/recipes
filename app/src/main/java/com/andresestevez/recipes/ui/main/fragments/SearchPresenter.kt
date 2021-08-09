@@ -12,6 +12,8 @@ class SearchPresenter(private val recipesRepository: RecipesRepository) {
         fun updateData(recipes: List<Recipe>)
         fun navigateTo(recipeId: String)
         fun hideKeyboard()
+        fun showProgress()
+        fun hideProgress()
     }
 
     private var view: View? = null
@@ -27,10 +29,15 @@ class SearchPresenter(private val recipesRepository: RecipesRepository) {
     fun onQueryTextSubmited(query: String?) {
         if (!query.isNullOrBlank()) {
             view?.let {
-                it.hideKeyboard()
+
+
                 (it as LifecycleOwner).lifecycleScope.launch {
+                    it.hideKeyboard()
+                    it.showProgress()
                     it.updateData(recipesRepository.listRecipesByName(query).meals)
+                    it.hideProgress()
                 }
+
             }
         }
     }

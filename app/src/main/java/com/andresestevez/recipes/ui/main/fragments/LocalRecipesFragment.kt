@@ -62,4 +62,12 @@ class LocalRecipesFragment : Fragment(), LocalRecipesPresenter.View {
     override fun updateData(recipes: List<Recipe>?) {
         adapter.submitList(recipes)
     }
+
+    override fun showProgress() {
+        binding.progress.visibility = View.VISIBLE
+    }
+
+    override fun hideProgress() {
+        binding.progress.visibility = View.GONE
+    }
 }
