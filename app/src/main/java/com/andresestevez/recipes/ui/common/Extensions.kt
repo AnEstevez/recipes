@@ -1,4 +1,4 @@
-package com.andresestevez.recipes.ui
+package com.andresestevez.recipes.ui.common
 
 import android.app.Activity
 import android.content.Context
@@ -11,8 +11,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.andresestevez.recipes.R
-import com.andresestevez.recipes.models.CountryCodeToNationality
-import com.andresestevez.recipes.ui.adapters.ViewPagerAdapter
+import com.andresestevez.recipes.ui.main.ViewPagerAdapter
 import com.google.android.material.snackbar.Snackbar
 import kotlin.properties.Delegates
 
@@ -62,7 +61,7 @@ fun <VH : RecyclerView.ViewHolder, T> RecyclerView.Adapter<VH>.basicDiffUtil(
         }).dispatchUpdatesTo(this)
     }
 
-    fun View.hideKeyboard() {
-        val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputManager.hideSoftInputFromWindow(windowToken, 0)
-    }
+fun View.hideKeyboard() {
+    val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputManager.hideSoftInputFromWindow(windowToken, 0)
+}

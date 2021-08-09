@@ -1,4 +1,4 @@
-package com.andresestevez.recipes.ui
+package com.andresestevez.recipes.ui.common
 
 import android.content.Context
 import android.util.AttributeSet

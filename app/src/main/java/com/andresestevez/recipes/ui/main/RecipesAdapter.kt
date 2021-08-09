@@ -1,4 +1,4 @@
-package com.andresestevez.recipes.ui.adapters
+package com.andresestevez.recipes.ui.main
 
 import android.view.LayoutInflater
 import android.view.View
