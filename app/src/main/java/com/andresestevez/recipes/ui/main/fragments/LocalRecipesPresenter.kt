@@ -11,6 +11,8 @@ class LocalRecipesPresenter(private val recipesRepository: RecipesRepository) {
     interface View {
         fun navigateTo(recipeId: String)
         fun updateData(recipes: List<Recipe>?)
+        fun showProgress()
+        fun hideProgress()
     }
 
     private var view : View? = null
@@ -30,7 +32,9 @@ class LocalRecipesPresenter(private val recipesRepository: RecipesRepository) {
     fun onLocalRecipesRequested() {
         view?.let {
             (it as LifecycleOwner).lifecycleScope.launch {
+                it.showProgress()
                 it.updateData(recipesRepository.listRecipesByRegion())
+                it.hideProgress()
             }
         }
     }
