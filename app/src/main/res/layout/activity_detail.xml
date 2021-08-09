@@ -68,7 +68,7 @@
                     android:textStyle="italic" />
             </androidx.cardview.widget.CardView>
 
-            <com.andresestevez.recipes.ui.RecipeIngredientsView
+            <com.andresestevez.recipes.ui.detail.RecipeIngredientsView
                 android:id="@+id/ingredients"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
