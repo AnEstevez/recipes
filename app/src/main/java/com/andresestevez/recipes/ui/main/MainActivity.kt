@@ -6,7 +6,10 @@ import androidx.fragment.app.Fragment
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.ActivityMainBinding
 import com.andresestevez.recipes.ui.common.getChildFragment
-import com.andresestevez.recipes.ui.main.MainPresenter.Companion.LOCAL_RECIPES_FRAGMENT
+import com.andresestevez.recipes.ui.common.getViewModel
+import com.andresestevez.recipes.ui.main.MainViewModel.Companion.LOCAL_RECIPES_FRAGMENT
+import com.andresestevez.recipes.ui.main.MainViewModel.UiModel
+import com.andresestevez.recipes.ui.main.MainViewModel.UiModel.RequestLocalRecipes
 import com.andresestevez.recipes.ui.main.fragments.FavFragment
 import com.andresestevez.recipes.ui.main.fragments.LocalRecipesFragment
 import com.andresestevez.recipes.ui.main.fragments.SearchFragment
@@ -14,18 +17,16 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 
-class MainActivity : AppCompatActivity(), MainPresenter.View {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val presenter by lazy { MainPresenter(this) }
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        presenter.onCreate(this)
 
         val fragments: List<Fragment> = listOf(FavFragment(), SearchFragment(), LocalRecipesFragment())
         binding.viewPager.adapter = ViewPagerAdapter(fragments, this)
@@ -40,34 +41,36 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
             tab.setIcon(icons[position])
         }.attach()
 
+        viewModel = getViewModel { MainViewModel(this) }
+        viewModel.model.observe(this, { findLocalRecipes(it) })
+
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                presenter.onTabSelected(tab)
+                viewModel.onTabSelected(tab)
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
-                presenter.onTabReselected(tab)
+                viewModel.onTabReselected(tab)
             }
 
         })
 
     }
 
-    override fun onDestroy() {
-        presenter.onDestroy()
-        super.onDestroy()
-    }
-
-    override fun findLocalRecipes(tab: TabLayout.Tab?) {
-        if (tab?.position == LOCAL_RECIPES_FRAGMENT) {
-            presenter.permissionRequester.runWithPermission {
-                getChildFragment<LocalRecipesFragment>(
-                    binding.viewPager.adapter as ViewPagerAdapter,
-                    LOCAL_RECIPES_FRAGMENT
-                ).requestLocalRecipes()
+    private fun findLocalRecipes(model: UiModel) {
+        when (model) {
+            is RequestLocalRecipes ->  if (model.tab?.position == LOCAL_RECIPES_FRAGMENT) {
+                viewModel.permissionRequester.runWithPermission {
+                    getChildFragment<LocalRecipesFragment>(
+                        binding.viewPager.adapter as ViewPagerAdapter,
+                        LOCAL_RECIPES_FRAGMENT
+                    ).requestLocalRecipes()
+                }
             }
         }
+
+
     }
 }
