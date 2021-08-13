@@ -1,10 +1,10 @@
 package com.andresestevez.recipes.ui.detail
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.andresestevez.recipes.databinding.ActivityDetailBinding
 import com.andresestevez.recipes.models.RecipesRepository
-import com.andresestevez.recipes.ui.common.getViewModel
 import com.bumptech.glide.Glide
 
 class DetailActivity : AppCompatActivity() {
@@ -15,17 +15,13 @@ class DetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailBinding
 
-    private val recipesRepository by lazy { RecipesRepository(this) }
-
-    private lateinit var viewModel : DetailViewModel
+    private val viewModel : DetailViewModel by viewModels { DetailViewModelFactory(RecipesRepository(application)) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-       // viewModel = ViewModelProvider(this, DetailViewModelFactory(recipesRepository)).get()
-        viewModel = getViewModel { DetailViewModel(recipesRepository) }
         viewModel.model.observe(this, {updateUI(it)})
 
         viewModel.refresh(intent.getStringExtra(EXTRA_RECIPE_ID))

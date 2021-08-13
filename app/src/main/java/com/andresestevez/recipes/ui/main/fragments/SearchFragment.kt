@@ -6,9 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import com.andresestevez.recipes.databinding.FragmentSearchBinding
 import com.andresestevez.recipes.models.RecipesRepository
 import com.andresestevez.recipes.ui.common.hideKeyboard
@@ -30,9 +29,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private lateinit var adapter: RecipesAdapter
 
-    private lateinit var viewModel: SearchViewModel
-
-    private val recipesRepository by lazy { RecipesRepository(requireActivity()) }
+    private val viewModel: SearchViewModel by viewModels { SearchViewModelFactory(RecipesRepository(requireActivity().application)) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +37,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
     ): View {
         // Inflate the layout for this fragment
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(this, SearchViewModelFactory(recipesRepository)).get()
+
         initRecyclerView()
         return binding.root
     }

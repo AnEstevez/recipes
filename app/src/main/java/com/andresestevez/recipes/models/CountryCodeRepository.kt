@@ -1,20 +1,20 @@
 package com.andresestevez.recipes.models
 
 import android.annotation.SuppressLint
-import android.app.Activity
+import android.app.Application
 import android.location.Geocoder
 import android.location.Location
 
-class CountryCodeRepository(activity: Activity) {
+class CountryCodeRepository(application: Application) {
 
     companion object {
         private const val DEFAULT_COUNTRY_CODE = "XX"
     }
 
-    private val fusedLocationProviderClient: LocationDataSource = PlayServicesLocationDataSource(activity)
-    private val geocoder = Geocoder(activity)
+    private val fusedLocationProviderClient: LocationDataSource = PlayServicesLocationDataSource(application)
+    private val geocoder = Geocoder(application)
 
-    suspend fun findLastLocationNationality(): String? {
+    suspend fun findLastLocationNationality(): String {
            return getLastLocationSuspended().toCountryCode().toNationality()
     }
 

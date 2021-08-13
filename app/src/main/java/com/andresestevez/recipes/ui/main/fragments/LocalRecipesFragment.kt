@@ -5,8 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
+import androidx.fragment.app.viewModels
 import com.andresestevez.recipes.databinding.FragmentLocalRecipesBinding
 import com.andresestevez.recipes.models.RecipesRepository
 import com.andresestevez.recipes.ui.common.startActivity
@@ -23,8 +22,7 @@ class LocalRecipesFragment : Fragment(){
 
     private lateinit var adapter: RecipesAdapter
 
-    private lateinit var viewModel: LocalRecipesViewModel
-    private val repository by lazy { RecipesRepository(requireActivity()) }
+    private val viewModel: LocalRecipesViewModel by viewModels { LocalRecipesViewModelFactory(RecipesRepository(requireActivity().application)) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,7 +30,6 @@ class LocalRecipesFragment : Fragment(){
     ): View {
 
         _binding = FragmentLocalRecipesBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(this, LocalRecipesViewModelFactory(repository)).get()
 
         initRecyclerView()
         return binding.root
@@ -58,7 +55,7 @@ class LocalRecipesFragment : Fragment(){
     }
 
     fun requestLocalRecipes() {
-        viewModel.refresh()
+        if (!this.isDetached) viewModel.refresh()
     }
 
     override fun onDestroyView() {
