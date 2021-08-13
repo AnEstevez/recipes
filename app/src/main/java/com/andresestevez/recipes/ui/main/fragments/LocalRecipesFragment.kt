@@ -63,7 +63,7 @@ class LocalRecipesFragment : Fragment(){
     }
 
     fun requestLocalRecipes() {
-        if (!this.isDetached) viewModel.refresh()
+        if (this.isAdded) viewModel.refresh()
     }
 
     override fun onDestroyView() {
