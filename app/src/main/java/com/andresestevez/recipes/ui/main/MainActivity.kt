@@ -9,14 +9,12 @@ import androidx.fragment.app.Fragment
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.ActivityMainBinding
 import com.andresestevez.recipes.models.PermissionRequester
-import com.andresestevez.recipes.ui.common.getChildFragment
+import com.andresestevez.recipes.models.RecipesRepository
 import com.andresestevez.recipes.ui.common.toast
 import com.andresestevez.recipes.ui.main.MainViewModel.Companion.LOCAL_RECIPES_FRAGMENT
 import com.andresestevez.recipes.ui.main.MainViewModel.UiModel
 import com.andresestevez.recipes.ui.main.MainViewModel.UiModel.RequestLocalRecipes
-import com.andresestevez.recipes.ui.main.fragments.FavFragment
-import com.andresestevez.recipes.ui.main.fragments.LocalRecipesFragment
-import com.andresestevez.recipes.ui.main.fragments.SearchFragment
+import com.andresestevez.recipes.ui.main.fragments.*
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -26,6 +24,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val viewModel: MainViewModel by viewModels()
+
+    private val localRecipesViewModel: LocalRecipesViewModel by viewModels { LocalRecipesViewModelFactory(
+        RecipesRepository(application)
+    ) }
+
 
     private val permissionRequester =
         PermissionRequester(this as ComponentActivity,
@@ -73,14 +76,9 @@ class MainActivity : AppCompatActivity() {
         when (model) {
             is RequestLocalRecipes ->  if (model.tab?.position == LOCAL_RECIPES_FRAGMENT) {
                 permissionRequester.runWithPermission {
-                    getChildFragment<LocalRecipesFragment>(
-                        binding.viewPager.adapter as ViewPagerAdapter,
-                        LOCAL_RECIPES_FRAGMENT
-                    ).requestLocalRecipes()
+                    localRecipesViewModel.refresh()
                 }
             }
         }
-
-
     }
 }

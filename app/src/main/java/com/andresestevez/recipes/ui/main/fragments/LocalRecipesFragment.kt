@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.andresestevez.recipes.databinding.FragmentLocalRecipesBinding
 import com.andresestevez.recipes.models.RecipesRepository
 import com.andresestevez.recipes.ui.common.startActivity
@@ -23,7 +23,7 @@ class LocalRecipesFragment : Fragment(){
 
     private lateinit var adapter: RecipesAdapter
 
-    private val viewModel: LocalRecipesViewModel by viewModels { LocalRecipesViewModelFactory(RecipesRepository(requireActivity().application)) }
+    private val viewModel: LocalRecipesViewModel by activityViewModels { LocalRecipesViewModelFactory(RecipesRepository(requireActivity().application)) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,14 +62,9 @@ class LocalRecipesFragment : Fragment(){
         }
     }
 
-    fun requestLocalRecipes() {
-        if (this.isAdded) viewModel.refresh()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 
 }
