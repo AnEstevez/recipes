@@ -3,6 +3,7 @@ package com.andresestevez.recipes.ui.main.fragments
 import androidx.lifecycle.*
 import com.andresestevez.recipes.models.Recipe
 import com.andresestevez.recipes.models.RecipesRepository
+import com.andresestevez.recipes.ui.common.Event
 import kotlinx.coroutines.launch
 
 class LocalRecipesViewModel(private val recipesRepository: RecipesRepository) : ViewModel() {
@@ -10,15 +11,18 @@ class LocalRecipesViewModel(private val recipesRepository: RecipesRepository) : 
     sealed class UiModel {
         object Loading : UiModel()
         class Content(val recipes: List<Recipe>) : UiModel()
-        class Navigation(val recipeId: String) : UiModel()
     }
 
     private val _model = MutableLiveData<UiModel>()
     val model : LiveData<UiModel>
             get() = _model
 
+    private val _navigation = MutableLiveData<Event<String>>()
+    val navigation: LiveData<Event<String>>
+        get() = _navigation
+
     fun onRecipeClicked(id: String) {
-        _model.value = UiModel.Navigation(id)
+        _navigation.value = Event(id)
     }
 
     fun refresh() {

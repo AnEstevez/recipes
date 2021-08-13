@@ -1,5 +1,5 @@
 package com.andresestevez.recipes.models
 
 data class RecipesDdResult(
-    val meals: List<Recipe> = listOf()
+    val meals: List<Recipe>? = listOf()
 )

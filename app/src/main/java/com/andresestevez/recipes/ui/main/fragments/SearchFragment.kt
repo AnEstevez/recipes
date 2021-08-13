@@ -53,6 +53,13 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
         binding.recycler.adapter = adapter
 
         viewModel.model.observe(viewLifecycleOwner, Observer(::updateUi))
+        viewModel.navigation.observe(viewLifecycleOwner, { event ->
+            event.getContentIfNotHandled()?.let {
+                context?.startActivity<DetailActivity> {
+                    putExtra(DetailActivity.EXTRA_RECIPE_ID, it)
+                }
+            }
+        })
 
         binding.searchView.setOnQueryTextListener(this)
     }
@@ -63,9 +70,6 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
         when (model){
             is Content -> adapter.submitList(model.recipes)
             HideKeyboard -> view?.hideKeyboard()
-            is Navigation -> context?.startActivity<DetailActivity> {
-                putExtra(DetailActivity.EXTRA_RECIPE_ID, model.recipeId)
-            }
             else -> {}
         }
     }
