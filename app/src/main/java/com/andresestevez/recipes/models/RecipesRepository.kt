@@ -1,12 +1,12 @@
 package com.andresestevez.recipes.models
 
-import android.app.Activity
+import android.app.Application
 import com.andresestevez.recipes.R
 
-class RecipesRepository(val activity: Activity) {
+class RecipesRepository(val application: Application) {
 
-    private val apiKey = activity.getString(R.string.api_key)
-    private val countryCodeRepository = CountryCodeRepository(activity)
+    private val apiKey = application.getString(R.string.api_key)
+    private val countryCodeRepository = CountryCodeRepository(application)
 
     suspend fun findRecipeById(recipeId: String) =
         TheMealDbClient.service.findMealById(apiKey, recipeId).meals.firstOrNull()
@@ -15,8 +15,8 @@ class RecipesRepository(val activity: Activity) {
         TheMealDbClient.service.listMealsByName(apiKey, name.lowercase())
 
     suspend fun listRecipesByRegion() =
-            countryCodeRepository.findLastLocationNationality()?.let {
-                TheMealDbClient.service.listMealsByNationality(apiKey, it).meals
-            }
+        countryCodeRepository.findLastLocationNationality().let {
+            TheMealDbClient.service.listMealsByNationality(apiKey, it).meals
+        }
 
 }

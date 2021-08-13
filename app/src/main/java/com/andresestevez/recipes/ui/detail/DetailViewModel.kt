@@ -25,3 +25,11 @@ class DetailViewModel(private val recipesRepository: RecipesRepository) : ViewMo
     }
 
 }
+
+@Suppress("UNCHECKED_CAST")
+class DetailViewModelFactory(private val recipesRepository: RecipesRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        return DetailViewModel(recipesRepository) as T
+    }
+
+}

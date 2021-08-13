@@ -1,12 +1,16 @@
 package com.andresestevez.recipes.ui.main
 
+import android.Manifest
 import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.ActivityMainBinding
+import com.andresestevez.recipes.models.PermissionRequester
 import com.andresestevez.recipes.ui.common.getChildFragment
-import com.andresestevez.recipes.ui.common.getViewModel
+import com.andresestevez.recipes.ui.common.toast
 import com.andresestevez.recipes.ui.main.MainViewModel.Companion.LOCAL_RECIPES_FRAGMENT
 import com.andresestevez.recipes.ui.main.MainViewModel.UiModel
 import com.andresestevez.recipes.ui.main.MainViewModel.UiModel.RequestLocalRecipes
@@ -21,7 +25,13 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModels()
+
+    private val permissionRequester =
+        PermissionRequester(this as ComponentActivity,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            onRationale = {application.toast(application.getString(R.string.rationale_local_dishes))}
+        )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,18 +40,18 @@ class MainActivity : AppCompatActivity() {
 
         val fragments: List<Fragment> = listOf(FavFragment(), SearchFragment(), LocalRecipesFragment())
         binding.viewPager.adapter = ViewPagerAdapter(fragments, this)
-
         val icons = listOf(
             R.drawable.ic_baseline_favorite_24,
             R.drawable.ic_baseline_search_24,
             R.drawable.ic_baseline_location_searching_24
         )
 
+        binding.viewPager.offscreenPageLimit = icons.size
+
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.setIcon(icons[position])
         }.attach()
 
-        viewModel = getViewModel { MainViewModel(this) }
         viewModel.model.observe(this, { findLocalRecipes(it) })
 
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -62,7 +72,7 @@ class MainActivity : AppCompatActivity() {
     private fun findLocalRecipes(model: UiModel) {
         when (model) {
             is RequestLocalRecipes ->  if (model.tab?.position == LOCAL_RECIPES_FRAGMENT) {
-                viewModel.permissionRequester.runWithPermission {
+                permissionRequester.runWithPermission {
                     getChildFragment<LocalRecipesFragment>(
                         binding.viewPager.adapter as ViewPagerAdapter,
                         LOCAL_RECIPES_FRAGMENT
