@@ -3,6 +3,7 @@ package com.andresestevez.recipes.ui.main.fragments
 import androidx.lifecycle.*
 import com.andresestevez.recipes.models.Recipe
 import com.andresestevez.recipes.models.RecipesRepository
+import com.andresestevez.recipes.ui.common.Event
 import kotlinx.coroutines.launch
 
 class SearchViewModel(private val recipesRepository: RecipesRepository) : ViewModel() {
@@ -10,14 +11,16 @@ class SearchViewModel(private val recipesRepository: RecipesRepository) : ViewMo
     sealed class UiModel {
         object HideKeyboard: UiModel()
         object Loading: UiModel()
-        class Content(val recipes: List<Recipe>): UiModel()
-        class Navigation(val recipeId: String): UiModel()
+        class Content(val recipes: List<Recipe>?): UiModel()
     }
 
     private val _model = MutableLiveData<UiModel>()
     val model: LiveData<UiModel>
         get() = _model
 
+    private val _navigation = MutableLiveData<Event<String>>()
+    val navigation : LiveData<Event<String>>
+        get() = _navigation
 
     fun refresh(query: String?) {
         if (!query.isNullOrBlank()) {
@@ -30,7 +33,7 @@ class SearchViewModel(private val recipesRepository: RecipesRepository) : ViewMo
     }
 
     fun onRecipeClicked(id: String) {
-        _model.value = UiModel.Navigation(id)
+        _navigation.value = Event(id)
     }
 
 }

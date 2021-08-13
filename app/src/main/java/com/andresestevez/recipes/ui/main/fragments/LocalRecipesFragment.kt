@@ -12,7 +12,8 @@ import com.andresestevez.recipes.ui.common.startActivity
 import com.andresestevez.recipes.ui.detail.DetailActivity
 import com.andresestevez.recipes.ui.main.RecipesAdapter
 import com.andresestevez.recipes.ui.main.fragments.LocalRecipesViewModel.UiModel
-import com.andresestevez.recipes.ui.main.fragments.LocalRecipesViewModel.UiModel.*
+import com.andresestevez.recipes.ui.main.fragments.LocalRecipesViewModel.UiModel.Content
+import com.andresestevez.recipes.ui.main.fragments.LocalRecipesViewModel.UiModel.Loading
 
 class LocalRecipesFragment : Fragment(){
 
@@ -43,13 +44,20 @@ class LocalRecipesFragment : Fragment(){
         super.onViewCreated(view, savedInstanceState)
         binding.recycler.adapter = adapter
         viewModel.model.observe(viewLifecycleOwner, {updateUi(it)})
+        viewModel.navigation.observe(viewLifecycleOwner, {  event ->
+            event.getContentIfNotHandled()?.let {
+                activity?.startActivity<DetailActivity> {
+                    putExtra(DetailActivity.EXTRA_RECIPE_ID, it)
+                }
+            }
+
+        })
     }
 
     private fun updateUi(model: UiModel) {
         binding.progress.visibility = if (model == Loading) View.VISIBLE else View.GONE
         when(model) {
             is Content -> adapter.submitList(model.recipes)
-            is Navigation -> activity?.startActivity<DetailActivity> { putExtra(DetailActivity.EXTRA_RECIPE_ID, model.recipeId) }
             else -> {}
         }
     }

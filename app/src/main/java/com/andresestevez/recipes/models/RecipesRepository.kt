@@ -9,7 +9,7 @@ class RecipesRepository(val application: Application) {
     private val countryCodeRepository = CountryCodeRepository(application)
 
     suspend fun findRecipeById(recipeId: String) =
-        TheMealDbClient.service.findMealById(apiKey, recipeId).meals.firstOrNull()
+        TheMealDbClient.service.findMealById(apiKey, recipeId).meals?.firstOrNull()
 
     suspend fun listRecipesByName(name: String) =
         TheMealDbClient.service.listMealsByName(apiKey, name.lowercase())
