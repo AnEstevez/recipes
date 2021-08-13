@@ -6,15 +6,9 @@ import android.content.Intent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import com.andresestevez.recipes.ui.main.ViewPagerAdapter
 
 fun Context.toast(message: String, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, message, duration).show()
-}
-
-@Suppress("UNCHECKED_CAST")
-fun <T> getChildFragment(adapter: ViewPagerAdapter, fragmentPosition: Int): T {
-    return adapter.createFragment(fragmentPosition) as T
 }
 
 inline fun <reified T : Activity> Context.intentFor(body: Intent.() -> Unit): Intent =
