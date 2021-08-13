@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.ViewItemBinding
-import com.andresestevez.recipes.models.Recipe
+import com.andresestevez.recipes.models.server.Recipe
 import com.bumptech.glide.Glide
 
 class RecipesAdapter(private val recipeClickedListener: (Recipe) -> Unit) :
