@@ -4,7 +4,7 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
-import com.andresestevez.recipes.models.Recipe
+import com.andresestevez.recipes.models.server.Recipe
 
 class RecipeIngredientsView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null

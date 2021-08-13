@@ -2,6 +2,7 @@ package com.andresestevez.recipes.models
 
 import android.app.Application
 import com.andresestevez.recipes.R
+import com.andresestevez.recipes.models.server.TheMealDbClient
 
 class RecipesRepository(val application: Application) {
 

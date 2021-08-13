@@ -1,4 +1,4 @@
-package com.andresestevez.recipes.models
+package com.andresestevez.recipes.models.server
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
