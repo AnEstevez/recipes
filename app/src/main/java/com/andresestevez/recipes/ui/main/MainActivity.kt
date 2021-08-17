@@ -10,6 +10,7 @@ import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.ActivityMainBinding
 import com.andresestevez.recipes.models.PermissionRequester
 import com.andresestevez.recipes.models.RecipesRepository
+import com.andresestevez.recipes.ui.common.app
 import com.andresestevez.recipes.ui.common.toast
 import com.andresestevez.recipes.ui.main.MainViewModel.Companion.LOCAL_RECIPES_FRAGMENT
 import com.andresestevez.recipes.ui.main.MainViewModel.UiModel
@@ -26,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
 
     private val localRecipesViewModel: LocalRecipesViewModel by viewModels { LocalRecipesViewModelFactory(
-        RecipesRepository(application)
+        RecipesRepository(app)
     ) }
 
 

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import com.andresestevez.recipes.RecipesApp
 
 fun Context.toast(message: String, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, message, duration).show()
@@ -22,3 +23,6 @@ fun View.hideKeyboard() {
     val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     inputManager.hideSoftInputFromWindow(windowToken, 0)
 }
+
+val Context.app: RecipesApp
+    get() = applicationContext as RecipesApp

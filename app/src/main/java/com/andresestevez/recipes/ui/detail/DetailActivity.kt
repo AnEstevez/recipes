@@ -5,6 +5,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.andresestevez.recipes.databinding.ActivityDetailBinding
 import com.andresestevez.recipes.models.RecipesRepository
+import com.andresestevez.recipes.ui.common.app
 import com.bumptech.glide.Glide
 
 class DetailActivity : AppCompatActivity() {
@@ -15,7 +16,7 @@ class DetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailBinding
 
-    private val viewModel : DetailViewModel by viewModels { DetailViewModelFactory(RecipesRepository(application)) }
+    private val viewModel : DetailViewModel by viewModels { DetailViewModelFactory(RecipesRepository(app)) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

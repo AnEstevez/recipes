@@ -27,7 +27,7 @@ class SearchViewModel(private val recipesRepository: RecipesRepository) : ViewMo
             viewModelScope.launch {
                 _model.value = UiModel.HideKeyboard
                 _model.value = UiModel.Loading
-                _model.value= UiModel.Content(recipesRepository.listRecipesByName(query).meals)
+                _model.value= UiModel.Content(recipesRepository.listRecipesByName(query))
             }
         }
     }
