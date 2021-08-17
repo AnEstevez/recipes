@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.andresestevez.recipes.databinding.FragmentSearchBinding
 import com.andresestevez.recipes.models.RecipesRepository
+import com.andresestevez.recipes.ui.common.app
 import com.andresestevez.recipes.ui.common.hideKeyboard
 import com.andresestevez.recipes.ui.common.startActivity
 import com.andresestevez.recipes.ui.detail.DetailActivity
@@ -29,7 +30,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private lateinit var adapter: RecipesAdapter
 
-    private val viewModel: SearchViewModel by viewModels { SearchViewModelFactory(RecipesRepository(requireActivity().application)) }
+    private val viewModel: SearchViewModel by viewModels { SearchViewModelFactory(RecipesRepository(requireActivity().app)) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

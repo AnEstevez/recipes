@@ -1,14 +1,13 @@
 package com.andresestevez.recipes.ui.detail
 
 import androidx.lifecycle.*
-import com.andresestevez.recipes.models.server.Recipe
 import com.andresestevez.recipes.models.RecipesRepository
 import kotlinx.coroutines.launch
 
 class DetailViewModel(private val recipesRepository: RecipesRepository) : ViewModel() {
 
     sealed class UiModel {
-        class Content(val recipe: Recipe?): UiModel()
+        class Content(val recipe: com.andresestevez.recipes.models.database.Recipe?): UiModel()
     }
 
     private val _model = MutableLiveData<UiModel>()
