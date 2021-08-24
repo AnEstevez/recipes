@@ -44,4 +44,8 @@ class RecipesRepository(application: RecipesApp) {
     suspend fun updateRecipe(recipe: Recipe) = withContext(Dispatchers.IO) {
         db.recipeDao().updateRecipe(recipe)
     }
+
+    suspend fun listFavorites() : List<Recipe> = withContext(Dispatchers.IO) {
+        db.recipeDao().getFavorites()
+    }
 }
