@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.ViewItemBinding
-import com.andresestevez.recipes.models.server.Recipe
+import com.andresestevez.recipes.models.database.Recipe
 import com.bumptech.glide.Glide
 
 class RecipesAdapter(private val recipeClickedListener: (Recipe) -> Unit) :
@@ -33,6 +33,8 @@ class RecipesAdapter(private val recipeClickedListener: (Recipe) -> Unit) :
             with(binding) {
                 textViewRecipe.text = recipe.name
                 Glide.with(root.context).load(recipe.thumbnail).into(imageViewBg)
+                this.btnFav.setImageResource(if (recipe.favorite) R.drawable.ic_baseline_favorite_24
+                    else R.drawable.ic_baseline_favorite_border_24)
             }
         }
     }

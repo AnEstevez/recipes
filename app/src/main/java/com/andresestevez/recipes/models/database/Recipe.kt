@@ -16,7 +16,7 @@ data class Recipe(
     val ingredients: List<String>,
     val measures: List<String>,
     @ColumnInfo(name = "favorite", defaultValue = "0" )
-    val favorite: Boolean,
+    var favorite: Boolean,
     val strCategory: String?,
     val strCreativeCommonsConfirmed: String?,
     val strDrinkAlternate: String?,

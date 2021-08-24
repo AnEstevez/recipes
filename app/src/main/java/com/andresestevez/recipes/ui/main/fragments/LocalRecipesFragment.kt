@@ -38,7 +38,7 @@ class LocalRecipesFragment : Fragment(){
     }
 
     private fun initRecyclerView() {
-        adapter = RecipesAdapter { viewModel.onRecipeClicked(it.id) }
+        adapter = RecipesAdapter { viewModel.onRecipeClicked(it.idMeal) }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

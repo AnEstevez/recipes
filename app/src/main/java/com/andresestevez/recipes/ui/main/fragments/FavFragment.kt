@@ -11,7 +11,7 @@ import com.andresestevez.recipes.models.RecipesRepository
 import com.andresestevez.recipes.ui.common.app
 import com.andresestevez.recipes.ui.common.startActivity
 import com.andresestevez.recipes.ui.detail.DetailActivity
-import com.andresestevez.recipes.ui.main.RecipesBDAdapter
+import com.andresestevez.recipes.ui.main.RecipesAdapter
 import com.andresestevez.recipes.ui.main.fragments.FavViewModel.UiModel.Loading
 
 
@@ -21,7 +21,7 @@ class FavFragment : Fragment() {
     private val binding
         get() = _binding!!
 
-    private lateinit var adapter : RecipesBDAdapter
+    private lateinit var adapter : RecipesAdapter
 
     private val viewModel: FavViewModel by activityViewModels { FavFragmentFactory(RecipesRepository(requireActivity().app)) }
 
@@ -36,7 +36,7 @@ class FavFragment : Fragment() {
         return binding.root    }
 
     private fun initRecyclerView() {
-        adapter = RecipesBDAdapter {viewModel.onRecipeClicked(it.idMeal)}
+        adapter = RecipesAdapter {viewModel.onRecipeClicked(it.idMeal)}
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

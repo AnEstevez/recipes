@@ -1,8 +1,8 @@
 package com.andresestevez.recipes.ui.main.fragments
 
 import androidx.lifecycle.*
-import com.andresestevez.recipes.models.server.Recipe
 import com.andresestevez.recipes.models.RecipesRepository
+import com.andresestevez.recipes.models.database.Recipe
 import com.andresestevez.recipes.ui.common.Event
 import kotlinx.coroutines.launch
 

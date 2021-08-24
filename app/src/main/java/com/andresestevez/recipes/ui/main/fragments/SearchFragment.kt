@@ -44,7 +44,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun initRecyclerView() {
-        adapter = RecipesAdapter { viewModel.onRecipeClicked(it.id) }
+        adapter = RecipesAdapter { viewModel.onRecipeClicked(it.idMeal) }
 
     }
 
