@@ -6,11 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import com.andresestevez.recipes.databinding.FragmentFavBinding
 import com.andresestevez.recipes.models.RecipesRepository
+import com.andresestevez.recipes.ui.common.EventObserver
 import com.andresestevez.recipes.ui.common.app
-import com.andresestevez.recipes.ui.common.startActivity
-import com.andresestevez.recipes.ui.detail.DetailActivity
+import com.andresestevez.recipes.ui.main.MainFragmentDirections
 import com.andresestevez.recipes.ui.main.RecipesAdapter
 import com.andresestevez.recipes.ui.main.fragments.FavViewModel.UiModel.Loading
 
@@ -33,10 +34,11 @@ class FavFragment : Fragment() {
         _binding = FragmentFavBinding.inflate(inflater, container, false)
 
         initRecyclerView()
-        return binding.root    }
+        return binding.root
+    }
 
     private fun initRecyclerView() {
-        adapter = RecipesAdapter {viewModel.onRecipeClicked(it.idMeal)}
+        adapter = RecipesAdapter(viewModel::onRecipeClicked)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,12 +49,9 @@ class FavFragment : Fragment() {
             updateUi(it)
         })
 
-        viewModel.navigation.observe(viewLifecycleOwner, {
-            it.getContentIfNotHandled().let {
-                activity?.startActivity<DetailActivity> {
-                    putExtra(DetailActivity.EXTRA_RECIPE_ID, it)
-                }
-            }
+        viewModel.navigation.observe(viewLifecycleOwner, EventObserver {
+            val direction = MainFragmentDirections.actionMainFragmentToDetailFragment(it)
+            view.findNavController().navigate(direction)
         })
 
     }

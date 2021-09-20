@@ -6,6 +6,7 @@ import android.content.Intent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.andresestevez.recipes.RecipesApp
 import com.andresestevez.recipes.models.server.Recipe
 
@@ -28,6 +29,10 @@ fun View.hideKeyboard() {
 val Context.app: RecipesApp
     get() = applicationContext as RecipesApp
 
+val Fragment.app: RecipesApp
+    get() = ((activity?.app)
+        ?: IllegalStateException("Fragment needs to be attach to the activity to access the App instance"))
+            as RecipesApp
 
 fun Recipe.toRecipeDB(): com.andresestevez.recipes.models.database.Recipe {
 

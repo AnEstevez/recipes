@@ -28,8 +28,8 @@ class FavViewModel(private val repository: RecipesRepository): ViewModel() {
         }
     }
 
-    fun onRecipeClicked(recipeId: String) {
-        _navigation.value = Event(recipeId)
+    fun onRecipeClicked(recipe: Recipe) {
+        _navigation.value = Event(recipe.idMeal)
     }
 }
 

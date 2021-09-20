@@ -6,11 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import com.andresestevez.recipes.databinding.FragmentLocalRecipesBinding
 import com.andresestevez.recipes.models.RecipesRepository
+import com.andresestevez.recipes.ui.common.EventObserver
 import com.andresestevez.recipes.ui.common.app
-import com.andresestevez.recipes.ui.common.startActivity
-import com.andresestevez.recipes.ui.detail.DetailActivity
+import com.andresestevez.recipes.ui.main.MainFragmentDirections
 import com.andresestevez.recipes.ui.main.RecipesAdapter
 import com.andresestevez.recipes.ui.main.fragments.LocalRecipesViewModel.UiModel
 import com.andresestevez.recipes.ui.main.fragments.LocalRecipesViewModel.UiModel.Content
@@ -38,21 +39,18 @@ class LocalRecipesFragment : Fragment(){
     }
 
     private fun initRecyclerView() {
-        adapter = RecipesAdapter { viewModel.onRecipeClicked(it.idMeal) }
+        adapter = RecipesAdapter(viewModel::onRecipeClicked)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.recycler.adapter = adapter
         viewModel.model.observe(viewLifecycleOwner, {updateUi(it)})
-        viewModel.navigation.observe(viewLifecycleOwner, {  event ->
-            event.getContentIfNotHandled()?.let {
-                activity?.startActivity<DetailActivity> {
-                    putExtra(DetailActivity.EXTRA_RECIPE_ID, it)
-                }
-            }
-
+        viewModel.navigation.observe(viewLifecycleOwner, EventObserver {
+            val direction = MainFragmentDirections.actionMainFragmentToDetailFragment(it)
+            view.findNavController().navigate(direction)
         })
+
     }
 
     private fun updateUi(model: UiModel) {
