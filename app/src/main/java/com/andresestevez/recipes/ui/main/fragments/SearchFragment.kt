@@ -8,12 +8,13 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import com.andresestevez.recipes.databinding.FragmentSearchBinding
 import com.andresestevez.recipes.models.RecipesRepository
+import com.andresestevez.recipes.ui.common.EventObserver
 import com.andresestevez.recipes.ui.common.app
 import com.andresestevez.recipes.ui.common.hideKeyboard
-import com.andresestevez.recipes.ui.common.startActivity
-import com.andresestevez.recipes.ui.detail.DetailActivity
+import com.andresestevez.recipes.ui.main.MainFragmentDirections
 import com.andresestevez.recipes.ui.main.RecipesAdapter
 import com.andresestevez.recipes.ui.main.fragments.SearchViewModel.UiModel
 import com.andresestevez.recipes.ui.main.fragments.SearchViewModel.UiModel.*
@@ -44,7 +45,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun initRecyclerView() {
-        adapter = RecipesAdapter { viewModel.onRecipeClicked(it.idMeal) }
+        adapter = RecipesAdapter(viewModel::onRecipeClicked)
 
     }
 
@@ -54,14 +55,10 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
         binding.recycler.adapter = adapter
 
         viewModel.model.observe(viewLifecycleOwner, Observer(::updateUi))
-        viewModel.navigation.observe(viewLifecycleOwner, { event ->
-            event.getContentIfNotHandled()?.let {
-                context?.startActivity<DetailActivity> {
-                    putExtra(DetailActivity.EXTRA_RECIPE_ID, it)
-                }
-            }
+        viewModel.navigation.observe(viewLifecycleOwner, EventObserver{
+            val direction = MainFragmentDirections.actionMainFragmentToDetailFragment(it)
+            view.findNavController().navigate(direction)
         })
-
         binding.searchView.setOnQueryTextListener(this)
     }
 

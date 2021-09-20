@@ -14,16 +14,10 @@ class LocalRecipesViewModel(private val recipesRepository: RecipesRepository) : 
     }
 
     private val _model = MutableLiveData<UiModel>()
-    val model : LiveData<UiModel>
-            get() = _model
+    val model : LiveData<UiModel> get() = _model
 
     private val _navigation = MutableLiveData<Event<String>>()
-    val navigation: LiveData<Event<String>>
-        get() = _navigation
-
-    fun onRecipeClicked(id: String) {
-        _navigation.value = Event(id)
-    }
+    val navigation : LiveData<Event<String>> get() = _navigation
 
     fun refresh() {
         viewModelScope.launch {
@@ -33,6 +27,9 @@ class LocalRecipesViewModel(private val recipesRepository: RecipesRepository) : 
 
     }
 
+    fun onRecipeClicked(recipe: Recipe) {
+        _navigation.value = Event(recipe.idMeal)
+    }
 }
 
 @Suppress("UNCHECKED_CAST")

@@ -19,8 +19,7 @@ class SearchViewModel(private val recipesRepository: RecipesRepository) : ViewMo
         get() = _model
 
     private val _navigation = MutableLiveData<Event<String>>()
-    val navigation : LiveData<Event<String>>
-        get() = _navigation
+    val navigation : LiveData<Event<String>> get() = _navigation
 
     fun refresh(query: String?) {
         if (!query.isNullOrBlank()) {
@@ -32,10 +31,11 @@ class SearchViewModel(private val recipesRepository: RecipesRepository) : ViewMo
         }
     }
 
-    fun onRecipeClicked(id: String) {
-        _navigation.value = Event(id)
+    fun onRecipeClicked(recipe : Recipe) {
+        viewModelScope.launch {
+            _navigation.value = Event(recipe.idMeal)
+        }
     }
-
 }
 
 @Suppress("UNCHECKED_CAST")
