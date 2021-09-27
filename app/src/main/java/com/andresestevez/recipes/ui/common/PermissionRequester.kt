@@ -1,4 +1,4 @@
-package com.andresestevez.recipes.models
+package com.andresestevez.recipes.ui.common
 
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts

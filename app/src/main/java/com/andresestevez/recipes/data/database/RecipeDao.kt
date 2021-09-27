@@ -1,4 +1,4 @@
-package com.andresestevez.recipes.models.database
+package com.andresestevez.recipes.data.database
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -12,7 +12,7 @@ interface RecipeDao {
     @Query("SELECT * from Recipe WHERE favorite = 1")
     fun getFavorites(): List<Recipe>
 
-    @Query("SELECT * from Recipe WHERE idMeal = :idMeal")
+    @Query("SELECT * from Recipe WHERE id = :idMeal")
     fun findByIdMeal(idMeal: String): Recipe
 
     @Insert(onConflict = IGNORE)

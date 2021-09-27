@@ -7,13 +7,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import com.andresestevez.data.repository.RecipesRepository
+import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.FragmentFavBinding
-import com.andresestevez.recipes.models.RecipesRepository
+import com.andresestevez.recipes.data.PlayServicesLocationDataSource
+import com.andresestevez.recipes.data.database.RoomDataSource
+import com.andresestevez.recipes.data.server.MealDBDataSource
 import com.andresestevez.recipes.ui.common.EventObserver
 import com.andresestevez.recipes.ui.common.app
 import com.andresestevez.recipes.ui.main.MainFragmentDirections
 import com.andresestevez.recipes.ui.main.RecipesAdapter
 import com.andresestevez.recipes.ui.main.fragments.FavViewModel.UiModel.Loading
+import com.andresestevez.usecases.GetFavoriteRecipes
 
 
 class FavFragment : Fragment() {
@@ -24,7 +29,18 @@ class FavFragment : Fragment() {
 
     private lateinit var adapter : RecipesAdapter
 
-    private val viewModel: FavViewModel by activityViewModels { FavFragmentFactory(RecipesRepository(requireActivity().app)) }
+    private val viewModel: FavViewModel by activityViewModels {
+        FavFragmentFactory(
+            GetFavoriteRecipes(
+                RecipesRepository(
+                    RoomDataSource(app.db),
+                    MealDBDataSource(),
+                    PlayServicesLocationDataSource(app),
+                    getString(R.string.api_key)
+                )
+            )
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

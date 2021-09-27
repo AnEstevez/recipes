@@ -1,4 +1,4 @@
-package com.andresestevez.recipes.models.database
+package com.andresestevez.recipes.data.database
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson

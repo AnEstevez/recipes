@@ -1,4 +1,4 @@
-package com.andresestevez.recipes.models.database
+package com.andresestevez.recipes.data.database
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Recipe(
-    @PrimaryKey(autoGenerate = true) val id: Int,
-    val idMeal: String,
+    @PrimaryKey
+    val id: String,
     val name: String,
     val thumbnail: String,
     val instructions: String,
