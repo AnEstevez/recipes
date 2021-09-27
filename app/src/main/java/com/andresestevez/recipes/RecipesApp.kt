@@ -2,7 +2,7 @@ package com.andresestevez.recipes
 
 import android.app.Application
 import androidx.room.Room
-import com.andresestevez.recipes.models.database.RecipeDatabase
+import com.andresestevez.recipes.data.database.RecipeDatabase
 
 class RecipesApp: Application() {
     lateinit var db: RecipeDatabase

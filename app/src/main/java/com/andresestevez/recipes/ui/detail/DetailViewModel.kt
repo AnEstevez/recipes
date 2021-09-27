@@ -1,11 +1,12 @@
 package com.andresestevez.recipes.ui.detail
 
 import androidx.lifecycle.*
-import com.andresestevez.recipes.models.RecipesRepository
-import com.andresestevez.recipes.models.database.Recipe
+import com.andresestevez.domain.Recipe
+import com.andresestevez.usecases.GetRecipeById
+import com.andresestevez.usecases.ToggleRecipeFavorite
 import kotlinx.coroutines.launch
 
-class DetailViewModel(private val recipesRepository: RecipesRepository) : ViewModel() {
+class DetailViewModel(private val getRecipeById: GetRecipeById, private val toggleRecipeFavorite: ToggleRecipeFavorite ) : ViewModel() {
 
     sealed class UiModel(val recipe: Recipe) {
         class Content(recipe: Recipe): UiModel(recipe)
@@ -19,7 +20,9 @@ class DetailViewModel(private val recipesRepository: RecipesRepository) : ViewMo
     fun refresh(recipeId: String?) {
         if (!recipeId.isNullOrEmpty()) {
             viewModelScope.launch {
-                _model.value = UiModel.Content(recipesRepository.findRecipeById(recipeId))
+                getRecipeById.invoke(recipeId)?.let {
+                    _model.value = UiModel.Content(it)
+                } ?: Exception("Recipe not found") // TODO ver como gestionar excepciones correctamente
             }
         }
     }
@@ -27,8 +30,7 @@ class DetailViewModel(private val recipesRepository: RecipesRepository) : ViewMo
     fun onFavoriteClicked() {
         _model.value?.recipe?.let {
             viewModelScope.launch {
-                val updatedRecipe = it.copy(favorite = !it.favorite)
-                recipesRepository.updateRecipe(updatedRecipe)
+                val updatedRecipe = toggleRecipeFavorite.invoke(it)
                 _model.value = UiModel.Favorite(updatedRecipe)
             }
         }
@@ -37,8 +39,8 @@ class DetailViewModel(private val recipesRepository: RecipesRepository) : ViewMo
 }
 
 @Suppress("UNCHECKED_CAST")
-class DetailViewModelFactory(private val recipesRepository: RecipesRepository) : ViewModelProvider.Factory {
+class DetailViewModelFactory(private val getRecipeById: GetRecipeById, private val toggleRecipeFavorite: ToggleRecipeFavorite ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return DetailViewModel(recipesRepository) as T
+        return DetailViewModel(getRecipeById, toggleRecipeFavorite) as T
     }
 }

@@ -1,12 +1,12 @@
 package com.andresestevez.recipes.ui.main.fragments
 
 import androidx.lifecycle.*
-import com.andresestevez.recipes.models.RecipesRepository
-import com.andresestevez.recipes.models.database.Recipe
+import com.andresestevez.domain.Recipe
 import com.andresestevez.recipes.ui.common.Event
+import com.andresestevez.usecases.GetRecipesByName
 import kotlinx.coroutines.launch
 
-class SearchViewModel(private val recipesRepository: RecipesRepository) : ViewModel() {
+class SearchViewModel(private val getRecipesByName: GetRecipesByName) : ViewModel() {
 
     sealed class UiModel {
         object HideKeyboard: UiModel()
@@ -26,22 +26,22 @@ class SearchViewModel(private val recipesRepository: RecipesRepository) : ViewMo
             viewModelScope.launch {
                 _model.value = UiModel.HideKeyboard
                 _model.value = UiModel.Loading
-                _model.value= UiModel.Content(recipesRepository.listRecipesByName(query))
+                _model.value= UiModel.Content(getRecipesByName.invoke(query))
             }
         }
     }
 
     fun onRecipeClicked(recipe : Recipe) {
         viewModelScope.launch {
-            _navigation.value = Event(recipe.idMeal)
+            _navigation.value = Event(recipe.id)
         }
     }
 }
 
 @Suppress("UNCHECKED_CAST")
-class SearchViewModelFactory(private val recipesRepository: RecipesRepository) : ViewModelProvider.Factory {
+class SearchViewModelFactory(private val getRecipesByName: GetRecipesByName) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return SearchViewModel(recipesRepository) as T
+        return SearchViewModel(getRecipesByName) as T
     }
 
 }

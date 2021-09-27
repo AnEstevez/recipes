@@ -1,4 +1,4 @@
-package com.andresestevez.recipes.models.server
+package com.andresestevez.recipes.data.server
 
 import retrofit2.http.GET
 import retrofit2.http.Path

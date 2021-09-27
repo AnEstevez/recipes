@@ -1,4 +1,4 @@
-package com.andresestevez.recipes.models
+package com.andresestevez.recipes.data
 
 enum class CountryCodeToNationality(val nationality: String) {
 
