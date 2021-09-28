@@ -62,6 +62,5 @@ data class Recipe(
     val strMeasure9: String?,
     val strSource: String?,
     val strTags: String?,
-    val strYoutube: String?,
-    val dateModified: String?
+    val strYoutube: String?
 ) : Parcelable

@@ -9,7 +9,7 @@ import androidx.room.Update
 @Dao
 interface RecipeDao {
 
-    @Query("SELECT * from Recipe WHERE favorite = 1")
+    @Query("SELECT * from Recipe WHERE favorite = 1 order by dateModified desc")
     fun getFavorites(): List<Recipe>
 
     @Query("SELECT * from Recipe WHERE id = :idMeal")

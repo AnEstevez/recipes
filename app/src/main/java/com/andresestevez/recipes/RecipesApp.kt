@@ -1,19 +1,19 @@
 package com.andresestevez.recipes
 
 import android.app.Application
-import androidx.room.Room
-import com.andresestevez.recipes.data.database.RecipeDatabase
+import com.andresestevez.recipes.di.DaggerRecipesComponent
+import com.andresestevez.recipes.di.RecipesComponent
 
 class RecipesApp: Application() {
-    lateinit var db: RecipeDatabase
+
+    lateinit var component: RecipesComponent
         private set
 
     override fun onCreate() {
         super.onCreate()
 
-        db = Room.databaseBuilder(
-            this,
-            RecipeDatabase::class.java, "recipe-db"
-        ).build()
+        component = DaggerRecipesComponent
+            .factory()
+            .create(this)
     }
 }

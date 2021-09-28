@@ -25,16 +25,7 @@ class DetailFragment : Fragment() {
     private val binding: FragmentDetailBinding get() = _binding!!
 
     private val viewModel : DetailViewModel by viewModels {
-        val recipesRepository = RecipesRepository(
-            RoomDataSource(app.db),
-            MealDBDataSource(),
-            PlayServicesLocationDataSource(app),
-            getString(R.string.api_key)
-        )
-        DetailViewModelFactory(
-            GetRecipeById(recipesRepository),
-            ToggleRecipeFavorite(recipesRepository)
-        )
+        app.component.detailViewModelFactory
     }
 
     private val args: DetailFragmentArgs by navArgs()

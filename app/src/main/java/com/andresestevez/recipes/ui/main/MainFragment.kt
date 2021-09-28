@@ -8,17 +8,15 @@ import android.view.ViewGroup
 import androidx.activity.ComponentActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.andresestevez.data.repository.RecipesRepository
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.FragmentMainBinding
 import com.andresestevez.recipes.ui.common.PermissionRequester
-import com.andresestevez.recipes.data.PlayServicesLocationDataSource
-import com.andresestevez.recipes.data.database.RoomDataSource
-import com.andresestevez.recipes.data.server.MealDBDataSource
 import com.andresestevez.recipes.ui.common.app
 import com.andresestevez.recipes.ui.common.toast
-import com.andresestevez.recipes.ui.main.fragments.*
-import com.andresestevez.usecases.GetLocalRecipes
+import com.andresestevez.recipes.ui.main.fragments.FavFragment
+import com.andresestevez.recipes.ui.main.fragments.LocalRecipesFragment
+import com.andresestevez.recipes.ui.main.fragments.LocalRecipesViewModel
+import com.andresestevez.recipes.ui.main.fragments.SearchFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -29,16 +27,7 @@ class MainFragment : Fragment() {
     private val viewModel: MainViewModel by activityViewModels()
 
     private val localRecipesViewModel: LocalRecipesViewModel by activityViewModels {
-        LocalRecipesViewModelFactory(
-            GetLocalRecipes(
-                RecipesRepository(
-                    RoomDataSource(app.db),
-                    MealDBDataSource(),
-                    PlayServicesLocationDataSource(app),
-                    getString(R.string.api_key)
-                )
-            )
-        )
+        app.component.localRecipesViewModelFactory
     }
 
     private var permissionRequester: PermissionRequester? = null
