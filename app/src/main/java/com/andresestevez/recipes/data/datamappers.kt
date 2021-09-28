@@ -1,8 +1,9 @@
 package com.andresestevez.recipes.data
 
-import com.andresestevez.recipes.data.server.Recipe as ServerRecipe
-import com.andresestevez.recipes.data.database.Recipe as RoomRecipe
+import java.util.*
 import com.andresestevez.domain.Recipe as DomainRecipe
+import com.andresestevez.recipes.data.database.Recipe as RoomRecipe
+import com.andresestevez.recipes.data.server.Recipe as ServerRecipe
 
 
 fun DomainRecipe.toDBRecipe(): RoomRecipe = RoomRecipe(
@@ -21,8 +22,8 @@ fun DomainRecipe.toDBRecipe(): RoomRecipe = RoomRecipe(
         strSource,
         strTags,
         strYoutube,
-        dateModified
-    )
+        dateModified?.time ?: System.currentTimeMillis()
+)
 
 fun RoomRecipe.toDomainRecipe(): DomainRecipe = DomainRecipe(
     id,
@@ -40,7 +41,7 @@ fun RoomRecipe.toDomainRecipe(): DomainRecipe = DomainRecipe(
     strSource,
     strTags,
     strYoutube,
-    dateModified
+    Date(dateModified)
 )
 
 fun ServerRecipe.toDomainRecipe(): DomainRecipe {
@@ -145,6 +146,6 @@ fun ServerRecipe.toDomainRecipe(): DomainRecipe {
         strSource,
         strTags,
         strYoutube,
-        dateModified
+        null
     )
 }

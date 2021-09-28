@@ -1,5 +1,7 @@
 package com.andresestevez.domain
 
+import java.util.*
+
 data class Recipe(
     val id: String,
     val name: String,
@@ -16,5 +18,5 @@ data class Recipe(
     val strSource: String?,
     val strTags: String?,
     val strYoutube: String?,
-    val dateModified: String?
+    val dateModified: Date?
 )

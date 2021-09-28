@@ -3,6 +3,7 @@ package com.andresestevez.recipes.data.database
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.sql.Timestamp
 
 @Entity
 data class Recipe(
@@ -24,6 +25,5 @@ data class Recipe(
     val strSource: String?,
     val strTags: String?,
     val strYoutube: String?,
-    @ColumnInfo(name = "dateModified", defaultValue = "CURRENT_TIMESTAMP" )
-    val dateModified: String?
+    val dateModified: Long
 )
