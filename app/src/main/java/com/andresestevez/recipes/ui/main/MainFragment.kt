@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.ComponentActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.FragmentMainBinding
 import com.andresestevez.recipes.ui.common.PermissionRequester
@@ -19,16 +18,17 @@ import com.andresestevez.recipes.ui.main.fragments.LocalRecipesViewModel
 import com.andresestevez.recipes.ui.main.fragments.SearchFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import org.koin.androidx.scope.ScopeFragment
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainFragment : Fragment() {
+class MainFragment : ScopeFragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding : FragmentMainBinding get() = _binding!!
 
-    private val viewModel: MainViewModel by activityViewModels()
+    private val viewModel: MainViewModel by viewModel()
 
-    private val localRecipesViewModel: LocalRecipesViewModel by activityViewModels {
-        app.component.localRecipesViewModelFactory
-    }
+    private val localRecipesViewModel: LocalRecipesViewModel by sharedViewModel()
 
     private var permissionRequester: PermissionRequester? = null
 
