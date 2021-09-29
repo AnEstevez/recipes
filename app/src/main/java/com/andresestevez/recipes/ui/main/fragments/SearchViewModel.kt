@@ -5,7 +5,6 @@ import com.andresestevez.domain.Recipe
 import com.andresestevez.recipes.ui.common.Event
 import com.andresestevez.usecases.GetRecipesByName
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class SearchViewModel(private val getRecipesByName: GetRecipesByName) : ViewModel() {
 
@@ -40,7 +39,7 @@ class SearchViewModel(private val getRecipesByName: GetRecipesByName) : ViewMode
 }
 
 @Suppress("UNCHECKED_CAST")
-class SearchViewModelFactory @Inject constructor(private val getRecipesByName: GetRecipesByName) : ViewModelProvider.Factory {
+class SearchViewModelFactory (private val getRecipesByName: GetRecipesByName) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return SearchViewModel(getRecipesByName) as T
     }

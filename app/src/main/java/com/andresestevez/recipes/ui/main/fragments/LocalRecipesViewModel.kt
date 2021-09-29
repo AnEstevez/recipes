@@ -5,7 +5,6 @@ import com.andresestevez.domain.Recipe
 import com.andresestevez.recipes.ui.common.Event
 import com.andresestevez.usecases.GetLocalRecipes
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class LocalRecipesViewModel(private val getLocalRecipes: GetLocalRecipes) : ViewModel() {
 
@@ -33,7 +32,7 @@ class LocalRecipesViewModel(private val getLocalRecipes: GetLocalRecipes) : View
 }
 
 @Suppress("UNCHECKED_CAST")
-class LocalRecipesViewModelFactory @Inject constructor(private val getLocalRecipes: GetLocalRecipes) : ViewModelProvider.Factory {
+class LocalRecipesViewModelFactory (private val getLocalRecipes: GetLocalRecipes) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return LocalRecipesViewModel(getLocalRecipes) as T
     }

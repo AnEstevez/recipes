@@ -4,9 +4,7 @@ import androidx.lifecycle.*
 import com.andresestevez.domain.Recipe
 import com.andresestevez.recipes.ui.common.Event
 import com.andresestevez.usecases.GetFavoriteRecipes
-import dagger.Provides
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class FavViewModel(private val getFavoriteRecipes: GetFavoriteRecipes): ViewModel() {
 
@@ -36,7 +34,7 @@ class FavViewModel(private val getFavoriteRecipes: GetFavoriteRecipes): ViewMode
 }
 
 @Suppress("UNCHECKED_CAST")
-class FavViewModelFactory @Inject constructor(private val getFavoriteRecipes: GetFavoriteRecipes): ViewModelProvider.Factory {
+class FavViewModelFactory (private val getFavoriteRecipes: GetFavoriteRecipes): ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return FavViewModel(getFavoriteRecipes) as T
     }

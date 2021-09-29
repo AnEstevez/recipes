@@ -5,18 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.andresestevez.recipes.databinding.FragmentLocalRecipesBinding
 import com.andresestevez.recipes.ui.common.EventObserver
-import com.andresestevez.recipes.ui.common.app
 import com.andresestevez.recipes.ui.main.MainFragmentDirections
 import com.andresestevez.recipes.ui.main.RecipesAdapter
 import com.andresestevez.recipes.ui.main.fragments.LocalRecipesViewModel.UiModel
 import com.andresestevez.recipes.ui.main.fragments.LocalRecipesViewModel.UiModel.Content
 import com.andresestevez.recipes.ui.main.fragments.LocalRecipesViewModel.UiModel.Loading
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class LocalRecipesFragment : Fragment(){
+class LocalRecipesFragment : Fragment() {
 
     private var _binding: FragmentLocalRecipesBinding? = null
     private val binding
@@ -24,9 +23,7 @@ class LocalRecipesFragment : Fragment(){
 
     private lateinit var adapter: RecipesAdapter
 
-    private val viewModel: LocalRecipesViewModel by activityViewModels {
-        app.component.localRecipesViewModelFactory
-    }
+    private val viewModel: LocalRecipesViewModel by sharedViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
