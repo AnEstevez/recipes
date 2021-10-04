@@ -1,18 +1,12 @@
 package com.andresestevez.recipes.ui.main.fragments
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.andresestevez.domain.Recipe
 import com.andresestevez.recipes.ui.common.Event
 import com.andresestevez.usecases.GetLocalRecipes
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class LocalRecipesViewModel @Inject constructor(private val getLocalRecipes: GetLocalRecipes) : ViewModel() {
+class LocalRecipesViewModel(private val getLocalRecipes: GetLocalRecipes) : ViewModel() {
 
     sealed class UiModel {
         object Loading : UiModel()
@@ -35,5 +29,11 @@ class LocalRecipesViewModel @Inject constructor(private val getLocalRecipes: Get
     fun onRecipeClicked(recipe: Recipe) {
         _navigation.value = Event(recipe.id)
     }
+}
 
+@Suppress("UNCHECKED_CAST")
+class LocalRecipesViewModelFactory (private val getLocalRecipes: GetLocalRecipes) : ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        return LocalRecipesViewModel(getLocalRecipes) as T
+    }
 }

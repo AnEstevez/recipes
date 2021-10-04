@@ -5,11 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.andresestevez.recipes.ui.main.MainViewModel.UiModel.RequestLocalRecipes
 import com.google.android.material.tabs.TabLayout
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 
-@HiltViewModel
-class MainViewModel @Inject constructor() : ViewModel() {
+class MainViewModel : ViewModel() {
 
     sealed class UiModel {
         class RequestLocalRecipes(val tab: TabLayout.Tab?): UiModel()

@@ -15,11 +15,14 @@ import com.andresestevez.recipes.ui.main.MainFragmentDirections
 import com.andresestevez.recipes.ui.main.RecipesAdapter
 import com.andresestevez.recipes.ui.main.fragments.SearchViewModel.UiModel
 import com.andresestevez.recipes.ui.main.fragments.SearchViewModel.UiModel.*
-import dagger.hilt.android.AndroidEntryPoint
+import org.koin.androidx.scope.ScopeFragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-@AndroidEntryPoint
-class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
+/**
+ * A simple [Fragment] subclass.
+ */
+class SearchFragment : ScopeFragment(), SearchView.OnQueryTextListener {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding
@@ -27,7 +30,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private lateinit var adapter: RecipesAdapter
 
-    private val viewModel: SearchViewModel by viewModels()
+    private val viewModel: SearchViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
