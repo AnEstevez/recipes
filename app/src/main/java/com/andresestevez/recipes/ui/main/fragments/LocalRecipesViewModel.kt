@@ -35,4 +35,5 @@ class LocalRecipesViewModel @Inject constructor(private val getLocalRecipes: Get
     fun onRecipeClicked(recipe: Recipe) {
         _navigation.value = Event(recipe.id)
     }
+
 }

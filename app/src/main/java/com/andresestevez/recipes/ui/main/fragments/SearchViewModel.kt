@@ -42,4 +42,5 @@ class SearchViewModel @Inject constructor(private val getRecipesByName: GetRecip
             _navigation.value = Event(recipe.id)
         }
     }
+
 }

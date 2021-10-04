@@ -37,4 +37,5 @@ class FavViewModel @Inject constructor(private val getFavoriteRecipes: GetFavori
     fun onRecipeClicked(recipe: Recipe) {
         _navigation.value = Event(recipe.id)
     }
+
 }
