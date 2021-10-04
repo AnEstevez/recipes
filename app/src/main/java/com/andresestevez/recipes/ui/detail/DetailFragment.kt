@@ -8,25 +8,18 @@ import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
-import com.andresestevez.data.repository.RecipesRepository
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.FragmentDetailBinding
-import com.andresestevez.recipes.data.PlayServicesLocationDataSource
-import com.andresestevez.recipes.data.database.RoomDataSource
-import com.andresestevez.recipes.data.server.MealDBDataSource
-import com.andresestevez.recipes.ui.common.app
-import com.andresestevez.usecases.GetRecipeById
-import com.andresestevez.usecases.ToggleRecipeFavorite
 import com.bumptech.glide.Glide
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DetailFragment : Fragment() {
 
     private var _binding: FragmentDetailBinding? = null
     private val binding: FragmentDetailBinding get() = _binding!!
 
-    private val viewModel : DetailViewModel by viewModels {
-        app.component.detailViewModelFactory
-    }
+    private val viewModel : DetailViewModel by viewModels()
 
     private val args: DetailFragmentArgs by navArgs()
 

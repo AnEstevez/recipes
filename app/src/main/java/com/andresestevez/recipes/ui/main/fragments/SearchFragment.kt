@@ -11,17 +11,15 @@ import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import com.andresestevez.recipes.databinding.FragmentSearchBinding
 import com.andresestevez.recipes.ui.common.EventObserver
-import com.andresestevez.recipes.ui.common.app
 import com.andresestevez.recipes.ui.common.hideKeyboard
 import com.andresestevez.recipes.ui.main.MainFragmentDirections
 import com.andresestevez.recipes.ui.main.RecipesAdapter
 import com.andresestevez.recipes.ui.main.fragments.SearchViewModel.UiModel
 import com.andresestevez.recipes.ui.main.fragments.SearchViewModel.UiModel.*
+import dagger.hilt.android.AndroidEntryPoint
 
 
-/**
- * A simple [Fragment] subclass.
- */
+@AndroidEntryPoint
 class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private var _binding: FragmentSearchBinding? = null
@@ -30,7 +28,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private lateinit var adapter: RecipesAdapter
 
-    private val viewModel: SearchViewModel by viewModels { app.component.searchViewModelFactory }
+    private val viewModel: SearchViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

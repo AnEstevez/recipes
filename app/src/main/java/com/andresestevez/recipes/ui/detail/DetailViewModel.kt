@@ -1,12 +1,18 @@
 package com.andresestevez.recipes.ui.detail
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.andresestevez.domain.Recipe
 import com.andresestevez.usecases.GetRecipeById
 import com.andresestevez.usecases.ToggleRecipeFavorite
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DetailViewModel(private val getRecipeById: GetRecipeById, private val toggleRecipeFavorite: ToggleRecipeFavorite ) : ViewModel() {
+@HiltViewModel
+class DetailViewModel @Inject constructor(private val getRecipeById: GetRecipeById, private val toggleRecipeFavorite: ToggleRecipeFavorite ) : ViewModel() {
 
     sealed class UiModel(val recipe: Recipe) {
         class Content(recipe: Recipe): UiModel(recipe)
@@ -22,7 +28,7 @@ class DetailViewModel(private val getRecipeById: GetRecipeById, private val togg
             viewModelScope.launch {
                 getRecipeById.invoke(recipeId)?.let {
                     _model.value = UiModel.Content(it)
-                } ?: Exception("Recipe not found") // TODO ver como gestionar excepciones correctamente
+                } ?: throw Exception("Recipe not found") // TODO
             }
         }
     }
@@ -36,11 +42,4 @@ class DetailViewModel(private val getRecipeById: GetRecipeById, private val togg
         }
     }
 
-}
-
-@Suppress("UNCHECKED_CAST")
-class DetailViewModelFactory(private val getRecipeById: GetRecipeById, private val toggleRecipeFavorite: ToggleRecipeFavorite ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return DetailViewModel(getRecipeById, toggleRecipeFavorite) as T
-    }
 }

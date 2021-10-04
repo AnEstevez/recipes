@@ -12,10 +12,13 @@ import com.andresestevez.recipes.data.database.RoomDataSource
 import com.andresestevez.recipes.data.server.MealDBDataSource
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
+@InstallIn(SingletonComponent::class)
 class AppModule {
 
     @Provides

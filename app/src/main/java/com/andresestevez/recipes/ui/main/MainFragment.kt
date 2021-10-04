@@ -1,45 +1,34 @@
 package com.andresestevez.recipes.ui.main
 
-import android.Manifest
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.ComponentActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.FragmentMainBinding
 import com.andresestevez.recipes.ui.common.PermissionRequester
-import com.andresestevez.recipes.ui.common.app
-import com.andresestevez.recipes.ui.common.toast
 import com.andresestevez.recipes.ui.main.fragments.FavFragment
 import com.andresestevez.recipes.ui.main.fragments.LocalRecipesFragment
 import com.andresestevez.recipes.ui.main.fragments.LocalRecipesViewModel
 import com.andresestevez.recipes.ui.main.fragments.SearchFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding : FragmentMainBinding get() = _binding!!
 
-    private val viewModel: MainViewModel by activityViewModels()
+    private val viewModel: MainViewModel by viewModels()
 
-    private val localRecipesViewModel: LocalRecipesViewModel by activityViewModels {
-        app.component.localRecipesViewModelFactory
-    }
+    private val localRecipesViewModel: LocalRecipesViewModel by activityViewModels()
 
-    private var permissionRequester: PermissionRequester? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        permissionRequester = PermissionRequester(requireActivity() as ComponentActivity,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            onRationale = {app.toast(app.getString(R.string.rationale_local_dishes))}
-        )
-    }
+    @Inject lateinit var permissionRequester: PermissionRequester
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,7 +80,7 @@ class MainFragment : Fragment() {
     private fun findLocalRecipes(model: MainViewModel.UiModel) {
         when (model) {
             is MainViewModel.UiModel.RequestLocalRecipes ->  if (model.tab?.position == MainViewModel.LOCAL_RECIPES_FRAGMENT) {
-                permissionRequester?.runWithPermission {
+                permissionRequester.runWithPermission {
                     localRecipesViewModel.refresh()
                 }
             }

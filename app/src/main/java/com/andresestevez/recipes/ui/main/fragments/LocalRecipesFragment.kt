@@ -9,13 +9,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.andresestevez.recipes.databinding.FragmentLocalRecipesBinding
 import com.andresestevez.recipes.ui.common.EventObserver
-import com.andresestevez.recipes.ui.common.app
 import com.andresestevez.recipes.ui.main.MainFragmentDirections
 import com.andresestevez.recipes.ui.main.RecipesAdapter
 import com.andresestevez.recipes.ui.main.fragments.LocalRecipesViewModel.UiModel
 import com.andresestevez.recipes.ui.main.fragments.LocalRecipesViewModel.UiModel.Content
 import com.andresestevez.recipes.ui.main.fragments.LocalRecipesViewModel.UiModel.Loading
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LocalRecipesFragment : Fragment(){
 
     private var _binding: FragmentLocalRecipesBinding? = null
@@ -24,9 +25,7 @@ class LocalRecipesFragment : Fragment(){
 
     private lateinit var adapter: RecipesAdapter
 
-    private val viewModel: LocalRecipesViewModel by activityViewModels {
-        app.component.localRecipesViewModelFactory
-    }
+    private val viewModel: LocalRecipesViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
