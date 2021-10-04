@@ -9,15 +9,16 @@ import androidx.navigation.fragment.navArgs
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.FragmentDetailBinding
 import com.bumptech.glide.Glide
-import org.koin.androidx.scope.ScopeFragment
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-class DetailFragment : ScopeFragment() {
+@AndroidEntryPoint
+class DetailFragment : Fragment() {
+
 
     private var _binding: FragmentDetailBinding? = null
     private val binding: FragmentDetailBinding get() = _binding!!
 
-    private val viewModel : DetailViewModel by viewModel()
+    private val viewModel : DetailViewModel by viewModels()
 
     private val args: DetailFragmentArgs by navArgs()
 

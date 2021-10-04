@@ -13,9 +13,10 @@ import com.andresestevez.recipes.ui.main.RecipesAdapter
 import com.andresestevez.recipes.ui.main.fragments.LocalRecipesViewModel.UiModel
 import com.andresestevez.recipes.ui.main.fragments.LocalRecipesViewModel.UiModel.Content
 import com.andresestevez.recipes.ui.main.fragments.LocalRecipesViewModel.UiModel.Loading
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-class LocalRecipesFragment : Fragment() {
+@AndroidEntryPoint
+class LocalRecipesFragment : Fragment(){
 
     private var _binding: FragmentLocalRecipesBinding? = null
     private val binding
@@ -23,7 +24,7 @@ class LocalRecipesFragment : Fragment() {
 
     private lateinit var adapter: RecipesAdapter
 
-    private val viewModel: LocalRecipesViewModel by sharedViewModel()
+    private val viewModel: LocalRecipesViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

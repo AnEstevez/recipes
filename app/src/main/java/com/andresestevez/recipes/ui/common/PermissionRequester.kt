@@ -2,11 +2,12 @@ package com.andresestevez.recipes.ui.common
 
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
+import dagger.hilt.android.scopes.ActivityScoped
 
-class PermissionRequester(activity: ComponentActivity,
-                          private val permission: String,
-                          private val onRationale: () -> Unit = {},
-                          private val onDenied: () -> Unit = {}) {
+class PermissionRequester (activity: ComponentActivity,
+                                              private val permission: String,
+                                              private val onRationale: () -> Unit = {},
+                                              private val onDenied: () -> Unit = {}) {
 
     private var onGranted: () -> Unit = {}
     private val permissionLauncher =
