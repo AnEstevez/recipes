@@ -4,17 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.andresestevez.recipes.databinding.FragmentFavBinding
 import com.andresestevez.recipes.ui.common.EventObserver
 import com.andresestevez.recipes.ui.main.MainFragmentDirections
 import com.andresestevez.recipes.ui.main.RecipesAdapter
 import com.andresestevez.recipes.ui.main.fragments.FavViewModel.UiModel.Loading
-import org.koin.androidx.scope.ScopeFragment
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-
-class FavFragment : ScopeFragment() {
+@AndroidEntryPoint
+class FavFragment : Fragment() {
 
     private var _binding: FragmentFavBinding? = null
     private val binding
@@ -22,7 +23,7 @@ class FavFragment : ScopeFragment() {
 
     private lateinit var adapter : RecipesAdapter
 
-    private val viewModel: FavViewModel by viewModel()
+    private val viewModel: FavViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

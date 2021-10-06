@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.ComponentActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.FragmentMainBinding
 import com.andresestevez.recipes.ui.common.PermissionRequester
@@ -18,19 +20,19 @@ import com.andresestevez.recipes.ui.main.fragments.LocalRecipesViewModel
 import com.andresestevez.recipes.ui.main.fragments.SearchFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import org.koin.androidx.scope.ScopeFragment
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class MainFragment : ScopeFragment() {
+@AndroidEntryPoint
+class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding : FragmentMainBinding get() = _binding!!
 
-    private val viewModel: MainViewModel by viewModel()
+    private val viewModel: MainViewModel by viewModels()
 
-    private val localRecipesViewModel: LocalRecipesViewModel by sharedViewModel()
+    private val localRecipesViewModel: LocalRecipesViewModel by activityViewModels()
 
-    private var permissionRequester: PermissionRequester? = null
+    @Inject lateinit var permissionRequester: PermissionRequester
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,7 +93,7 @@ class MainFragment : ScopeFragment() {
     private fun findLocalRecipes(model: MainViewModel.UiModel) {
         when (model) {
             is MainViewModel.UiModel.RequestLocalRecipes ->  if (model.tab?.position == MainViewModel.LOCAL_RECIPES_FRAGMENT) {
-                permissionRequester?.runWithPermission {
+                permissionRequester.runWithPermission {
                     localRecipesViewModel.refresh()
                 }
             }

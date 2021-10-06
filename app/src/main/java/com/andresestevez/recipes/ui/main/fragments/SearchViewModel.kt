@@ -1,12 +1,18 @@
 package com.andresestevez.recipes.ui.main.fragments
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.andresestevez.domain.Recipe
 import com.andresestevez.recipes.ui.common.Event
 import com.andresestevez.usecases.GetRecipesByName
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SearchViewModel(private val getRecipesByName: GetRecipesByName) : ViewModel() {
+@HiltViewModel
+class SearchViewModel @Inject constructor(private val getRecipesByName: GetRecipesByName) : ViewModel() {
 
     sealed class UiModel {
         object HideKeyboard: UiModel()
@@ -36,12 +42,4 @@ class SearchViewModel(private val getRecipesByName: GetRecipesByName) : ViewMode
             _navigation.value = Event(recipe.id)
         }
     }
-}
-
-@Suppress("UNCHECKED_CAST")
-class SearchViewModelFactory (private val getRecipesByName: GetRecipesByName) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return SearchViewModel(getRecipesByName) as T
-    }
-
 }
