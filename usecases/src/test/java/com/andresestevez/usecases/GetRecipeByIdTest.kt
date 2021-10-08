@@ -1,0 +1,46 @@
+package com.andresestevez.usecases
+
+import com.andresestevez.data.repository.RecipesRepository
+import com.andresestevez.data.repository.mockedRecipe
+import kotlinx.coroutines.runBlocking
+import org.junit.Assert.*
+
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.Mock
+import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
+
+@RunWith(MockitoJUnitRunner::class)
+class GetRecipeByIdTest {
+
+    @Mock
+    lateinit var recipesRepository: RecipesRepository
+
+    private lateinit var getRecipeById: GetRecipeById
+
+    @Before
+    fun setUp() {
+        getRecipeById = GetRecipeById(recipesRepository)
+    }
+
+    @Test
+    fun `invoke calls recipesRepository`() {
+        runBlocking {
+            // GIVEN
+            val recipeId = "rec06"
+            val recipe = mockedRecipe.copy(id = recipeId)
+
+            whenever(recipesRepository.findRecipeById(recipeId)).thenReturn(recipe)
+
+            // WHEN
+            val result = getRecipeById.invoke(recipeId)
+
+            // THEN
+            verify(recipesRepository).findRecipeById(recipeId)
+            assertEquals(recipe, result)
+        }
+    }
+}

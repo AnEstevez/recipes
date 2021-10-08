@@ -24,20 +24,21 @@ class RecipesRepository(
     suspend fun getRecipesByRegion(): List<Recipe> {
         val nationality = locationDataSource.getLastLocationNationality()
         val recipes: List<Recipe> = remoteDataSource.listMealsByNationality(apiKey, nationality)
-        if (!recipes.isNullOrEmpty()) {
-            val favIdList = localDataSource.getFavorites().map { recipe -> recipe.id }
-            recipes.forEach { it.favorite = favIdList.contains(it.id) }
-        }
+        checkFavorites(recipes)
         return recipes
     }
 
     suspend fun getRecipesByName(name: String): List<Recipe> {
         val recipes : List<Recipe> = remoteDataSource.listMealsByName(apiKey, name.lowercase())
+        checkFavorites(recipes)
+        return recipes
+    }
+
+    suspend fun checkFavorites(recipes: List<Recipe>) {
         if (!recipes.isNullOrEmpty()) {
             val favIdList = localDataSource.getFavorites().map { recipe -> recipe.id }
             recipes.forEach { it.favorite = favIdList.contains(it.id) }
         }
-        return recipes
     }
 
     suspend fun updateRecipe(recipe: Recipe) {
