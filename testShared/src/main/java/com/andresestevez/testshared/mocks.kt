@@ -1,8 +1,8 @@
-package com.andresestevez.data.repository
+package com.andresestevez.testshared
 
 import com.andresestevez.domain.Recipe
 
-internal val mockedRecipe = Recipe(
+val mockedRecipe = Recipe(
     "recipe01",
     "Carne o caldeiro",
     "http://www.cocinayrecetasfaciles.com/files/styles/receta_facebook/public/receta/carne-o-caldeiro.png-1.png",

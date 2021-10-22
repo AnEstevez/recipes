@@ -21,8 +21,6 @@ class DetailFragment : Fragment() {
 
     private val viewModel : DetailViewModel by viewModels()
 
-    private val args: DetailFragmentArgs by navArgs()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,7 +36,6 @@ class DetailFragment : Fragment() {
         binding.floatingBtn.setOnClickListener { viewModel.onFavoriteClicked() }
         viewModel.model.observe(viewLifecycleOwner, {updateUI(it)})
 
-        viewModel.refresh(args.recipeID)
     }
 
     private fun updateUI(model: DetailViewModel.UiModel) {

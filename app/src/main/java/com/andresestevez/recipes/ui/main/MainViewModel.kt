@@ -12,7 +12,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor() : ViewModel() {
 
     sealed class UiModel {
-        class RequestLocalRecipes(val tab: TabLayout.Tab?): UiModel()
+        data class RequestLocalRecipes(val tab: TabLayout.Tab?): UiModel()
     }
 
     companion object {

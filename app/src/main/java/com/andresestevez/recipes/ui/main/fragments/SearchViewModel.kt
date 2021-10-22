@@ -17,7 +17,7 @@ class SearchViewModel @Inject constructor(private val getRecipesByName: GetRecip
     sealed class UiModel {
         object HideKeyboard: UiModel()
         object Loading: UiModel()
-        class Content(val recipes: List<Recipe>?): UiModel()
+        data class Content(val recipes: List<Recipe>?): UiModel()
     }
 
     private val _model = MutableLiveData<UiModel>()

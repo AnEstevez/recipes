@@ -1,7 +1,7 @@
 package com.andresestevez.usecases
 
 import com.andresestevez.data.repository.RecipesRepository
-import com.andresestevez.data.repository.mockedRecipe
+import com.andresestevez.testshared.mockedRecipe
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 

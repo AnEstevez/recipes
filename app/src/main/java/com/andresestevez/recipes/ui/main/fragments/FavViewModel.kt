@@ -16,7 +16,7 @@ class FavViewModel @Inject constructor(private val getFavoriteRecipes: GetFavori
 
     sealed class UiModel {
         object Loading: UiModel()
-        class Content(val recipes: List<Recipe>) : UiModel()
+        data class Content(val recipes: List<Recipe>) : UiModel()
     }
 
     private var _model = MutableLiveData<UiModel>()
