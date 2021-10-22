@@ -4,10 +4,12 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.location.Geocoder
 import android.location.Location
+import android.util.Log
 import com.andresestevez.data.source.LocationDataSource
 import com.andresestevez.data.source.LocationDataSource.Companion.DEFAULT_COUNTRY_CODE
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.suspendCancellableCoroutine
+import java.io.IOException
 import kotlin.coroutines.resume
 
 class PlayServicesLocationDataSource(application: Application) : LocationDataSource {
@@ -27,11 +29,18 @@ class PlayServicesLocationDataSource(application: Application) : LocationDataSou
         if (this == null) {
             return DEFAULT_COUNTRY_CODE
         }
-        return geocoder.getFromLocation(
+        var result = DEFAULT_COUNTRY_CODE
+
+        try {
+        result = geocoder.getFromLocation(
             this.latitude,
             this.longitude,
-            1
-        )?.firstOrNull()?.countryCode ?: DEFAULT_COUNTRY_CODE
+            1)?.firstOrNull()?.countryCode ?: DEFAULT_COUNTRY_CODE
+        } catch (e : IOException) {
+            Log.e("PlayServicesLocationDataSource.toCountryCode", e.stackTraceToString())
+        }
+
+        return result
     }
 
     private fun String?.toNationality(): String {

@@ -52,6 +52,7 @@ dependencies {
 
     testImplementation testLibs.values()
     androidTestImplementation androidTestLibs.values()
+    testImplementation androidxTestLibs.values()
 }
 
 // Allow references to generated code
