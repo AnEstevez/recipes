@@ -15,8 +15,7 @@ class RecipesRepository(
     suspend fun findRecipeById(recipeId: String): Recipe? {
         var recipe = localDataSource.findById(recipeId)
         if (recipe == null) {
-            recipe = remoteDataSource.findById(apiKey, recipeId)
-            localDataSource.saveRecipe(recipe)
+            recipe = remoteDataSource.findById(apiKey, recipeId).also { localDataSource.saveRecipe(it) }
         }
         return recipe
     }

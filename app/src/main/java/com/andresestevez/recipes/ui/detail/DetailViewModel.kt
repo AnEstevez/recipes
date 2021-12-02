@@ -5,13 +5,14 @@ import androidx.lifecycle.*
 import com.andresestevez.domain.Recipe
 import com.andresestevez.usecases.GetRecipeById
 import com.andresestevez.usecases.ToggleRecipeFavorite
+import dagger.assisted.Assisted
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val stateHandle: SavedStateHandle,
+    var stateHandle: SavedStateHandle,
     private val getRecipeById: GetRecipeById,
     private val toggleRecipeFavorite: ToggleRecipeFavorite,
 ) : ViewModel() {

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.VisibleForTesting
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
@@ -25,7 +26,8 @@ class LocalRecipesFragment : Fragment() {
 
     private lateinit var adapter: RecipesAdapter
 
-    private val viewModel: LocalRecipesViewModel by activityViewModels()
+    @VisibleForTesting
+    val viewModel: LocalRecipesViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

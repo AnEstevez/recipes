@@ -13,39 +13,37 @@ import com.andresestevez.recipes.data.server.MealDBDataSource
 import com.andresestevez.recipes.data.server.TheMealDbClient
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dagger.hilt.testing.TestInstallIn
 import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
-class AppModule {
+@TestInstallIn(components = [SingletonComponent::class], replaces = [AppModule::class])
+class FakeAppModule {
 
     @Provides
     @Singleton
-    @Named("apiKey")
+    @Named("apiKeyTest")
     fun apiKeyProvider(application: Application): String = application.getString(R.string.api_key)
 
     @Provides
     @Singleton
-    fun dataBaseProvider(application: Application) = Room.databaseBuilder(
+    fun dataBaseProvider(application: Application) : RecipeDatabase = Room.inMemoryDatabaseBuilder(
         application,
-        RecipeDatabase::class.java,
-        "recipe-db"
-    ).build()
+        RecipeDatabase::class.java
+    ).allowMainThreadQueries().build()
 
     @Provides
     @Singleton
-    @Named("baseUrl")
-    fun baseUrlProvider(application: Application): String =
-        application.getString(R.string.mealdb_base_url)
+    @Named("baseUrlTest")
+    fun baseUrlProvider(application: Application): String = "http://localhost:8080/"
 
     @Provides
     @Singleton
     fun mealDBClientProvider(
         application: Application,
-        @Named("baseUrl") baseUrl: String,
+        @Named("baseUrlTest") baseUrl: String,
     ): TheMealDbClient = TheMealDbClient(baseUrl)
 
     @Provides

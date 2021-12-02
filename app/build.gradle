@@ -17,7 +17,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.andresestevez.recipes.CustomHiltTestRunner"
     }
 
     buildTypes {
@@ -48,11 +48,16 @@ dependencies {
     implementation kotlinLibs.values()
     implementation androidLibs.values()
     implementation libs.values()
+    implementation 'com.google.ar:core:1.27.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     kapt kaptLibs.values()
 
+    kaptTest kaptTestLibs.values()
+    kaptAndroidTest kaptAndroidTestLibs.values()
     testImplementation testLibs.values()
     androidTestImplementation androidTestLibs.values()
     testImplementation androidxTestLibs.values()
+    debugImplementation debugLibs.values()
 }
 
 // Allow references to generated code
