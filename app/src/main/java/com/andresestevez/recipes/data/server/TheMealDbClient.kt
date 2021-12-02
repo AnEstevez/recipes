@@ -1,14 +1,22 @@
 package com.andresestevez.recipes.data.server
 
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object TheMealDbClient {
+class TheMealDbClient(baseUrl: String) {
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl("https://www.themealdb.com/api/json/v1/")
+    val okHttpClient = HttpLoggingInterceptor().run {
+        level = HttpLoggingInterceptor.Level.BODY
+        OkHttpClient.Builder().addInterceptor(this).build()
+    }
+
+    val service: TheMealDbService = Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
+        .run { create(TheMealDbService::class.java) }
 
-    val service: TheMealDbService = retrofit.create(TheMealDbService::class.java)
 }

@@ -1,13 +1,13 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = "1.5.21"
+    ext.kotlin_version = "1.5.31"
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:4.2.2"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.30"
+        classpath 'com.android.tools.build:gradle:7.0.3'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31'
 
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.3.5"
         classpath 'com.google.dagger:hilt-android-gradle-plugin:2.38.1'
@@ -24,7 +24,9 @@ allprojects {
 
     ext {
         def room_version = "2.3.0"
-        def navigation = "2.3.1"
+        def navigation = "2.3.5"
+        def hilt_version = "2.39.1"
+        def fragment_version = "1.3.6"
 
         androidLibs = [
                 kotlinStdlib                     : "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
@@ -35,15 +37,14 @@ allprojects {
                 coreKtx                          : 'androidx.core:core-ktx:1.5.0',
                 lifecycleRuntimeKtx              : 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1',
                 activityKtx                      : "androidx.activity:activity-ktx:1.3.1",
-                fragmentKtx                      : "androidx.fragment:fragment-ktx:1.3.6",
+                fragmentKtx                      : "androidx.fragment:fragment-ktx:$fragment_version",
                 lifecycleViewmodelKtx            : "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1",
-
 
                 roomRuntime                      : "androidx.room:room-runtime:$room_version",
                 navigationFragmentKtx            : "androidx.navigation:navigation-fragment-ktx:$navigation",
                 navigationUiKtx                  : "androidx.navigation:navigation-ui-ktx:$navigation",
                 navigationDynamicFeaturesFragment: "androidx.navigation:navigation-dynamic-features-fragment:$navigation",
-                hiltAndroid                      : 'com.google.dagger:hilt-android:2.38.1'
+                hiltAndroid                      : "com.google.dagger:hilt-android:$hilt_version"
 
         ]
 
@@ -55,22 +56,32 @@ allprojects {
                 playServicesLocation  : 'com.google.android.gms:play-services-location:18.0.0',
                 glide                 : 'com.github.bumptech.glide:glide:4.12.0',
                 retrofit2             : 'com.squareup.retrofit2:retrofit:2.9.0',
-                retrofit2ConverterGson: 'com.squareup.retrofit2:converter-gson:2.9.0'
+                retrofit2ConverterGson: 'com.squareup.retrofit2:converter-gson:2.9.0',
+                okhttpLoginInterceptor: 'com.squareup.okhttp3:logging-interceptor:4.9.2'
         ]
 
         // To use Kotlin annotation processing tool (kapt)
         kaptLibs = [
                 room : "androidx.room:room-compiler:$room_version",
-                hilt : 'com.google.dagger:hilt-compiler:2.38.1',
+                hilt : "com.google.dagger:hilt-compiler:$hilt_version",
                 glide: 'com.github.bumptech.glide:compiler:4.12.0'
         ]
 
+        kaptTestLibs = [
+                hilt_unit_tests: "com.google.dagger:hilt-compiler:$hilt_version"
+        ]
+
+        kaptAndroidTestLibs = [
+                hilt_instrumentation_tests: "com.google.dagger:hilt-compiler:$hilt_version"
+        ]
+
         testLibs = [
-                junit        : 'junit:junit:4.13.2',
-                mockito      : 'org.mockito.kotlin:mockito-kotlin:3.2.0',
-                mockitoInline: 'org.mockito:mockito-inline:3.12.4',
-                coroutines   : 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1',
-                testShared   : project(':testShared')
+                junit          : 'junit:junit:4.13.2',
+                mockito        : 'org.mockito.kotlin:mockito-kotlin:4.0.0',
+                mockitoInline  : 'org.mockito:mockito-inline:4.0.0',
+                coroutines     : 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1',
+                hilt_unit_tests: "com.google.dagger:hilt-android-testing:$hilt_version",
+                testShared     : project(':testShared')
         ]
 
         androidxTestLibs = [
@@ -78,9 +89,23 @@ allprojects {
         ]
 
         androidTestLibs = [
-                junit   : 'androidx.test.ext:junit:1.1.3',
-                runner  : 'androidx.test:runner:1.4.0',
-                espresso: 'androidx.test.espresso:espresso-core:3.4.0'
+                runner                    : 'androidx.test:runner:1.4.0',
+                //espresso                  : 'androidx.test.espresso:espresso-core:3.3.0',
+                espresso_contrib          : 'androidx.test.espresso:espresso-contrib:3.3.0',
+                rules                     : 'androidx.test:rules:1.4.0',
+                junit                     : 'androidx.test.ext:junit-ktx:1.1.3',
+                hilt_instrumentation_tests: "com.google.dagger:hilt-android-testing:$hilt_version",
+                mockwebserver             : "com.squareup.okhttp3:mockwebserver:4.9.0",
+                okhttp3_idling            : 'com.jakewharton.espresso:okhttp3-idling-resource:1.0.0',
+
+                archCoreTesting           : 'androidx.arch.core:core-testing:2.1.0',
+                mockito                   : 'org.mockito:mockito-android:4.0.0',
+                navigation                : "androidx.navigation:navigation-testing:$navigation"
+
+        ]
+
+        debugLibs = [
+                fragment: "androidx.fragment:fragment-testing:$fragment_version"
         ]
 
     }

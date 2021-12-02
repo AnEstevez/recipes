@@ -2,7 +2,15 @@ package com.andresestevez.recipes.ui.main.fragments
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.andresestevez.data.repository.RecipesRepository
+import com.andresestevez.data.source.LocalDataSource
+import com.andresestevez.data.source.LocationDataSource
+import com.andresestevez.data.source.RemoteDataSource
 import com.andresestevez.recipes.ui.common.Event
+import com.andresestevez.recipes.ui.di.FakeLocalDataSource
+import com.andresestevez.recipes.ui.di.FakeLocationDataSource
+import com.andresestevez.recipes.ui.di.FakeRemoteDataSource
+import com.andresestevez.recipes.ui.di.defaultFakeRecipes
 import com.andresestevez.testshared.mockedRecipe
 import com.andresestevez.usecases.GetRecipesByName
 import kotlinx.coroutines.Dispatchers
@@ -21,17 +29,22 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
-
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class SearchViewModelTest {
+class SearchIntegrationTest {
 
-    @Mock
-    lateinit var getRecipesByName: GetRecipesByName
+    @get:Rule
+    val rule = InstantTaskExecutorRule()
+
+    private var apiKey: String = "1"
+    private var localDataSource: LocalDataSource = FakeLocalDataSource()
+    private var remoteDataSource: RemoteDataSource = FakeRemoteDataSource()
+    private var locationDataSource: LocationDataSource = FakeLocationDataSource()
 
     private lateinit var vm: SearchViewModel
+    private lateinit var getRecipesByName: GetRecipesByName
+    private lateinit var recipesRepository: RecipesRepository
 
     @Mock
     lateinit var observerUiModel: Observer<SearchViewModel.UiModel>
@@ -39,14 +52,15 @@ class SearchViewModelTest {
     @Mock
     lateinit var observerNavigation: Observer<Event<String>>
 
-    @get:Rule
-    val rule = InstantTaskExecutorRule()
-
     private val testDispatcher = TestCoroutineDispatcher()
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
+
+        recipesRepository =
+            RecipesRepository(localDataSource, remoteDataSource, locationDataSource, apiKey)
+        getRecipesByName = GetRecipesByName(recipesRepository)
         vm = SearchViewModel(getRecipesByName)
     }
 
@@ -58,9 +72,7 @@ class SearchViewModelTest {
     @Test
     fun `when refresh, HideKeyboard is called`() = runBlockingTest {
         // GIVEN
-        val name = "fabada"
-        val recipes = listOf(mockedRecipe.copy(id = "777", name = "Fabada asturiana"))
-        whenever(getRecipesByName.invoke(name)).thenReturn(recipes)
+        val name = "pork"
         vm.model.observeForever(observerUiModel)
 
         // WHEN
@@ -76,9 +88,7 @@ class SearchViewModelTest {
     @Test
     fun `when refresh, Loading is called`() = runBlockingTest {
         // GIVEN
-        val name = "fabada"
-        val recipes = listOf(mockedRecipe.copy(id = "777", name = "Fabada asturiana"))
-        whenever(getRecipesByName.invoke(name)).thenReturn(recipes)
+        val name = "pork"
         vm.model.observeForever(observerUiModel)
 
         // WHEN
@@ -93,17 +103,17 @@ class SearchViewModelTest {
     @Test
     fun `when refresh, Content is called`() = runBlockingTest {
         // GIVEN
-        val name = "fabada"
-        val recipes = listOf(mockedRecipe.copy(id = "777", name = "Fabada asturiana"))
-        whenever(getRecipesByName.invoke(name)).thenReturn(recipes)
+        val name = "pork"
         vm.model.observeForever(observerUiModel)
 
         // WHEN
         vm.refresh(name)
 
         // THEN
-        verify(observerUiModel).onChanged(SearchViewModel.UiModel.Content(recipes))
-        assertEquals(recipes, (vm.model.value as SearchViewModel.UiModel.Content).recipes)
+        verify(observerUiModel).onChanged(SearchViewModel.UiModel.Content(
+            defaultFakeRecipes.filter { it.name.contains(name) }))
+        assertEquals(defaultFakeRecipes.filter { it.name.contains(name) },
+            (vm.model.value as SearchViewModel.UiModel.Content).recipes)
 
         vm.model.removeObserver(observerUiModel)
     }
@@ -111,15 +121,14 @@ class SearchViewModelTest {
     @Test
     fun `when onRecipeClicked, navigation value is updated`() = runBlockingTest {
         // GIVEN
-        val recipe = mockedRecipe.copy(id = "777")
         vm.navigation.observeForever(observerNavigation)
 
         // WHEN
-        vm.onRecipeClicked(recipe)
+        vm.onRecipeClicked(mockedRecipe)
 
         // THEN
         verify(observerNavigation).onChanged(any())
-        assertEquals(recipe.id, vm.navigation.value?.getContentIfNotHandled())
+        assertEquals(mockedRecipe.id, vm.navigation.value?.getContentIfNotHandled())
 
         vm.navigation.removeObserver(observerNavigation)
     }

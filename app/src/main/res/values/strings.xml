@@ -3,4 +3,6 @@
     <string name="ingredients_section">Ingredients</string>
     <string name="method_section">Method</string>
     <string name="rationale_local_dishes">Permission required to find local dishes</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="mealdb_base_url">https://www.themealdb.com/api/json/v1/</string>
 </resources>

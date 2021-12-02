@@ -16,7 +16,7 @@ import org.mockito.kotlin.verify
 @RunWith(MockitoJUnitRunner::class)
 class MainViewModelTest {
 
-    lateinit var vm: MainViewModel
+    private lateinit var vm: MainViewModel
 
     @Mock
     lateinit var observer: Observer<MainViewModel.UiModel>
@@ -43,6 +43,7 @@ class MainViewModelTest {
         // Then
         verify(observer).onChanged(RequestLocalRecipes(tab))
         Assert.assertEquals(RequestLocalRecipes(tab), vm.model.value)
+
         vm.model.removeObserver(observer)
     }
 
@@ -57,6 +58,7 @@ class MainViewModelTest {
         // Then
         verify(observer).onChanged(RequestLocalRecipes(tab))
         Assert.assertEquals(RequestLocalRecipes(tab), vm.model.value)
+
         vm.model.removeObserver(observer)
     }
 
