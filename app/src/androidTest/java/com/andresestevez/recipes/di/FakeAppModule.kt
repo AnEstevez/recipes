@@ -5,7 +5,6 @@ import androidx.room.Room
 import com.andresestevez.data.source.LocalDataSource
 import com.andresestevez.data.source.LocationDataSource
 import com.andresestevez.data.source.RemoteDataSource
-import com.andresestevez.recipes.R
 import com.andresestevez.recipes.data.PlayServicesLocationDataSource
 import com.andresestevez.recipes.data.database.RecipeDatabase
 import com.andresestevez.recipes.data.database.RoomDataSource
@@ -25,7 +24,7 @@ class FakeAppModule {
     @Provides
     @Singleton
     @Named("apiKeyTest")
-    fun apiKeyProvider(application: Application): String = application.getString(R.string.api_key)
+    fun apiKeyProvider(application: Application): String = "666"
 
     @Provides
     @Singleton
