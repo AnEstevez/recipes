@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.andresestevez.data.source.LocalDataSource
 import com.andresestevez.data.source.LocationDataSource
 import com.andresestevez.data.source.RemoteDataSource
+import com.andresestevez.recipes.BuildConfig
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.data.PlayServicesLocationDataSource
 import com.andresestevez.recipes.data.database.RecipeDatabase
@@ -25,7 +26,7 @@ class AppModule {
     @Provides
     @Singleton
     @Named("apiKey")
-    fun apiKeyProvider(application: Application): String = application.getString(R.string.api_key)
+    fun apiKeyProvider(): String = BuildConfig.API_KEY
 
     @Provides
     @Singleton
@@ -44,8 +45,7 @@ class AppModule {
     @Provides
     @Singleton
     fun mealDBClientProvider(
-        application: Application,
-        @Named("baseUrl") baseUrl: String,
+        @Named("baseUrl") baseUrl: String
     ): TheMealDbClient = TheMealDbClient(baseUrl)
 
     @Provides
