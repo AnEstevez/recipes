@@ -2,7 +2,8 @@ package com.andresestevez.usecases
 
 import com.andresestevez.data.repository.RecipesRepository
 import com.andresestevez.testshared.mockedRecipe
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -12,6 +13,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ToggleRecipeFavoriteTest {
 
@@ -27,7 +29,7 @@ class ToggleRecipeFavoriteTest {
 
     @Test
     fun `invoke calls recipesRepository`() {
-        runBlocking {
+        runBlockingTest {
             // GIVEN
             val recipe = mockedRecipe.copy(id = "rec02", favorite = false, dateModified = null)
 
@@ -42,7 +44,7 @@ class ToggleRecipeFavoriteTest {
 
     @Test
     fun `unfavorite recipe becomes favorite`() {
-        runBlocking {
+        runBlockingTest {
             // GIVEN
             val recipe = mockedRecipe.copy(id = "rec02", favorite = false, dateModified = null)
 
@@ -59,7 +61,7 @@ class ToggleRecipeFavoriteTest {
 
     @Test
     fun `favorite recipe becomes unfavorite`() {
-        runBlocking {
+        runBlockingTest {
             // GIVEN
             val recipe = mockedRecipe.copy(id = "rec02", favorite = true, dateModified = null)
 

@@ -10,7 +10,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.data.database.RecipeDatabase
-import com.andresestevez.recipes.data.toDBRecipe
+import com.andresestevez.recipes.data.toEntity
 import com.andresestevez.recipes.di.defaultFakeRecipes
 import com.andresestevez.recipes.launchFragmentInHiltContainer
 import com.andresestevez.recipes.ui.main.MainFragmentDirections
@@ -41,7 +41,7 @@ class FavFragmentTest {
     fun setUp() {
         hiltRule.inject()
 
-        recipeDataBase.recipeDao().insertRecipe(defaultFakeRecipes.map { it.toDBRecipe() })
+        recipeDataBase.recipeDao().insertRecipe(defaultFakeRecipes.map { it.toEntity() })
 
     }
 

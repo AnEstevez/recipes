@@ -3,10 +3,9 @@ package com.andresestevez.recipes.data.database
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.sql.Timestamp
 
-@Entity
-data class Recipe(
+@Entity(tableName = "recipe")
+data class RecipeEntity(
     @PrimaryKey
     val id: String,
     val name: String,

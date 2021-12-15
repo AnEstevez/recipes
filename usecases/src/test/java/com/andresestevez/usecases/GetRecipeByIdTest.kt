@@ -2,7 +2,8 @@ package com.andresestevez.usecases
 
 import com.andresestevez.data.repository.RecipesRepository
 import com.andresestevez.testshared.mockedRecipe
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -12,6 +13,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class GetRecipeByIdTest {
 
@@ -27,7 +29,7 @@ class GetRecipeByIdTest {
 
     @Test
     fun `invoke calls recipesRepository`() {
-        runBlocking {
+        runBlockingTest {
             // GIVEN
             val recipeId = "rec06"
             val recipe = mockedRecipe.copy(id = recipeId)

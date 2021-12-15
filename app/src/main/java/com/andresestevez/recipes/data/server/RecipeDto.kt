@@ -1,11 +1,8 @@
 package com.andresestevez.recipes.data.server
 
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
-data class Recipe(
+data class RecipeDto(
     @SerializedName("idMeal")
     val id: String,
     @SerializedName("strMeal")
@@ -63,4 +60,4 @@ data class Recipe(
     val strSource: String?,
     val strTags: String?,
     val strYoutube: String?
-) : Parcelable
+)
