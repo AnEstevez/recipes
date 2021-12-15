@@ -80,7 +80,6 @@ allprojects {
                 mockito        : 'org.mockito.kotlin:mockito-kotlin:4.0.0',
                 mockitoInline  : 'org.mockito:mockito-inline:4.0.0',
                 coroutines     : 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1',
-                hilt_unit_tests: "com.google.dagger:hilt-android-testing:$hilt_version",
                 testShared     : project(':testShared')
         ]
 
@@ -90,7 +89,6 @@ allprojects {
 
         androidTestLibs = [
                 runner                    : 'androidx.test:runner:1.4.0',
-                //espresso                  : 'androidx.test.espresso:espresso-core:3.3.0',
                 espresso_contrib          : 'androidx.test.espresso:espresso-contrib:3.3.0',
                 rules                     : 'androidx.test:rules:1.4.0',
                 junit                     : 'androidx.test.ext:junit-ktx:1.1.3',

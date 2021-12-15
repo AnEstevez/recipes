@@ -9,15 +9,15 @@ import androidx.room.Update
 @Dao
 interface RecipeDao {
 
-    @Query("SELECT * from Recipe WHERE favorite = 1 order by dateModified desc")
-    fun getFavorites(): List<Recipe>
+    @Query("SELECT * from recipe WHERE favorite = 1 order by dateModified desc")
+    fun getFavorites(): List<RecipeEntity>
 
-    @Query("SELECT * from Recipe WHERE id = :idMeal")
-    fun findByIdMeal(idMeal: String): Recipe
+    @Query("SELECT * from recipe WHERE id = :idMeal")
+    fun findByIdMeal(idMeal: String): RecipeEntity
 
     @Insert(onConflict = IGNORE)
-    fun insertRecipe(recipes: List<Recipe>)
+    fun insertRecipe(recipes: List<RecipeEntity>)
 
     @Update
-    fun updateRecipe(recipe: Recipe)
+    fun updateRecipe(recipe: RecipeEntity)
 }

@@ -4,7 +4,8 @@ import com.andresestevez.data.source.LocalDataSource
 import com.andresestevez.data.source.LocationDataSource
 import com.andresestevez.data.source.RemoteDataSource
 import com.andresestevez.testshared.mockedRecipe
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -16,6 +17,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class RecipesRepositoryTest {
 
@@ -37,7 +39,7 @@ class RecipesRepositoryTest {
 
     @Test
     fun `findRecipeById calls and retrieves data from localDataSource`() {
-        runBlocking {
+        runBlockingTest {
             // GIVEN
             val id = "rec00001"
             val recipe = mockedRecipe.copy(id = id)
@@ -55,7 +57,7 @@ class RecipesRepositoryTest {
 
     @Test
     fun `findRecipeById calls remoteDataSource when no local data`() {
-        runBlocking {
+        runBlockingTest {
             // GIVEN
             val id = "rec00001"
             val recipe = mockedRecipe.copy(id = id)
@@ -76,7 +78,7 @@ class RecipesRepositoryTest {
 
     @Test
     fun `getRecipesByRegion calls locationDataSource and gets from remoteDataSource`() {
-        runBlocking {
+        runBlockingTest {
             // GIVEN
             val spanishRecipes = listOf(mockedRecipe.copy(id = "rec00003"))
             val nationality = "spanish"
@@ -97,7 +99,7 @@ class RecipesRepositoryTest {
 
     @Test
     fun `getRecipesByName gets from remoteDataSource`() {
-        runBlocking {
+        runBlockingTest {
             // GIVEN
             val recipes = listOf(mockedRecipe.copy(id = "rec00003"))
             val name = "carne"
@@ -116,7 +118,7 @@ class RecipesRepositoryTest {
 
     @Test
     fun `updateRecipe calls localDataSource`() {
-        runBlocking {
+        runBlockingTest {
             // GIVEN
             val recipe = mockedRecipe.copy(id = "rec00003")
 
@@ -130,7 +132,7 @@ class RecipesRepositoryTest {
 
     @Test
     fun `getFavorites calls localDataSource`() {
-        runBlocking {
+        runBlockingTest {
             // GIVEN
             val recipes = listOf(mockedRecipe.copy(id = "rec00003"))
             whenever(localDataSource.getFavorites()).thenReturn(recipes)
@@ -146,7 +148,7 @@ class RecipesRepositoryTest {
 
     @Test
     fun `checkFavorites updates recipes favorite flag`() {
-        runBlocking {
+        runBlockingTest {
             // GIVEN
             val recipes = listOf(mockedRecipe.copy(id = "rec01"), mockedRecipe.copy(id = "rec02"))
             val favoriteRecipes = listOf(mockedRecipe.copy(id = "rec02"))

@@ -2,11 +2,11 @@ package com.andresestevez.recipes.data
 
 import java.util.*
 import com.andresestevez.domain.Recipe as DomainRecipe
-import com.andresestevez.recipes.data.database.Recipe as RoomRecipe
-import com.andresestevez.recipes.data.server.Recipe as ServerRecipe
+import com.andresestevez.recipes.data.database.RecipeEntity as RoomRecipe
+import com.andresestevez.recipes.data.server.RecipeDto as ServerRecipe
 
 
-fun DomainRecipe.toDBRecipe(): RoomRecipe = RoomRecipe(
+fun DomainRecipe.toEntity(): RoomRecipe = RoomRecipe(
         id,
         name,
         thumbnail,
@@ -25,7 +25,7 @@ fun DomainRecipe.toDBRecipe(): RoomRecipe = RoomRecipe(
         dateModified?.time ?: System.currentTimeMillis()
 )
 
-fun RoomRecipe.toDomainRecipe(): DomainRecipe = DomainRecipe(
+fun RoomRecipe.toDomain(): DomainRecipe = DomainRecipe(
     id,
     name,
     thumbnail,
@@ -44,7 +44,7 @@ fun RoomRecipe.toDomainRecipe(): DomainRecipe = DomainRecipe(
     Date(dateModified)
 )
 
-fun ServerRecipe.toDomainRecipe(): DomainRecipe {
+fun ServerRecipe.toDomain(): DomainRecipe {
 
     val ingredientsList: MutableList<String> = mutableListOf()
     val measuresList: MutableList<String> = mutableListOf()

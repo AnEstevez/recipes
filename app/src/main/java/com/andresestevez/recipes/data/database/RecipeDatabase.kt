@@ -6,17 +6,32 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-@Database(entities = [Recipe::class], version = 3)
+@Database(entities = [RecipeEntity::class], version = 1)
 @TypeConverters(Converters::class)
 abstract class RecipeDatabase : RoomDatabase() {
 
-    companion object {
-        fun build(context: Context) = Room.databaseBuilder(
-            context,
-            RecipeDatabase::class.java,
-            "recipe-db"
-        ).build()
-    }
-
     abstract fun recipeDao(): RecipeDao
+
+    companion object {
+        // Singleton prevents multiple instances of database opening at the
+        // same time.
+        @Volatile
+        private var INSTANCE: RecipeDatabase? = null
+
+        fun getDatabase(context: Context): RecipeDatabase {
+            // if the INSTANCE is not null, then return it,
+            // if it is, then create the database
+            return INSTANCE ?: synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context.applicationContext,
+                    RecipeDatabase::class.java,
+                    "recipe-db"
+                ).build()
+
+                INSTANCE = instance
+                // return instance
+                instance
+            }
+        }
+    }
 }

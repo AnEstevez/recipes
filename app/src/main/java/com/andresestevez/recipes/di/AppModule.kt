@@ -1,7 +1,6 @@
 package com.andresestevez.recipes.di
 
 import android.app.Application
-import androidx.room.Room
 import com.andresestevez.data.source.LocalDataSource
 import com.andresestevez.data.source.LocationDataSource
 import com.andresestevez.data.source.RemoteDataSource
@@ -30,11 +29,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun dataBaseProvider(application: Application) = Room.databaseBuilder(
-        application,
-        RecipeDatabase::class.java,
-        "recipe-db"
-    ).build()
+    fun dataBaseProvider(application: Application) = RecipeDatabase.getDatabase(application)
 
     @Provides
     @Singleton
