@@ -124,7 +124,7 @@ class DetailIntegrationTest {
             // GIVEN
             val recipe =
                 defaultFakeRecipes.first { it.id == TONKATSU_RECIPE_ID }.copy(favorite = false)
-            vm.setNewValue(DetailViewModel.UiModel.Content(recipe))
+            vm.setNewValue(DetailViewModel.UiModel(recipe))
             vm.model.observeForever(observer)
 
             // WHEN
@@ -145,7 +145,7 @@ class DetailIntegrationTest {
             // GIVEN
             val recipe =
                 defaultFakeRecipes.first { it.id == TONKATSU_RECIPE_ID }.copy(favorite = true)
-            vm.setNewValue(DetailViewModel.UiModel.Content(recipe))
+            vm.setNewValue(DetailViewModel.UiModel(recipe))
             vm.model.observeForever(observer)
 
             // WHEN

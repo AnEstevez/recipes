@@ -110,7 +110,7 @@ class DetailViewModelTest {
             val recipe = mockedRecipe.copy(id = "777", favorite = false)
             val recipeClicked = recipe.copy(favorite = true)
             whenever(toggleRecipeFavorite.invoke(recipe)).thenReturn(recipeClicked)
-            vm.setNewValue(DetailViewModel.UiModel.Content(recipe))
+            vm.setNewValue(DetailViewModel.UiModel(recipe))
             vm.model.observeForever(observer)
 
             // WHEN
@@ -131,7 +131,7 @@ class DetailViewModelTest {
             val recipe = mockedRecipe.copy(id = "777", favorite = true)
             val recipeClicked = recipe.copy(favorite = false)
             whenever(toggleRecipeFavorite.invoke(recipe)).thenReturn(recipeClicked)
-            vm.setNewValue(DetailViewModel.UiModel.Content(recipe))
+            vm.setNewValue(DetailViewModel.UiModel(recipe))
             vm.model.observeForever(observer)
 
             // WHEN

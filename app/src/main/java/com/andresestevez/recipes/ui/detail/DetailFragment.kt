@@ -8,7 +8,6 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.navArgs
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.FragmentDetailBinding
 import com.bumptech.glide.Glide
@@ -41,25 +40,14 @@ class DetailFragment : Fragment() {
     }
 
     private fun updateUI(model: DetailViewModel.UiModel) {
-
-        when (model) {
-            is DetailViewModel.UiModel.Content -> {
-                model.recipe.let {
-                    with(binding) {
-                        Glide.with(this@DetailFragment).load(it.thumbnail).into(imageView)
-                        toolbar.title = it.name
-                        ingredients.setIngredients(it)
-                        instructions.text = it.instructions
-                        val favIcon = if (it.favorite) R.drawable.ic_baseline_favorite_24 else R.drawable.ic_baseline_favorite_border_24
-                        floatingBtn.setImageDrawable(getDrawable(requireContext(), favIcon))
-                    }
-                }
-            }
-            is DetailViewModel.UiModel.Favorite ->   {
-                model.recipe.let {
-                    val favIcon = if (it.favorite) R.drawable.ic_baseline_favorite_24 else R.drawable.ic_baseline_favorite_border_24
-                    binding.floatingBtn.setImageDrawable(getDrawable(requireContext(), favIcon))
-                }
+        model.recipe.let {
+            with(binding) {
+                Glide.with(this@DetailFragment).load(it.thumbnail).into(imageView)
+                toolbar.title = it.name
+                ingredients.setIngredients(it)
+                instructions.text = it.instructions
+                val favIcon = if (it.favorite) R.drawable.ic_baseline_favorite_24 else R.drawable.ic_baseline_favorite_border_24
+                floatingBtn.setImageDrawable(getDrawable(requireContext(), favIcon))
             }
         }
     }
