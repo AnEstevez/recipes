@@ -8,7 +8,9 @@ import android.util.Log
 import com.andresestevez.data.source.LocationDataSource
 import com.andresestevez.data.source.LocationDataSource.Companion.DEFAULT_COUNTRY_CODE
 import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import java.io.IOException
 import kotlin.coroutines.resume
 
@@ -18,12 +20,13 @@ class PlayServicesLocationDataSource(application: Application) : LocationDataSou
     private val geocoder = Geocoder(application)
 
     @SuppressLint("MissingPermission")
-    override suspend fun getLastLocationNationality(): String =
+    override suspend fun getLastLocationNationality(): String = withContext(Dispatchers.IO) {
         suspendCancellableCoroutine { continuation ->
             fusedLocationProviderClient.lastLocation.addOnCompleteListener {
                 continuation.resume(it.result.toCountryCode().toNationality())
             }
         }
+    }
 
     private fun Location?.toCountryCode(): String {
         if (this == null) {

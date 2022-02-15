@@ -3,6 +3,9 @@ package com.andresestevez.usecases
 import com.andresestevez.data.repository.RecipesRepository
 import com.andresestevez.testshared.mockedRecipe
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -32,14 +35,14 @@ class GetFavoriteRecipesTest {
             // GIVEN
             val recipes = listOf(mockedRecipe.copy(id = "rec01"))
 
-            whenever(recipesRepository.getFavorites()).thenReturn(recipes)
+            whenever(recipesRepository.getFavorites()).thenReturn(flowOf(recipes))
 
             // WHEN
-            val result = getFavoriteRecipes.invoke()
+            val result = getFavoriteRecipes()
 
             // THEN
             verify(recipesRepository).getFavorites()
-            assertEquals(recipes, result)
+            assertEquals(recipes, result.first())
         }
     }
 }

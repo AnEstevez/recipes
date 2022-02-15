@@ -74,7 +74,7 @@ class FavViewModelTest {
     fun `when refresh, getFavoriteRecipes is called`() = runBlockingTest {
         // GIVEN
         val recipes = listOf(mockedRecipe.copy(id = "777"))
-        whenever(getFavoriteRecipes.invoke()).thenReturn(recipes)
+        whenever(getFavoriteRecipes()).thenReturn(recipes)
         vm.model.observeForever(observerUiModel)
 
         // WHEN

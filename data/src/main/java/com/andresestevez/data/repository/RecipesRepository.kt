@@ -4,48 +4,97 @@ import com.andresestevez.data.source.LocalDataSource
 import com.andresestevez.data.source.LocationDataSource
 import com.andresestevez.data.source.RemoteDataSource
 import com.andresestevez.domain.Recipe
+import kotlinx.coroutines.flow.*
+import java.io.IOException
 
 class RecipesRepository(
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: RemoteDataSource,
     private val locationDataSource: LocationDataSource,
-    private val apiKey: String
-    ) {
+    private val apiKey: String,
+) {
 
-    suspend fun findRecipeById(recipeId: String): Recipe? {
-        var recipe = localDataSource.findById(recipeId)
-        if (recipe == null) {
-            recipe = remoteDataSource.findById(apiKey, recipeId).also { localDataSource.saveRecipe(it) }
+    fun findRecipeById(recipeId: String): Flow<Result<Recipe>> = flow<Result<Recipe>> {
+        localDataSource.findById(recipeId).collect {
+            if (it.instructions.isEmpty()) {
+                val remoteResult = remoteDataSource.findById(apiKey, recipeId)
+                if (remoteResult.isSuccess) {
+                    localDataSource.updateRecipe(remoteResult.getOrThrow())
+                } else {
+                    emit(Result.success(it))
+                    emit(remoteResult)
+                }
+            } else {
+                emit(Result.success(it))
+            }
         }
-        return recipe
+    }.catch { emit(Result.failure(it)) }
+
+    fun getRecipesByRegion(): Flow<Result<List<Recipe>>> = flow {
+        var nationality = "unknown"
+        nationality = locationDataSource.getLastLocationNationality()
+        localDataSource.searchByCountry(nationality)
+            .catch { emit(Result.success<List<Recipe>>(emptyList())) }.collect {
+                if (it.isNullOrEmpty()) {
+                    emit(Result.success<List<Recipe>>(emptyList()))
+                } else {
+                    emit(Result.success(it))
+                }
+
+                val remoteResult = remoteDataSource.listMealsByNationality(apiKey, nationality)
+                if (remoteResult.isSuccess) {
+                    // listMealsByNationality doesn't return the country
+                    localDataSource.saveAll(remoteResult.getOrThrow()
+                        .map { it.copy(country = nationality) })
+                } else {
+                    remoteResult.onFailure { throwable ->
+                        if (throwable is NoDataFoundException) {
+                            emit(Result.failure<List<Recipe>>(NoDataFoundException("No local recipes found")))
+                        } else {
+                            emit(Result.failure<List<Recipe>>(throwable))
+                        }
+                    }
+                }
+            }
+    }.catch {
+        emit(Result.failure<List<Recipe>>(it))
     }
 
-    suspend fun getRecipesByRegion(): List<Recipe> {
-        val nationality = locationDataSource.getLastLocationNationality()
-        val recipes: List<Recipe> = remoteDataSource.listMealsByNationality(apiKey, nationality)
-        checkFavorites(recipes)
-        return recipes
-    }
+    fun getRecipesByName(name: String): Flow<Result<List<Recipe>>> = flow {
+        val recipeName = name.trim().lowercase()
+        localDataSource.searchByName(recipeName)
+            .catch { emit(Result.success<List<Recipe>>(emptyList())) }.collect {
+                if (it.isNullOrEmpty()) {
+                    emit(Result.success<List<Recipe>>(emptyList()))
+                } else {
+                    emit(Result.success(it))
+                }
 
-    suspend fun getRecipesByName(name: String): List<Recipe> {
-        val recipes : List<Recipe> = remoteDataSource.listMealsByName(apiKey, name.lowercase())
-        checkFavorites(recipes)
-        return recipes
-    }
-
-    suspend fun checkFavorites(recipes: List<Recipe>) {
-        if (!recipes.isNullOrEmpty()) {
-            val favIdList = localDataSource.getFavorites().map { recipe -> recipe.id }
-            recipes.forEach { it.favorite = favIdList.contains(it.id) }
-        }
+                val remoteResult = remoteDataSource.listMealsByName(apiKey, recipeName)
+                if (remoteResult.isSuccess) {
+                    localDataSource.saveAll(remoteResult.getOrThrow())
+                } else {
+                    remoteResult.onFailure { throwable ->
+                        if (throwable is NoDataFoundException) {
+                            emit(Result.failure<List<Recipe>>(NoDataFoundException("No recipes found")))
+                        } else {
+                            emit(Result.failure<List<Recipe>>(throwable))
+                        }
+                    }
+                }
+            }
+    }.catch {
+        emit(Result.failure<List<Recipe>>(it))
     }
 
     suspend fun updateRecipe(recipe: Recipe) {
         localDataSource.updateRecipe(recipe)
     }
 
-    suspend fun getFavorites() : List<Recipe> {
-        return localDataSource.getFavorites()
-    }
+    fun getFavorites(): Flow<Result<List<Recipe>>> = flow {
+        localDataSource.getFavorites().collect {
+            emit(Result.success(it))
+        }
+    }.catch { emit(Result.failure(it)) }
 
 }
