@@ -4,15 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import com.andresestevez.recipes.databinding.FragmentFavBinding
 import com.andresestevez.recipes.ui.common.EventObserver
+import com.andresestevez.recipes.ui.common.toast
 import com.andresestevez.recipes.ui.main.MainFragmentDirections
 import com.andresestevez.recipes.ui.main.RecipesAdapter
-import com.andresestevez.recipes.ui.main.fragments.FavViewModel.UiModel.Loading
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FavFragment : Fragment() {
@@ -44,30 +50,21 @@ class FavFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.recycler.adapter = adapter
 
-        viewModel.model.observe(viewLifecycleOwner, {
-            updateUi(it)
-        })
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect {
+                    binding.progress.isVisible = it.loading
+                    adapter.submitList(it.data)
+                    it.userMessage?.let { message -> requireContext().toast(message) }
+                }
+            }
+        }
 
         viewModel.navigation.observe(viewLifecycleOwner, EventObserver {
             val direction = MainFragmentDirections.actionMainFragmentToDetailFragment(it)
             view.findNavController().navigate(direction)
         })
 
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.refresh()
-    }
-
-    private fun updateUi(model: FavViewModel.UiModel) {
-        binding.progress.visibility = if (model == Loading) View.VISIBLE else View.GONE
-
-        when(model) {
-            is FavViewModel.UiModel.Content -> adapter.submitList(model.recipes)
-            else -> {}
-
-        }
     }
 
     override fun onDestroyView() {

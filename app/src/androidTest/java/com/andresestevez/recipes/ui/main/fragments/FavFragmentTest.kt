@@ -41,7 +41,7 @@ class FavFragmentTest {
     fun setUp() {
         hiltRule.inject()
 
-        recipeDataBase.recipeDao().insertRecipe(defaultFakeRecipes.map { it.toEntity() })
+        recipeDataBase.recipeDao().insertAll(defaultFakeRecipes.map { it.toEntity() })
 
     }
 

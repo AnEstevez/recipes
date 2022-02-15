@@ -8,12 +8,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     defaultConfig {
         applicationId "com.andresestevez.recipes"
         minSdkVersion 23
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
 
@@ -61,7 +61,7 @@ dependencies {
     testImplementation testLibs.values()
     androidTestImplementation androidTestLibs.values()
     testImplementation androidxTestLibs.values()
-    debugImplementation debugLibs.values()
+    androidTestImplementation debugLibs.values()
 }
 
 // Allow references to generated code

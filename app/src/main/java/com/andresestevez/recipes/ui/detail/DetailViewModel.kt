@@ -1,11 +1,14 @@
 package com.andresestevez.recipes.ui.detail
 
-import androidx.annotation.VisibleForTesting
-import androidx.lifecycle.*
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.andresestevez.domain.Recipe
+import com.andresestevez.recipes.ui.common.getMessageFromThrowable
 import com.andresestevez.usecases.GetRecipeById
 import com.andresestevez.usecases.ToggleRecipeFavorite
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,36 +23,43 @@ class DetailViewModel @Inject constructor(
         const val RECIPE_ID_NAV_ARGS = "recipeID"
     }
 
-    data class UiModel(val recipe: Recipe)
+    data class UiState(
+        var loading: Boolean = false,
+        var data: Recipe? = null,
+        var userMessage: String? = null,
+    )
 
-    private val _model = MutableLiveData<UiModel>()
-    val model: LiveData<UiModel>
-        get() {
-            if (_model.value == null) refresh()
-            return _model
-        }
+    private var _state: MutableStateFlow<UiState> = MutableStateFlow(UiState(loading = true))
+    val state: StateFlow<UiState> = _state.asStateFlow()
 
-    fun refresh() {
-        val recipeIdFromNavArgs = stateHandle.get<String>(RECIPE_ID_NAV_ARGS)
-            ?: throw IllegalStateException("Recipe id not found in the state handle")
+    private val recipeId = stateHandle.get<String>(RECIPE_ID_NAV_ARGS)!!
+
+    init {
         viewModelScope.launch {
-            getRecipeById.invoke(recipeIdFromNavArgs)?.let {
-                _model.value = UiModel(it)
+            _state.update { it.copy(loading = true, userMessage = null) }
+
+            getRecipeById(recipeId).collect { result ->
+                result.fold({ data ->
+                    _state.update {
+                        it.copy(loading = false,
+                            data = data,
+                            userMessage = null)
+                    }
+                })
+                { throwable ->
+                    _state.update {
+                        it.copy(loading = false,
+                            userMessage = throwable.getMessageFromThrowable())
+                    }
+                }
             }
         }
     }
 
     fun onFavoriteClicked() {
-        _model.value?.recipe?.let {
-            viewModelScope.launch {
-                val updatedRecipe = toggleRecipeFavorite.invoke(it)
-                _model.value = UiModel(updatedRecipe)
-            }
+        viewModelScope.launch {
+            state.value.data?.let { toggleRecipeFavorite(it) }
         }
     }
 
-    @VisibleForTesting
-    fun setNewValue(newValue: UiModel) {
-        _model.value = newValue
-    }
 }

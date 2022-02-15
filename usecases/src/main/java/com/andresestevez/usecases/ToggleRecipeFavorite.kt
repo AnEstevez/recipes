@@ -6,7 +6,7 @@ import java.util.*
 
 class ToggleRecipeFavorite(private val recipesRepository: RecipesRepository) {
 
-    suspend fun invoke(recipe: Recipe): Recipe = with(recipe) {
-        copy(favorite = !favorite, dateModified = Date()).also { recipesRepository.updateRecipe(it) }
+    suspend operator fun invoke(recipe: Recipe): Unit = with(recipe) {
+        recipesRepository.updateRecipe(copy(favorite = !favorite, dateModified = Date()))
     }
 }

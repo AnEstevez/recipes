@@ -132,10 +132,10 @@ fun ServerRecipe.toDomain(): DomainRecipe {
 
     return DomainRecipe(
         id,
-        name,
+        name = name.lowercase(),
         thumbnail,
         instructions ?: "",
-        country ?: "",
+        country = if(country.isNullOrBlank()) "" else country.lowercase(),
         ingredientsList,
         measuresList,
         false,

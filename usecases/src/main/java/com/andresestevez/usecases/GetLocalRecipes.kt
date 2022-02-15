@@ -2,8 +2,9 @@ package com.andresestevez.usecases
 
 import com.andresestevez.data.repository.RecipesRepository
 import com.andresestevez.domain.Recipe
+import kotlinx.coroutines.flow.Flow
 
 class GetLocalRecipes(private val recipesRepository: RecipesRepository) {
 
-    suspend fun invoke(): List<Recipe> = recipesRepository.getRecipesByRegion()
+    operator fun invoke(): Flow<Result<List<Recipe>>> = recipesRepository.getRecipesByRegion()
 }

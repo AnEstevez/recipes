@@ -5,18 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import com.andresestevez.recipes.databinding.FragmentSearchBinding
 import com.andresestevez.recipes.ui.common.EventObserver
 import com.andresestevez.recipes.ui.common.hideKeyboard
+import com.andresestevez.recipes.ui.common.toast
 import com.andresestevez.recipes.ui.main.MainFragmentDirections
 import com.andresestevez.recipes.ui.main.RecipesAdapter
-import com.andresestevez.recipes.ui.main.fragments.SearchViewModel.UiModel
-import com.andresestevez.recipes.ui.main.fragments.SearchViewModel.UiModel.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -32,7 +36,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         // Inflate the layout for this fragment
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
@@ -51,22 +55,21 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
 
         binding.recycler.adapter = adapter
 
-        viewModel.model.observe(viewLifecycleOwner, Observer(::updateUi))
-        viewModel.navigation.observe(viewLifecycleOwner, EventObserver{
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect {
+                    binding.progress.isVisible = it.loading
+                    adapter.submitList(it.data)
+                    it.userMessage?.let { message -> requireContext().toast(message) }
+                }
+            }
+        }
+
+        viewModel.navigation.observe(viewLifecycleOwner, EventObserver {
             val direction = MainFragmentDirections.actionMainFragmentToDetailFragment(it)
             view.findNavController().navigate(direction)
         })
         binding.searchView.setOnQueryTextListener(this)
-    }
-
-    private fun updateUi(model: UiModel) {
-        binding.progress.visibility = if (model == Loading) View.VISIBLE else View.GONE
-
-        when (model){
-            is Content -> adapter.submitList(model.recipes)
-            HideKeyboard -> view?.hideKeyboard()
-            else -> {}
-        }
     }
 
     override fun onDestroyView() {
@@ -75,6 +78,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
+        view?.hideKeyboard()
         viewModel.refresh(query)
         return true
     }

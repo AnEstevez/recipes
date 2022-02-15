@@ -6,12 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.andresestevez.domain.Recipe
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.FragmentDetailBinding
+import com.andresestevez.recipes.ui.common.toast
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
@@ -35,12 +43,20 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.floatingBtn.setOnClickListener { viewModel.onFavoriteClicked() }
-        viewModel.model.observe(viewLifecycleOwner, {updateUI(it)})
 
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect {
+                    binding.progress.isVisible = it.loading
+                    it.data?.let { recipe -> updateUI(recipe) }
+                    it.userMessage?.let { message -> requireContext().toast(message) }
+                }
+            }
+        }
     }
 
-    private fun updateUI(model: DetailViewModel.UiModel) {
-        model.recipe.let {
+    private fun updateUI(recipe: Recipe) {
+        recipe.let {
             with(binding) {
                 Glide.with(this@DetailFragment).load(it.thumbnail).into(imageView)
                 toolbar.title = it.name
