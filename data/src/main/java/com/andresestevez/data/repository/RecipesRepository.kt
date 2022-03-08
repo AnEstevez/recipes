@@ -48,11 +48,7 @@ class RecipesRepository(
                         .map { it.copy(country = nationality) })
                 } else {
                     remoteResult.onFailure { throwable ->
-                        if (throwable is NoDataFoundException) {
-                            emit(Result.failure<List<Recipe>>(NoDataFoundException("No local recipes found")))
-                        } else {
-                            emit(Result.failure<List<Recipe>>(throwable))
-                        }
+                        emit(Result.failure<List<Recipe>>(throwable))
                     }
                 }
             }
@@ -75,11 +71,7 @@ class RecipesRepository(
                     localDataSource.saveAll(remoteResult.getOrThrow())
                 } else {
                     remoteResult.onFailure { throwable ->
-                        if (throwable is NoDataFoundException) {
-                            emit(Result.failure<List<Recipe>>(NoDataFoundException("No recipes found")))
-                        } else {
-                            emit(Result.failure<List<Recipe>>(throwable))
-                        }
+                        emit(Result.failure<List<Recipe>>(throwable))
                     }
                 }
             }

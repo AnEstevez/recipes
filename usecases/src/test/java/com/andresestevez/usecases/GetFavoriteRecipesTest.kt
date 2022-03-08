@@ -35,14 +35,14 @@ class GetFavoriteRecipesTest {
             // GIVEN
             val recipes = listOf(mockedRecipe.copy(id = "rec01"))
 
-            whenever(recipesRepository.getFavorites()).thenReturn(flowOf(recipes))
+            whenever(recipesRepository.getFavorites()).thenReturn(flowOf(Result.success(recipes)))
 
             // WHEN
-            val result = getFavoriteRecipes()
+            val result = getFavoriteRecipes().first()
 
             // THEN
             verify(recipesRepository).getFavorites()
-            assertEquals(recipes, result.first())
+            assertEquals(Result.success(recipes), result)
         }
     }
 }

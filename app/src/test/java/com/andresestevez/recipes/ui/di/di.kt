@@ -5,6 +5,8 @@ import com.andresestevez.data.source.LocationDataSource
 import com.andresestevez.data.source.RemoteDataSource
 import com.andresestevez.domain.Recipe
 import com.andresestevez.recipes.data.CountryCodeToNationality
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
 val mockedRecipe = Recipe(
     "recipe01",
@@ -26,51 +28,74 @@ val mockedRecipe = Recipe(
 )
 
 val defaultFakeRecipes = mutableListOf(
-    mockedRecipe.copy("1", "Chocolate Chip Banana Bread", favorite = true, country = CountryCodeToNationality.FR.nationality),
+    mockedRecipe.copy("1",
+        "Chocolate Chip Banana Bread",
+        favorite = true,
+        country = CountryCodeToNationality.FR.nationality),
     mockedRecipe.copy("2", "Chicken Chow Mein", country = CountryCodeToNationality.CH.nationality),
     mockedRecipe.copy("3", "Chicken Parmesan", country = CountryCodeToNationality.IT.nationality),
     mockedRecipe.copy("4", "French Onion Soup", country = CountryCodeToNationality.FR.nationality),
     mockedRecipe.copy("53032", "Tonkatsu pork", country = CountryCodeToNationality.JP.nationality)
 )
 
-class FakeLocalDataSource() : LocalDataSource {
+class FakeLocalDataSource(var exceptionToThrow: Throwable? = null) : LocalDataSource {
 
     var recipes: MutableList<Recipe> = defaultFakeRecipes
 
-    override suspend fun findById(recipeId: String): Recipe? {
-        return try {
-            recipes.first { it.id == recipeId }
-        } catch (e : NoSuchElementException) {
-            null
-        }
+    override fun findById(recipeId: String): Flow<Recipe> {
+        exceptionToThrow?.let { throw it } ?: return flowOf(recipes.first { it.id == recipeId })
     }
 
     override suspend fun saveRecipe(recipe: Recipe?) {
-        recipe?.let { recipes.add(it) }
+        exceptionToThrow?.let { throw it } ?: recipe?.let {
+            if (!recipes.contains(it)) {
+                recipes.add(it)
+            }
+        }
     }
 
-    override suspend fun getFavorites(): List<Recipe> = recipes.filter { it.favorite }
+    override fun getFavorites(): Flow<List<Recipe>> =
+        exceptionToThrow?.let { throw it } ?: flowOf(recipes.filter { it.favorite })
 
     override suspend fun updateRecipe(recipe: Recipe) {
-        recipes.indexOfFirst { it.id == recipe.id }.let {
+        exceptionToThrow?.let { throw it } ?: recipes.indexOfFirst { it.id == recipe.id }.let {
             recipes.removeAt(it)
             recipes.add(it, recipe)
         }
     }
+
+    override suspend fun saveAll(newRecipes: List<Recipe>) {
+        exceptionToThrow?.let { throw it } ?: newRecipes.forEach {
+            if (!recipes.contains(it)) {
+                recipes.add(it)
+            }
+        }
+    }
+
+    override fun searchByCountry(country: String): Flow<List<Recipe>> =
+        exceptionToThrow?.let { throw it } ?: flowOf(recipes.filter { it.country == country })
+
+    override fun searchByName(name: String): Flow<List<Recipe>> =
+        exceptionToThrow?.let { throw it } ?: flowOf(recipes.filter {
+            it.name.lowercase().contains(name.lowercase())
+        })
 }
 
 class FakeRemoteDataSource() : RemoteDataSource {
 
     var recipes: MutableList<Recipe> = defaultFakeRecipes
 
-    override suspend fun findById(apiKey: String, recipeId: String): Recipe =
-        recipes.first { it.id == recipeId }
+    override suspend fun findById(apiKey: String, recipeId: String): Result<Recipe> =
+        Result.success(recipes.first { it.id == recipeId })
 
-    override suspend fun listMealsByNationality(apiKey: String, nationality: String): List<Recipe> =
-        recipes.filter { it.country == nationality }
+    override suspend fun listMealsByNationality(
+        apiKey: String,
+        nationality: String,
+    ): Result<List<Recipe>> =
+        Result.success(recipes.filter { it.country == nationality })
 
-    override suspend fun listMealsByName(apiKey: String, name: String): List<Recipe> =
-        recipes.filter { it.name.contains(name) }
+    override suspend fun listMealsByName(apiKey: String, name: String): Result<List<Recipe>> =
+        Result.success(recipes.filter { it.name.contains(name) })
 }
 
 class FakeLocationDataSource : LocationDataSource {

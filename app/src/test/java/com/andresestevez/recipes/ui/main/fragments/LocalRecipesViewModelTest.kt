@@ -2,8 +2,17 @@ package com.andresestevez.recipes.ui.main.fragments
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.andresestevez.data.repository.NoDataFoundException
+import com.andresestevez.data.repository.RecipesRepository
+import com.andresestevez.data.source.LocalDataSource
+import com.andresestevez.data.source.LocationDataSource
+import com.andresestevez.data.source.RemoteDataSource
+import com.andresestevez.domain.Recipe
+import com.andresestevez.recipes.data.CountryCodeToNationality
 import com.andresestevez.recipes.ui.common.Event
-import com.andresestevez.recipes.ui.main.fragments.LocalRecipesViewModel.UiModel
+import com.andresestevez.recipes.ui.di.FakeLocalDataSource
+import com.andresestevez.recipes.ui.di.FakeLocationDataSource
+import com.andresestevez.recipes.ui.di.FakeRemoteDataSource
 import com.andresestevez.testshared.mockedRecipe
 import com.andresestevez.usecases.GetLocalRecipes
 import kotlinx.coroutines.Dispatchers
@@ -22,19 +31,10 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class LocalRecipesViewModelTest {
-
-    @Mock
-    lateinit var getLocalRecipes: GetLocalRecipes
-
-    private lateinit var vm: LocalRecipesViewModel
-
-    @Mock
-    lateinit var observerUiModel: Observer<UiModel>
 
     @Mock
     lateinit var observerNavigation: Observer<Event<String>>
@@ -44,9 +44,24 @@ class LocalRecipesViewModelTest {
 
     private val testDispatcher = TestCoroutineDispatcher()
 
+    private var apiKey: String = "1"
+    private var localDataSource: LocalDataSource = FakeLocalDataSource()
+    private var remoteDataSource: RemoteDataSource = FakeRemoteDataSource()
+    private var locationDataSource: LocationDataSource = FakeLocationDataSource()
+
+    private lateinit var vm: LocalRecipesViewModel
+    private lateinit var getLocalRecipes: GetLocalRecipes
+    private lateinit var recipesRepository: RecipesRepository
+
+
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
+
+        recipesRepository =
+            RecipesRepository(localDataSource, remoteDataSource, locationDataSource, apiKey)
+        getLocalRecipes = GetLocalRecipes(recipesRepository)
+
         vm = LocalRecipesViewModel(getLocalRecipes)
     }
 
@@ -56,35 +71,36 @@ class LocalRecipesViewModelTest {
     }
 
     @Test
-    fun `when refresh, loading is shown`() = runBlockingTest {
-        // GIVEN
-        vm.model.observeForever(observerUiModel)
-
+    fun `when refresh, data is loaded`() = runBlockingTest {
+        // GIVEN japanese nationality
+        (locationDataSource as FakeLocationDataSource).location =
+            CountryCodeToNationality.JP.nationality
         // WHEN
         vm.refresh()
+        // THEN japanese recipes
+        assertEquals(CountryCodeToNationality.JP.nationality, vm.state.value.data[0].country)
 
-        // THEN
-        verify(observerUiModel).onChanged(UiModel.Loading)
-
-        vm.model.removeObserver(observerUiModel)
+        // GIVEN italian nationality
+        (locationDataSource as FakeLocationDataSource).location =
+            CountryCodeToNationality.IT.nationality
+        // WHEN
+        vm.refresh()
+        // THEN italian recipes
+        assertEquals(CountryCodeToNationality.IT.nationality, vm.state.value.data[0].country)
 
     }
 
     @Test
-    fun `when refresh, getLocalRecipes is called`() = runBlockingTest {
+    fun `when exception, user message is updated`() = runBlockingTest {
         // GIVEN
-        val recipes = listOf(mockedRecipe.copy(id = "777"))
-        whenever(getLocalRecipes.invoke()).thenReturn(recipes)
-        vm.model.observeForever(observerUiModel)
+        (localDataSource as FakeLocalDataSource).exceptionToThrow = NoDataFoundException("No data")
 
         // WHEN
         vm.refresh()
 
         // THEN
-        verify(getLocalRecipes).invoke()
-
-        vm.model.removeObserver(observerUiModel)
-
+        assertEquals(emptyList<Recipe>(), vm.state.value.data)
+        assertEquals("No data", vm.state.value.userMessage)
     }
 
     @Test

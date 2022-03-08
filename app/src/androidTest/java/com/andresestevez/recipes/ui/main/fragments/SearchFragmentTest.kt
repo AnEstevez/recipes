@@ -114,7 +114,7 @@ class SearchFragmentTest {
         onView(withId(R.id.recycler))
             .perform(RecyclerViewActions
                 .scrollToPosition<RecipesAdapter.ViewHolder>(0))
-        onView(withText("Tonkatsu pork")).check(matches(isDisplayed()))
+        onView(withText("TONKATSU PORK")).check(matches(isDisplayed()))
 
     }
 
@@ -172,7 +172,7 @@ class SearchFragmentTest {
         onView(withId(R.id.recycler))
             .perform(RecyclerViewActions
                 .scrollToPosition<RecipesAdapter.ViewHolder>(0))
-        onView(withText("Tonkatsu pork")).check(matches(isDisplayed()))
+        onView(withText("TONKATSU PORK")).check(matches(isDisplayed()))
 
         onView(withId(R.id.recycler)).perform(actionOnItemAtPosition<RecipesAdapter.ViewHolder>(0,
             click()))

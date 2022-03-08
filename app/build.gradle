@@ -19,6 +19,12 @@ android {
 
         testInstrumentationRunner "com.andresestevez.recipes.CustomHiltTestRunner"
 
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
+            }
+        }
+
         // Please ensure you have a valid API KEY for themealdb.com to use this app
         // A valid key will need to be entered
         buildConfigField("String", "API_KEY", API_KEY)
@@ -34,6 +40,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
