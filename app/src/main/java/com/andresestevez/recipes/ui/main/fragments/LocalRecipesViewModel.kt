@@ -23,7 +23,7 @@ class LocalRecipesViewModel @Inject constructor(private val getLocalRecipes: Get
         var userMessage: String? = null,
     )
 
-    private var _state: MutableStateFlow<UiState> = MutableStateFlow(UiState(loading = true))
+    private var _state: MutableStateFlow<UiState> = MutableStateFlow(UiState(loading = false))
     val state: StateFlow<UiState> = _state.asStateFlow()
 
     private val _navigation = MutableLiveData<Event<String>>()

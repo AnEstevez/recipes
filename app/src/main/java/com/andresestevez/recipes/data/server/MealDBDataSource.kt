@@ -30,7 +30,7 @@ class MealDBDataSource(private val mealDbClient: TheMealDbClient) : RemoteDataSo
             try {
                 val result = mealDbClient.service.listMealsByNationality(apiKey, nationality).meals
                 if (result.isNullOrEmpty()) {
-                    Result.failure<List<Recipe>>(NoDataFoundException())
+                    Result.failure<List<Recipe>>(NoDataFoundException("No recipes found"))
                 } else {
                     Result.success(result.map { it.toDomain() })
                 }
@@ -44,7 +44,7 @@ class MealDBDataSource(private val mealDbClient: TheMealDbClient) : RemoteDataSo
             try {
                 val result = mealDbClient.service.listMealsByName(apiKey, name).meals
                 if (result.isNullOrEmpty()) {
-                    Result.failure<List<Recipe>>(NoDataFoundException())
+                    Result.failure<List<Recipe>>(NoDataFoundException("No recipes found"))
                 } else {
                     Result.success(result.map { it.toDomain() })
                 }

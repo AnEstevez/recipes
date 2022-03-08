@@ -10,7 +10,10 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import com.andresestevez.recipes.MockServerDispatcher
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.asAndroidX
+import com.andresestevez.recipes.data.database.RecipeDatabase
 import com.andresestevez.recipes.data.server.TheMealDbClient
+import com.andresestevez.recipes.data.toEntity
+import com.andresestevez.recipes.di.mockedRecipe
 import com.andresestevez.recipes.launchFragmentInHiltContainer
 import com.andresestevez.recipes.ui.detail.DetailFragment
 import com.andresestevez.recipes.ui.detail.DetailViewModel
@@ -18,6 +21,7 @@ import com.jakewharton.espresso.OkHttp3IdlingResource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockWebServer
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.containsString
@@ -41,6 +45,9 @@ class DetailFragmentTest {
     @Inject
     lateinit var recipeDbClient: TheMealDbClient
 
+    @Inject
+    lateinit var recipeDataBase: RecipeDatabase
+
     @Before
     fun setUp() {
         hiltRule.inject()
@@ -53,11 +60,16 @@ class DetailFragmentTest {
             OkHttp3IdlingResource.create("OkHttp", recipeDbClient.okHttpClient).asAndroidX()
         IdlingRegistry.getInstance().register(resource)
 
+        val recipe = mockedRecipe.copy(id = "53037", instructions = "").toEntity()
+        runBlocking {
+            recipeDataBase.recipeDao().insertAll(listOf(recipe))
+        }
     }
 
     @After
     fun tearDown() {
         mockWebServer.shutdown()
+        recipeDataBase.close()
     }
 
     @Test
@@ -69,6 +81,8 @@ class DetailFragmentTest {
         launchFragmentInHiltContainer<DetailFragment>(myBundle) {
             Log.e("SavedStateHandle keys: ", viewModel.stateHandle.keys().toString())
         }
+
+        Thread.sleep(200)
 
         val textView = onView(withId(R.id.ingredientsSectionText))
         textView.check(matches(withText("Ingredients")))

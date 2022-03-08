@@ -3,6 +3,8 @@ package com.andresestevez.usecases
 import com.andresestevez.data.repository.RecipesRepository
 import com.andresestevez.testshared.mockedRecipe
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -34,14 +36,14 @@ class GetRecipeByIdTest {
             val recipeId = "rec06"
             val recipe = mockedRecipe.copy(id = recipeId)
 
-            whenever(recipesRepository.findRecipeById(recipeId)).thenReturn(recipe)
+            whenever(recipesRepository.findRecipeById(recipeId)).thenReturn(flowOf(Result.success(recipe)))
 
             // WHEN
-            val result = getRecipeById.invoke(recipeId)
+            val result = getRecipeById(recipeId).first()
 
             // THEN
             verify(recipesRepository).findRecipeById(recipeId)
-            assertEquals(recipe, result)
+            assertEquals(Result.success(recipe), result)
         }
     }
 }

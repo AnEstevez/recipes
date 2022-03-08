@@ -18,6 +18,7 @@ import com.andresestevez.recipes.ui.main.RecipesAdapter
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -41,7 +42,9 @@ class FavFragmentTest {
     fun setUp() {
         hiltRule.inject()
 
-        recipeDataBase.recipeDao().insertAll(defaultFakeRecipes.map { it.toEntity() })
+        runBlocking {
+            recipeDataBase.recipeDao().insertAll(defaultFakeRecipes.map { it.toEntity() })
+        }
 
     }
 
