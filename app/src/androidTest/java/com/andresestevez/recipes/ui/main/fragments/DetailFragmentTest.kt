@@ -1,7 +1,6 @@
 package com.andresestevez.recipes.ui.main.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.LinearLayout
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
@@ -30,6 +29,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -79,7 +79,7 @@ class DetailFragmentTest {
         myBundle.putString(DetailViewModel.RECIPE_ID_NAV_ARGS, "53037")
 
         launchFragmentInHiltContainer<DetailFragment>(myBundle) {
-            Log.e("SavedStateHandle keys: ", viewModel.stateHandle.keys().toString())
+            Timber.e("SavedStateHandle keys: %s", viewModel.stateHandle.keys().toString())
         }
 
         Thread.sleep(200)
