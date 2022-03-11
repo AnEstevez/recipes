@@ -44,8 +44,8 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.floatingBtn.setOnClickListener { viewModel.onFavoriteClicked() }
 
-        lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect {
                     binding.progress.isVisible = it.loading
                     it.data?.let { recipe -> updateUI(recipe) }
