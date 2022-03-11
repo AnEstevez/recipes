@@ -52,8 +52,8 @@ class LocalRecipesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.recycler.adapter = adapter
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect {
                     binding.progress.isVisible = it.loading
                     adapter.submitList(it.data)
