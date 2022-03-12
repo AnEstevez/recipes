@@ -1,23 +1,18 @@
 package com.andresestevez.recipes.ui.main.fragments
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
 import com.andresestevez.data.repository.NoDataFoundException
 import com.andresestevez.data.repository.RecipesRepository
 import com.andresestevez.data.source.LocalDataSource
 import com.andresestevez.data.source.LocationDataSource
 import com.andresestevez.data.source.RemoteDataSource
-import com.andresestevez.domain.Recipe
-import com.andresestevez.recipes.ui.common.Event
 import com.andresestevez.recipes.ui.di.FakeLocalDataSource
 import com.andresestevez.recipes.ui.di.FakeLocationDataSource
 import com.andresestevez.recipes.ui.di.FakeRemoteDataSource
-import com.andresestevez.testshared.mockedRecipe
 import com.andresestevez.usecases.GetFavoriteRecipes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runBlockingTest
@@ -28,12 +23,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -47,9 +37,6 @@ class FavViewModelTest {
     private lateinit var vm: FavViewModel
     private lateinit var getFavoriteRecipes: GetFavoriteRecipes
     private lateinit var recipesRepository: RecipesRepository
-
-    @Mock
-    lateinit var observerNavigation: Observer<Event<String>>
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
@@ -100,20 +87,4 @@ class FavViewModelTest {
 
     }
 
-    @Test
-    fun `when onRecipeClicked, navigation value is updated`() = runBlockingTest {
-        // GIVEN
-        val recipe = mockedRecipe.copy(id = "777")
-        vm = FavViewModel(getFavoriteRecipes)
-        vm.navigation.observeForever(observerNavigation)
-
-        // WHEN
-        vm.onRecipeClicked(recipe)
-
-        // THEN
-        verify(observerNavigation).onChanged(any())
-        assertEquals(recipe.id, vm.navigation.value?.getContentIfNotHandled())
-
-        vm.navigation.removeObserver(observerNavigation)
-    }
 }

@@ -1,11 +1,8 @@
 package com.andresestevez.recipes.ui.main.fragments
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andresestevez.domain.Recipe
-import com.andresestevez.recipes.ui.common.Event
 import com.andresestevez.recipes.ui.common.getMessageFromThrowable
 import com.andresestevez.usecases.GetFavoriteRecipes
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,14 +43,6 @@ class FavViewModel @Inject constructor(private val getFavoriteRecipes: GetFavori
                 }
             }
         }
-    }
-
-    private var _navigation = MutableLiveData<Event<String>>()
-    val navigation: LiveData<Event<String>>
-        get() = _navigation
-
-    fun onRecipeClicked(recipe: Recipe) {
-        _navigation.value = Event(recipe.id)
     }
 
 }
