@@ -1,7 +1,6 @@
 package com.andresestevez.recipes.ui.main.fragments
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
 import com.andresestevez.data.repository.NoDataFoundException
 import com.andresestevez.data.repository.RecipesRepository
 import com.andresestevez.data.source.LocalDataSource
@@ -9,11 +8,9 @@ import com.andresestevez.data.source.LocationDataSource
 import com.andresestevez.data.source.RemoteDataSource
 import com.andresestevez.domain.Recipe
 import com.andresestevez.recipes.data.CountryCodeToNationality
-import com.andresestevez.recipes.ui.common.Event
 import com.andresestevez.recipes.ui.di.FakeLocalDataSource
 import com.andresestevez.recipes.ui.di.FakeLocationDataSource
 import com.andresestevez.recipes.ui.di.FakeRemoteDataSource
-import com.andresestevez.testshared.mockedRecipe
 import com.andresestevez.usecases.GetLocalRecipes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,17 +24,11 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
-import org.mockito.kotlin.verify
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class LocalRecipesViewModelTest {
-
-    @Mock
-    lateinit var observerNavigation: Observer<Event<String>>
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
@@ -103,19 +94,4 @@ class LocalRecipesViewModelTest {
         assertEquals("No data", vm.state.value.userMessage)
     }
 
-    @Test
-    fun `when onRecipeClicked, navigation value is updated`() = runBlockingTest {
-        // GIVEN
-        val recipe = mockedRecipe.copy(id = "777")
-        vm.navigation.observeForever(observerNavigation)
-
-        // WHEN
-        vm.onRecipeClicked(recipe)
-
-        // THEN
-        verify(observerNavigation).onChanged(any())
-        assertEquals(recipe.id, vm.navigation.value?.getContentIfNotHandled())
-
-        vm.navigation.removeObserver(observerNavigation)
-    }
 }

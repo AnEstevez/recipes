@@ -19,6 +19,8 @@ import com.andresestevez.recipes.ui.common.toast
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -46,10 +48,23 @@ class DetailFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.state.collect {
-                    binding.progress.isVisible = it.loading
-                    it.data?.let { recipe -> updateUI(recipe) }
-                    it.userMessage?.let { message -> requireContext().toast(message) }
+                launch {
+                    viewModel.state.map { state -> state.loading }.distinctUntilChanged().collect {
+                        binding.progress.isVisible = it
+                    }
+                }
+
+                launch {
+                    viewModel.state.map { state -> state.data }.distinctUntilChanged().collect {
+                        it?.let { recipe -> updateUI(recipe) }
+                    }
+                }
+
+                launch {
+                    viewModel.state.map { state -> state.userMessage }.distinctUntilChanged()
+                        .collect {
+                            it?.let { message -> requireContext().toast(message) }
+                        }
                 }
             }
         }

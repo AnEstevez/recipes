@@ -1,11 +1,8 @@
 package com.andresestevez.recipes.ui.main.fragments
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andresestevez.domain.Recipe
-import com.andresestevez.recipes.ui.common.Event
 import com.andresestevez.recipes.ui.common.getMessageFromThrowable
 import com.andresestevez.usecases.GetRecipesByName
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,9 +22,6 @@ class SearchViewModel @Inject constructor(private val getRecipesByName: GetRecip
 
     private var _state: MutableStateFlow<UiState> = MutableStateFlow(UiState())
     val state: StateFlow<UiState> = _state.asStateFlow()
-
-    private val _navigation = MutableLiveData<Event<String>>()
-    val navigation: LiveData<Event<String>> get() = _navigation
 
     fun refresh(query: String?) {
         if (!query.isNullOrBlank()) {
@@ -53,9 +47,4 @@ class SearchViewModel @Inject constructor(private val getRecipesByName: GetRecip
         }
     }
 
-    fun onRecipeClicked(recipe: Recipe) {
-        viewModelScope.launch {
-            _navigation.value = Event(recipe.id)
-        }
-    }
 }

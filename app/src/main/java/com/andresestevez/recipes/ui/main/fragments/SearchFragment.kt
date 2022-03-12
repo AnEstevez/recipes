@@ -11,15 +11,14 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.findNavController
 import com.andresestevez.recipes.databinding.FragmentSearchBinding
-import com.andresestevez.recipes.ui.common.EventObserver
 import com.andresestevez.recipes.ui.common.hideKeyboard
 import com.andresestevez.recipes.ui.common.toast
-import com.andresestevez.recipes.ui.main.MainFragmentDirections
 import com.andresestevez.recipes.ui.main.RecipesAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 
@@ -46,7 +45,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun initRecyclerView() {
-        adapter = RecipesAdapter(viewModel::onRecipeClicked)
+        adapter = RecipesAdapter()
 
     }
 
@@ -57,18 +56,26 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.state.collect {
-                    binding.progress.isVisible = it.loading
-                    adapter.submitList(it.data)
-                    it.userMessage?.let { message -> requireContext().toast(message) }
+                launch {
+                    viewModel.state.map { state -> state.loading }.distinctUntilChanged().collect {
+                        binding.progress.isVisible = it
+                    }
+                }
+
+                launch {
+                    viewModel.state.map { state -> state.data }.distinctUntilChanged().collect {
+                        adapter.submitList(it)
+                    }
+                }
+
+                launch {
+                    viewModel.state.map { state -> state.userMessage }.distinctUntilChanged()
+                        .collect {
+                            it?.let { message -> requireContext().toast(message) }
+                        }
                 }
             }
         }
-
-        viewModel.navigation.observe(viewLifecycleOwner, EventObserver {
-            val direction = MainFragmentDirections.actionMainFragmentToDetailFragment(it)
-            view.findNavController().navigate(direction)
-        })
         binding.searchView.setOnQueryTextListener(this)
     }
 

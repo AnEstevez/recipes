@@ -3,6 +3,7 @@ package com.andresestevez.recipes.ui.main
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -11,8 +12,7 @@ import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.ViewItemBinding
 import com.bumptech.glide.Glide
 
-class RecipesAdapter(private val recipeClickedListener: (Recipe) -> Unit) :
-    ListAdapter<Recipe, RecipesAdapter.ViewHolder>(DiffUtilCallback) {
+class RecipesAdapter : ListAdapter<Recipe, RecipesAdapter.ViewHolder>(DiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
@@ -23,7 +23,7 @@ class RecipesAdapter(private val recipeClickedListener: (Recipe) -> Unit) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val recipe = getItem(position)
         holder.bind(recipe)
-        holder.itemView.setOnClickListener { recipeClickedListener(recipe) }
+        holder.itemView.setOnClickListener { navigateToDetail(recipe.id, it) }
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -34,15 +34,22 @@ class RecipesAdapter(private val recipeClickedListener: (Recipe) -> Unit) :
                 textViewRecipe.text = recipe.name
                 Glide.with(root.context).load(recipe.thumbnail).into(imageViewBg)
                 this.btnFav.setImageResource(if (recipe.favorite) R.drawable.ic_baseline_favorite_24
-                    else R.drawable.ic_baseline_favorite_border_24)
+                else R.drawable.ic_baseline_favorite_border_24)
             }
         }
     }
 
-    private object DiffUtilCallback : DiffUtil.ItemCallback<Recipe>() {
-        override fun areItemsTheSame(oldItem: Recipe, newItem: Recipe): Boolean = oldItem.id == newItem.id
+    private fun navigateToDetail(recipeId: String, view: View) {
+        val direction = MainFragmentDirections.actionMainFragmentToDetailFragment(recipeId)
+        view.findNavController().navigate(direction)
+    }
 
-        override fun areContentsTheSame(oldItem: Recipe, newItem: Recipe): Boolean = oldItem == newItem
+    private object DiffUtilCallback : DiffUtil.ItemCallback<Recipe>() {
+        override fun areItemsTheSame(oldItem: Recipe, newItem: Recipe): Boolean =
+            oldItem.id == newItem.id
+
+        override fun areContentsTheSame(oldItem: Recipe, newItem: Recipe): Boolean =
+            oldItem == newItem
     }
 
 }
