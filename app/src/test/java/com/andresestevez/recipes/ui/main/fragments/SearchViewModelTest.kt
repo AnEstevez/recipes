@@ -12,6 +12,7 @@ import com.andresestevez.recipes.ui.di.FakeLocationDataSource
 import com.andresestevez.recipes.ui.di.FakeRemoteDataSource
 import com.andresestevez.recipes.ui.di.defaultFakeRecipes
 import com.andresestevez.usecases.GetRecipesByName
+import com.andresestevez.usecases.ToggleRecipeFavorite
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -41,6 +42,7 @@ class SearchViewModelTest {
 
     private lateinit var vm: SearchViewModel
     private lateinit var getRecipesByName: GetRecipesByName
+    private lateinit var toggleRecipeFavorite: ToggleRecipeFavorite
     private lateinit var recipesRepository: RecipesRepository
 
     private val testDispatcher = TestCoroutineDispatcher()
@@ -52,7 +54,8 @@ class SearchViewModelTest {
         recipesRepository =
             RecipesRepository(localDataSource, remoteDataSource, locationDataSource, apiKey)
         getRecipesByName = GetRecipesByName(recipesRepository)
-        vm = SearchViewModel(getRecipesByName)
+        toggleRecipeFavorite = ToggleRecipeFavorite(recipesRepository)
+        vm = SearchViewModel(getRecipesByName, toggleRecipeFavorite)
     }
 
     @After
@@ -69,8 +72,8 @@ class SearchViewModelTest {
         vm.refresh(name)
 
         // THEN
-        assertEquals(defaultFakeRecipes.filter { recipe -> recipe.name.lowercase().contains(name) },
-            vm.state.value.data)
+        assertEquals(defaultFakeRecipes.filter { recipe -> recipe.name.lowercase().contains(name) }.map { it.name },
+            vm.state.value.data.map { it.title })
         assertEquals(2, vm.state.value.data.size)
     }
 

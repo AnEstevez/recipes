@@ -118,6 +118,7 @@
         android:layout_margin="16dp"
         android:backgroundTint="?attr/colorBackgroundFloating"
         android:src="@drawable/ic_baseline_favorite_border_24"
+        android:tag="@drawable/ic_baseline_favorite_border_24"
         app:borderWidth="0dp"
         app:layout_anchor="@+id/appbar"
         app:layout_anchorGravity="bottom|end" />

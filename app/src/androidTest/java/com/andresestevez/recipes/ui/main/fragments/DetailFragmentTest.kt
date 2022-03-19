@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.andresestevez.recipes.MockServerDispatcher
@@ -99,6 +100,32 @@ class DetailFragmentTest {
 
         val textView4 = onView(withId(R.id.instructions))
         textView4.check(matches(withSubstring("Heat the butter in a casserole dish until sizzling")))
+    }
+
+
+    @Test
+    fun clickFloatingButton_updatesIcon() {
+        val myBundle = Bundle()
+        myBundle.putString(DetailViewModel.RECIPE_ID_NAV_ARGS, "53037")
+
+        launchFragmentInHiltContainer<DetailFragment>(myBundle) {
+            Timber.e("SavedStateHandle keys: %s", viewModel.stateHandle.keys().toString())
+        }
+
+        Thread.sleep(200)
+
+        val btnFav = onView(Matchers.allOf(withId(R.id.floatingBtn)))
+
+        btnFav.check(matches(withTagValue(Matchers.equalTo(R.drawable.ic_baseline_favorite_border_24))))
+
+        btnFav.perform(ViewActions.click())
+        Thread.sleep(200)
+        btnFav.check(matches(withTagValue(Matchers.equalTo(R.drawable.ic_baseline_favorite_24))))
+
+        btnFav.perform(ViewActions.click())
+        Thread.sleep(200)
+        btnFav.check(matches(withTagValue(Matchers.equalTo(R.drawable.ic_baseline_favorite_border_24))))
+
     }
 
 }

@@ -10,9 +10,9 @@ import com.andresestevez.recipes.ui.di.FakeLocalDataSource
 import com.andresestevez.recipes.ui.di.FakeLocationDataSource
 import com.andresestevez.recipes.ui.di.FakeRemoteDataSource
 import com.andresestevez.usecases.GetFavoriteRecipes
+import com.andresestevez.usecases.ToggleRecipeFavorite
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runBlockingTest
@@ -36,6 +36,7 @@ class FavViewModelTest {
 
     private lateinit var vm: FavViewModel
     private lateinit var getFavoriteRecipes: GetFavoriteRecipes
+    private lateinit var toggleRecipeFavorite: ToggleRecipeFavorite
     private lateinit var recipesRepository: RecipesRepository
 
     @get:Rule
@@ -50,6 +51,7 @@ class FavViewModelTest {
         recipesRepository =
             RecipesRepository(localDataSource, remoteDataSource, locationDataSource, apiKey)
         getFavoriteRecipes = GetFavoriteRecipes(recipesRepository)
+        toggleRecipeFavorite = ToggleRecipeFavorite(recipesRepository)
     }
 
     @After
@@ -61,13 +63,11 @@ class FavViewModelTest {
     fun `when init, favorite recipes are retrieved`() = runBlockingTest {
         // GIVEN -> viewmodel
         // WHEN -> init
-        vm = FavViewModel(getFavoriteRecipes)
+        vm = FavViewModel(getFavoriteRecipes, toggleRecipeFavorite)
 
         // THEN
-        val expectedResult = FavViewModel.UiState(loading = false,
-            data = localDataSource.getFavorites().first(),
-            userMessage = null)
-        assertEquals(expectedResult, vm.state.value)
+        assertEquals(1, vm.state.value.data.size)
+        assertEquals(true, vm.state.value.data.first().bookmarked)
 
     }
 
@@ -77,7 +77,7 @@ class FavViewModelTest {
         (localDataSource as FakeLocalDataSource).exceptionToThrow = NoDataFoundException()
 
         // WHEN
-        vm = FavViewModel(getFavoriteRecipes)
+        vm = FavViewModel(getFavoriteRecipes, toggleRecipeFavorite)
 
         // THEN
         val expectedResult = FavViewModel.UiState(loading = false,

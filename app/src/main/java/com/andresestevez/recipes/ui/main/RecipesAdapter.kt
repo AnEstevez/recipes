@@ -7,12 +7,15 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.andresestevez.domain.Recipe
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.ViewItemBinding
+import com.andresestevez.recipes.ui.common.RecipeItemUiState
 import com.bumptech.glide.Glide
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class RecipesAdapter : ListAdapter<Recipe, RecipesAdapter.ViewHolder>(DiffUtilCallback) {
+class RecipesAdapter : ListAdapter<RecipeItemUiState, RecipesAdapter.ViewHolder>(DiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
@@ -29,12 +32,19 @@ class RecipesAdapter : ListAdapter<Recipe, RecipesAdapter.ViewHolder>(DiffUtilCa
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = ViewItemBinding.bind(view)
 
-        fun bind(recipe: Recipe) {
+        fun bind(recipe: RecipeItemUiState) {
             with(binding) {
-                textViewRecipe.text = recipe.name
+                textViewRecipe.text = recipe.title
                 Glide.with(root.context).load(recipe.thumbnail).into(imageViewBg)
-                this.btnFav.setImageResource(if (recipe.favorite) R.drawable.ic_baseline_favorite_24
-                else R.drawable.ic_baseline_favorite_border_24)
+                val icon = if (recipe.bookmarked) R.drawable.ic_baseline_favorite_24
+                else R.drawable.ic_baseline_favorite_border_24
+                btnFav.setBackgroundResource(icon)
+                btnFav.tag = icon
+                btnFav.setOnClickListener {
+                    CoroutineScope(Dispatchers.IO) .launch{
+                        recipe.onBookmark()
+                    }
+                }
             }
         }
     }
@@ -44,11 +54,17 @@ class RecipesAdapter : ListAdapter<Recipe, RecipesAdapter.ViewHolder>(DiffUtilCa
         view.findNavController().navigate(direction)
     }
 
-    private object DiffUtilCallback : DiffUtil.ItemCallback<Recipe>() {
-        override fun areItemsTheSame(oldItem: Recipe, newItem: Recipe): Boolean =
+    private object DiffUtilCallback : DiffUtil.ItemCallback<RecipeItemUiState>() {
+        override fun areItemsTheSame(
+            oldItem: RecipeItemUiState,
+            newItem: RecipeItemUiState,
+        ): Boolean =
             oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: Recipe, newItem: Recipe): Boolean =
+        override fun areContentsTheSame(
+            oldItem: RecipeItemUiState,
+            newItem: RecipeItemUiState,
+        ): Boolean =
             oldItem == newItem
     }
 
