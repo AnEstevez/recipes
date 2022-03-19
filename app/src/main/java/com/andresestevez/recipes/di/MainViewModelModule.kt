@@ -2,6 +2,7 @@ package com.andresestevez.recipes.di
 
 import com.andresestevez.data.repository.RecipesRepository
 import com.andresestevez.usecases.GetLocalRecipes
+import com.andresestevez.usecases.ToggleRecipeFavorite
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,4 +17,8 @@ class MainViewModelModule {
     @ViewModelScoped
     fun getLocalRecipesProvider(recipesRepository: RecipesRepository) = GetLocalRecipes(recipesRepository)
 
+    @Provides
+    @ViewModelScoped
+    fun toggleRecipeFavoriteProvider(recipesRepository: RecipesRepository) =
+        ToggleRecipeFavorite(recipesRepository)
 }

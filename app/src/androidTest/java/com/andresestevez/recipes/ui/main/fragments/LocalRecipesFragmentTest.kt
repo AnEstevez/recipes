@@ -23,6 +23,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okhttp3.mockwebserver.MockWebServer
 import org.hamcrest.Matchers
+import org.hamcrest.Matchers.equalTo
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -120,6 +121,37 @@ class LocalRecipesFragmentTest {
 
         val direction = MainFragmentDirections.actionMainFragmentToDetailFragment(recipeId)
         verify(navController).navigate(direction)
+
+    }
+
+    @Test
+    fun clickBtnFav_updatesIcon() {
+        launchFragmentInHiltContainer<LocalRecipesFragment> {
+            this.viewModel.refresh()
+        }
+
+        Thread.sleep(200)
+
+        onView(Matchers.allOf(withId(R.id.textViewRecipe), withText("TONKATSU PORK"),
+            withParent(withParent(withId(R.id.cardView))),
+            isDisplayed()))
+
+        onView(withId(R.id.recycler))
+            .perform(RecyclerViewActions
+                .scrollToPosition<RecipesAdapter.ViewHolder>(0))
+
+        val btnFav = onView(Matchers.allOf(withId(R.id.btnFav),
+            withParent(withChild(withText("TONKATSU PORK")))))
+
+        btnFav.check(matches(withTagValue(equalTo(R.drawable.ic_baseline_favorite_border_24))))
+
+        btnFav.perform(click())
+        Thread.sleep(200)
+        btnFav.check(matches(withTagValue(equalTo(R.drawable.ic_baseline_favorite_24))))
+
+        btnFav.perform(click())
+        Thread.sleep(200)
+        btnFav.check(matches(withTagValue(equalTo(R.drawable.ic_baseline_favorite_border_24))))
 
     }
 

@@ -48,11 +48,15 @@
             android:layout_gravity="top|end"
             android:layout_marginTop="0dp"
             android:layout_marginEnd="0dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:background="@drawable/ic_baseline_favorite_border_24"
+            android:tag="@drawable/ic_baseline_favorite_border_24"
             android:baselineAlignBottom="false"
             android:clickable="false"
-            android:foreground="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_baseline_favorite_border_24" />
+            android:contextClickable="false"
+            android:focusable="false"
+            android:foreground="@android:color/transparent"
+            android:longClickable="false"/>
+
     </FrameLayout>
 
 </androidx.cardview.widget.CardView>

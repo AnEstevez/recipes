@@ -79,6 +79,7 @@ class DetailFragment : Fragment() {
                 instructions.text = it.instructions
                 val favIcon = if (it.favorite) R.drawable.ic_baseline_favorite_24 else R.drawable.ic_baseline_favorite_border_24
                 floatingBtn.setImageDrawable(getDrawable(requireContext(), favIcon))
+                floatingBtn.tag = favIcon
             }
         }
     }

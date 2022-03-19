@@ -14,6 +14,7 @@ class SearchViewModelModule {
 
     @Provides
     @ViewModelScoped
-    fun getRecipesByNameProvider(recipesRepository: RecipesRepository) = GetRecipesByName(recipesRepository)
+    fun getRecipesByNameProvider(recipesRepository: RecipesRepository) =
+        GetRecipesByName(recipesRepository)
 
 }

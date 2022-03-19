@@ -14,6 +14,7 @@ class FavViewModelModule {
 
     @Provides
     @ViewModelScoped
-    fun getFavoriteRecipesProvider(recipesRepository: RecipesRepository) = GetFavoriteRecipes(recipesRepository)
+    fun getFavoriteRecipesProvider(recipesRepository: RecipesRepository) =
+        GetFavoriteRecipes(recipesRepository)
 
 }

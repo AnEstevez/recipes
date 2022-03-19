@@ -68,7 +68,7 @@ class SearchFragmentTest {
     @Test
     fun searchByName_displayItems() {
 
-        launchFragmentInHiltContainer<SearchFragment> ()
+        launchFragmentInHiltContainer<SearchFragment>()
 
         val appCompatImageView = onView(
             Matchers.allOf(withId(R.id.search_button), withContentDescription("Search"),
@@ -181,6 +181,71 @@ class SearchFragmentTest {
         verify(navController).navigate(direction)
 
     }
+
+    @Test
+    fun click_btnFav_updates_favorites_list() {
+        launchFragmentInHiltContainer<SearchFragment>()
+
+        val appCompatImageView = onView(
+            Matchers.allOf(withId(R.id.search_button), withContentDescription("Search"),
+                childAtPosition(
+                    Matchers.allOf(withId(R.id.search_bar),
+                        childAtPosition(
+                            withId(R.id.searchView),
+                            0)),
+                    1),
+                isDisplayed()))
+        appCompatImageView.perform(click())
+
+        val searchAutoComplete = onView(
+            Matchers.allOf(withId(R.id.search_src_text),
+                childAtPosition(
+                    Matchers.allOf(withId(R.id.search_plate),
+                        childAtPosition(
+                            withId(R.id.search_edit_frame),
+                            1)),
+                    0),
+                isDisplayed()))
+        searchAutoComplete.perform(replaceText("pork"), closeSoftKeyboard())
+
+        val searchAutoComplete2 = onView(
+            Matchers.allOf(withId(R.id.search_src_text),
+                childAtPosition(
+                    Matchers.allOf(withId(R.id.search_plate),
+                        childAtPosition(
+                            withId(R.id.search_edit_frame),
+                            1)),
+                    0),
+                isDisplayed()))
+        searchAutoComplete2.perform(pressImeActionButton())
+
+        Thread.sleep(300)
+
+        val textView = onView(
+            Matchers.allOf(withId(R.id.textViewRecipe), withText("TONKATSU PORK"),
+                withParent(withParent(withId(R.id.cardView))),
+                isDisplayed()))
+        textView.check(matches(withText("TONKATSU PORK")))
+
+        onView(withId(R.id.recycler))
+            .perform(RecyclerViewActions
+                .scrollToPosition<RecipesAdapter.ViewHolder>(0))
+        onView(withText("TONKATSU PORK")).check(matches(isDisplayed()))
+
+        val btnFav = onView(Matchers.allOf(withId(R.id.btnFav),
+            withParent(withChild(withText("TONKATSU PORK")))))
+
+        btnFav.check(matches(withTagValue(Matchers.equalTo(R.drawable.ic_baseline_favorite_border_24))))
+
+        btnFav.perform(click())
+        Thread.sleep(200)
+        btnFav.check(matches(withTagValue(Matchers.equalTo(R.drawable.ic_baseline_favorite_24))))
+
+        btnFav.perform(click())
+        Thread.sleep(200)
+        btnFav.check(matches(withTagValue(Matchers.equalTo(R.drawable.ic_baseline_favorite_border_24))))
+    }
+
 
     private fun childAtPosition(
         parentMatcher: Matcher<View>, position: Int,

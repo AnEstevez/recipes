@@ -12,6 +12,7 @@ import com.andresestevez.recipes.ui.di.FakeLocalDataSource
 import com.andresestevez.recipes.ui.di.FakeLocationDataSource
 import com.andresestevez.recipes.ui.di.FakeRemoteDataSource
 import com.andresestevez.usecases.GetLocalRecipes
+import com.andresestevez.usecases.ToggleRecipeFavorite
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -42,6 +43,7 @@ class LocalRecipesViewModelTest {
 
     private lateinit var vm: LocalRecipesViewModel
     private lateinit var getLocalRecipes: GetLocalRecipes
+    private lateinit var toggleRecipeFavorite: ToggleRecipeFavorite
     private lateinit var recipesRepository: RecipesRepository
 
 
@@ -52,8 +54,8 @@ class LocalRecipesViewModelTest {
         recipesRepository =
             RecipesRepository(localDataSource, remoteDataSource, locationDataSource, apiKey)
         getLocalRecipes = GetLocalRecipes(recipesRepository)
-
-        vm = LocalRecipesViewModel(getLocalRecipes)
+        toggleRecipeFavorite = ToggleRecipeFavorite(recipesRepository)
+        vm = LocalRecipesViewModel(getLocalRecipes, toggleRecipeFavorite)
     }
 
     @After
@@ -69,7 +71,7 @@ class LocalRecipesViewModelTest {
         // WHEN
         vm.refresh()
         // THEN japanese recipes
-        assertEquals(CountryCodeToNationality.JP.nationality, vm.state.value.data[0].country)
+        assertEquals("Tonkatsu pork", vm.state.value.data[0].title)
 
         // GIVEN italian nationality
         (locationDataSource as FakeLocationDataSource).location =
@@ -77,7 +79,7 @@ class LocalRecipesViewModelTest {
         // WHEN
         vm.refresh()
         // THEN italian recipes
-        assertEquals(CountryCodeToNationality.IT.nationality, vm.state.value.data[0].country)
+        assertEquals("Chicken Parmesan", vm.state.value.data[0].title)
 
     }
 

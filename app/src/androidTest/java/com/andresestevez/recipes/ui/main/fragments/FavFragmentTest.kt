@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
@@ -19,6 +20,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import org.hamcrest.Matchers
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -58,6 +60,8 @@ class FavFragmentTest {
 
         launchFragmentInHiltContainer<FavFragment>()
 
+        Thread.sleep(200)
+
         onView(withId(R.id.recycler))
             .perform(RecyclerViewActions
                 .scrollToPosition<RecipesAdapter.ViewHolder>(0))
@@ -75,6 +79,8 @@ class FavFragmentTest {
             Navigation.setViewNavController(requireView(), navController)
         }
 
+        Thread.sleep(300)
+
         onView(withId(R.id.recycler))
             .perform(RecyclerViewActions
                 .scrollToPosition<RecipesAdapter.ViewHolder>(1))
@@ -88,6 +94,40 @@ class FavFragmentTest {
         val direction = MainFragmentDirections.actionMainFragmentToDetailFragment(recipeId)
         verify(navController).navigate(direction)
 
+    }
+
+
+    @Test
+    fun click_btnFav_updates_favorites_list() {
+        val navController = mock(NavController::class.java)
+
+        launchFragmentInHiltContainer<FavFragment> {
+            Navigation.setViewNavController(requireView(), navController)
+        }
+
+        val recipeBananaBread = onView(
+            Matchers.allOf(withId(R.id.cardView),
+                withChild(withChild(withText("Chocolate Chip Banana Bread"))),
+                isDisplayed()))
+
+        onView(withId(R.id.recycler))
+            .perform(RecyclerViewActions
+                .scrollToPosition<RecipesAdapter.ViewHolder>(1))
+        onView(withText("Chocolate Chip Banana Bread")).check(matches(isDisplayed()))
+
+        onView(withId(R.id.recycler)).perform(actionOnItemAtPosition<RecipesAdapter.ViewHolder>(0,
+            click()))
+
+        val imageButton = onView(
+            Matchers.allOf(withId(R.id.btnFav),
+                withParent(withChild(withText("Chocolate Chip Banana Bread"))),
+                isDisplayed()))
+
+        imageButton.check(matches(withTagValue(Matchers.equalTo(R.drawable.ic_baseline_favorite_24))))
+
+        imageButton.perform(click())
+
+        recipeBananaBread.check(ViewAssertions.doesNotExist())
     }
 
 }
