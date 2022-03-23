@@ -1,15 +1,14 @@
 package com.andresestevez.recipes.ui.main.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.FragmentFavBinding
 import com.andresestevez.recipes.ui.common.toast
 import com.andresestevez.recipes.ui.main.RecipesAdapter
@@ -20,34 +19,18 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class FavFragment : Fragment() {
-
-    private var _binding: FragmentFavBinding? = null
-    private val binding
-        get() = _binding!!
-
-    private lateinit var adapter: RecipesAdapter
+class FavFragment : Fragment(R.layout.fragment_fav) {
 
     private val viewModel: FavViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-
-        _binding = FragmentFavBinding.inflate(inflater, container, false)
-
-        initRecyclerView()
-        return binding.root
-    }
-
-    private fun initRecyclerView() {
-        adapter = RecipesAdapter()
-    }
+    private val adapter = RecipesAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.recycler.adapter = adapter
+
+        val binding = FragmentFavBinding.bind(view).apply {
+            recycler.adapter = adapter
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -73,8 +56,4 @@ class FavFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }

@@ -1,9 +1,7 @@
 package com.andresestevez.recipes.ui.main.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.VisibleForTesting
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -11,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.FragmentLocalRecipesBinding
 import com.andresestevez.recipes.ui.common.PermissionRequester
 import com.andresestevez.recipes.ui.common.toast
@@ -22,36 +21,19 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class LocalRecipesFragment(private val permissionRequester: PermissionRequester) : Fragment() {
+class LocalRecipesFragment(private val permissionRequester: PermissionRequester) :
+    Fragment(R.layout.fragment_local_recipes) {
 
-    private var _binding: FragmentLocalRecipesBinding? = null
-    private val binding
-        get() = _binding!!
-
-    private lateinit var adapter: RecipesAdapter
+    private val adapter = RecipesAdapter()
 
     @VisibleForTesting
     val viewModel: LocalRecipesViewModel by activityViewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-
-        _binding = FragmentLocalRecipesBinding.inflate(inflater, container, false)
-
-        initRecyclerView()
-
-        return binding.root
-    }
-
-    private fun initRecyclerView() {
-        adapter = RecipesAdapter()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.recycler.adapter = adapter
+        val binding = FragmentLocalRecipesBinding.bind(view).apply {
+            recycler.adapter = adapter
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -90,10 +72,4 @@ class LocalRecipesFragment(private val permissionRequester: PermissionRequester)
         super.onPause()
         viewModel.justSelected = false
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
 }
