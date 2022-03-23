@@ -22,7 +22,7 @@ enum class CountryCodeToNationality(val nationality: String) {
     PL("polish"),
     PT("portuguese"),
     RU("russian"),
-    SP("spanish"),
+    ES("spanish"),
     TH("thai"),
     TN("tunisian"),
     TR("turkish"),

@@ -13,7 +13,7 @@ val mockedRecipe = Recipe(
     "Carne o caldeiro",
     "http://www.cocinayrecetasfaciles.com/files/styles/receta_facebook/public/receta/carne-o-caldeiro.png-1.png",
     "Cortar la carne de ternera en trozos medianos. Ponerla en una cazuela.Añadir el unto y sal. Cubrirla con agua fría y llevar a ebullición.En el momento que comience a hervir disminuir la fuente de calor y cocer a fuego lento hasta que la carne esté tierna, 60/75 minutos aproximadamente.Retirar la carne cocida a otro recipiente con caldo de la cocción para mantenerla caliente.Cocer las patatas, peladas y enteras, en el resto del caldo 15/20′.Colocar la carne, las patatas y un poco de caldo en una fuente.Espolvorear con el pimentón elegido y rociar con aceite de oliva.Servir caliente.",
-    CountryCodeToNationality.SP.nationality,
+    CountryCodeToNationality.ES.nationality,
     listOf("falda de ternera", "unto", "patatas", "Pimentón", "Aceite de oliva", "sal"),
     listOf("1,5kg", "75g", "12", "al gusto", "al gusto", "al gusto"),
     false,
@@ -100,7 +100,7 @@ class FakeRemoteDataSource() : RemoteDataSource {
 
 class FakeLocationDataSource : LocationDataSource {
 
-    var location = CountryCodeToNationality.SP.nationality
+    var location = CountryCodeToNationality.ES.nationality
 
     override suspend fun getLastLocationNationality(): String = location
 }

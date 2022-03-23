@@ -22,8 +22,10 @@ class LocalRecipesViewModel @Inject constructor(
     data class UiState(
         var loading: Boolean = false,
         var data: List<RecipeItemUiState> = emptyList(),
-        var userMessage: String? = null,
+        var userMessage: String? = null
     )
+
+    var justSelected: Boolean = false
 
     private var _state: MutableStateFlow<UiState> = MutableStateFlow(UiState(loading = false))
     val state: StateFlow<UiState> = _state.asStateFlow()

@@ -4,8 +4,10 @@ import com.andresestevez.data.source.LocalDataSource
 import com.andresestevez.data.source.LocationDataSource
 import com.andresestevez.data.source.RemoteDataSource
 import com.andresestevez.domain.Recipe
-import kotlinx.coroutines.flow.*
-import java.io.IOException
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 
 class RecipesRepository(
     private val localDataSource: LocalDataSource,
@@ -14,12 +16,13 @@ class RecipesRepository(
     private val apiKey: String,
 ) {
 
-    fun findRecipeById(recipeId: String): Flow<Result<Recipe>> = flow<Result<Recipe>> {
+    fun findRecipeById(recipeId: String): Flow<Result<Recipe>> = flow {
         localDataSource.findById(recipeId).collect {
             if (it.instructions.isEmpty()) {
                 val remoteResult = remoteDataSource.findById(apiKey, recipeId)
                 if (remoteResult.isSuccess) {
-                    localDataSource.updateRecipe(remoteResult.getOrThrow())
+                    localDataSource.updateRecipe(remoteResult.getOrThrow()
+                        .copy(favorite = it.favorite))
                 } else {
                     emit(Result.success(it))
                     emit(remoteResult)
@@ -31,14 +34,13 @@ class RecipesRepository(
     }.catch { emit(Result.failure(it)) }
 
     fun getRecipesByRegion(): Flow<Result<List<Recipe>>> = flow {
-        var nationality = "unknown"
-        nationality = locationDataSource.getLastLocationNationality()
+        val nationality = locationDataSource.getLastLocationNationality()
         localDataSource.searchByCountry(nationality)
-            .catch { emit(Result.success<List<Recipe>>(emptyList())) }.collect {
-                if (it.isNullOrEmpty()) {
+            .catch { emit(Result.success<List<Recipe>>(emptyList())) }.collect { recipes ->
+                if (recipes.isNullOrEmpty()) {
                     emit(Result.success<List<Recipe>>(emptyList()))
                 } else {
-                    emit(Result.success(it))
+                    emit(Result.success(recipes))
                 }
 
                 val remoteResult = remoteDataSource.listMealsByNationality(apiKey, nationality)
