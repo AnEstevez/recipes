@@ -8,11 +8,11 @@ import com.andresestevez.recipes.ui.common.PermissionRequester
 import com.andresestevez.recipes.ui.common.toast
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.testing.TestInstallIn
 
 @Module
-@TestInstallIn(components = [FragmentComponent::class], replaces = [MainFragmentModule::class])
+@TestInstallIn(components = [ActivityComponent::class], replaces = [LocalRecipesFragmentModule::class])
 object FakeMainFragmentModule {
 
     @Provides

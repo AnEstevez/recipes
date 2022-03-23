@@ -12,6 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.andresestevez.recipes.databinding.FragmentLocalRecipesBinding
+import com.andresestevez.recipes.ui.common.PermissionRequester
 import com.andresestevez.recipes.ui.common.toast
 import com.andresestevez.recipes.ui.main.RecipesAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,7 +22,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class LocalRecipesFragment : Fragment() {
+class LocalRecipesFragment(private val permissionRequester: PermissionRequester) : Fragment() {
 
     private var _binding: FragmentLocalRecipesBinding? = null
     private val binding
@@ -40,6 +41,7 @@ class LocalRecipesFragment : Fragment() {
         _binding = FragmentLocalRecipesBinding.inflate(inflater, container, false)
 
         initRecyclerView()
+
         return binding.root
     }
 
@@ -73,6 +75,20 @@ class LocalRecipesFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (viewModel.justSelected) {
+            permissionRequester.runWithPermission {
+                viewModel.refresh()
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.justSelected = false
     }
 
     override fun onDestroyView() {

@@ -85,6 +85,8 @@ class LocalRecipesFragmentTest {
                 isDisplayed()))
         textView.check(matches(withText("TONKATSU PORK")))
 
+        Thread.sleep(300)
+
         onView(withId(R.id.recycler))
             .perform(RecyclerViewActions
                 .scrollToPosition<RecipesAdapter.ViewHolder>(0))

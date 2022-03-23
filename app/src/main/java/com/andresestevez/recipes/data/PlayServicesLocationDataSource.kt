@@ -47,11 +47,16 @@ class PlayServicesLocationDataSource(application: Application) : LocationDataSou
     }
 
     private fun String?.toNationality(): String {
-        return if (CountryCodeToNationality.values()
+        Timber.d("Country code [%s]", this)
+
+        val result =  if (CountryCodeToNationality.values()
                 .map { country -> country.name }
                 .contains(this))
             CountryCodeToNationality.valueOf(this!!).nationality
         else CountryCodeToNationality.XX.nationality
+
+        Timber.d("Nationality [%s]", result)
+        return result
     }
 }
 

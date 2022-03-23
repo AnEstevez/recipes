@@ -1,26 +1,17 @@
 package com.andresestevez.recipes.ui.main
 
-import android.Manifest
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.ComponentActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.viewpager2.widget.ViewPager2
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.FragmentMainBinding
-import com.andresestevez.recipes.ui.common.PermissionRequester
-import com.andresestevez.recipes.ui.common.app
-import com.andresestevez.recipes.ui.common.toast
-import com.andresestevez.recipes.ui.main.fragments.FavFragment
-import com.andresestevez.recipes.ui.main.fragments.LocalRecipesFragment
 import com.andresestevez.recipes.ui.main.fragments.LocalRecipesViewModel
-import com.andresestevez.recipes.ui.main.fragments.SearchFragment
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
@@ -32,19 +23,9 @@ class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding: FragmentMainBinding get() = _binding!!
 
+    private var tabMediator: TabLayoutMediator? = null
+
     private val localRecipesViewModel: LocalRecipesViewModel by activityViewModels()
-
-    @Inject
-    lateinit var permissionRequester: PermissionRequester
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        permissionRequester = PermissionRequester(requireActivity() as ComponentActivity,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            onRationale = { app.toast(app.getString(R.string.rationale_local_dishes)) }
-        )
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,45 +46,38 @@ class MainFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        _binding?.viewPager?.unregisterOnPageChangeCallback(OnPageChangeCallback())
+        tabMediator?.detach()
+        _binding?.viewPager?.adapter = null
         _binding = null
     }
 
     private fun setupViewPagerAndTab() {
-        val fragments: List<Fragment> =
-            listOf(FavFragment(), SearchFragment(), LocalRecipesFragment())
-        binding.viewPager.adapter = ViewPagerAdapter(fragments, requireActivity())
+        binding.viewPager.adapter = ViewPagerAdapter(childFragmentManager, requireActivity())
         val icons = listOf(
             R.drawable.ic_baseline_favorite_24,
             R.drawable.ic_baseline_search_24,
             R.drawable.ic_baseline_location_searching_24
         )
 
-        binding.viewPager.offscreenPageLimit = icons.size
+        binding.viewPager.offscreenPageLimit = 2
 
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+        tabMediator = TabLayoutMediator(
+            binding.tabLayout,
+            binding.viewPager
+        ) { tab, position ->
             tab.setIcon(icons[position])
-        }.attach()
+        }.also { it.attach() }
 
-        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                if (tab?.position == LOCAL_RECIPES_FRAGMENT) {
-                    findLocalRecipesWithPermission()
-                }
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                if (tab?.position == LOCAL_RECIPES_FRAGMENT) {
-                    findLocalRecipesWithPermission()
-                }
-            }
-        })
+        binding.viewPager.registerOnPageChangeCallback(OnPageChangeCallback())
     }
 
-    private fun findLocalRecipesWithPermission() {
-        permissionRequester.runWithPermission {
-            localRecipesViewModel.refresh()
+    inner class OnPageChangeCallback : ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            super.onPageSelected(position)
+            if (position == LOCAL_RECIPES_FRAGMENT) {
+                localRecipesViewModel.justSelected = true
+            }
         }
     }
 

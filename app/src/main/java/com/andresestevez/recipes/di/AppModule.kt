@@ -40,7 +40,7 @@ class AppModule {
     @Provides
     @Singleton
     fun mealDBClientProvider(
-        @Named("baseUrl") baseUrl: String
+        @Named("baseUrl") baseUrl: String,
     ): TheMealDbClient = TheMealDbClient(baseUrl)
 
     @Provides
@@ -53,4 +53,5 @@ class AppModule {
     @Provides
     fun locationDataSourceProvider(application: Application): LocationDataSource =
         PlayServicesLocationDataSource(application)
+
 }
