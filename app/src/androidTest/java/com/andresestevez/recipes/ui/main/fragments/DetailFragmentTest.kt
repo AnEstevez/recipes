@@ -112,18 +112,18 @@ class DetailFragmentTest {
             Timber.e("SavedStateHandle keys: %s", viewModel.stateHandle.keys().toString())
         }
 
-        Thread.sleep(200)
+        Thread.sleep(300)
 
         val btnFav = onView(Matchers.allOf(withId(R.id.floatingBtn)))
 
         btnFav.check(matches(withTagValue(Matchers.equalTo(R.drawable.ic_baseline_favorite_border_24))))
 
         btnFav.perform(ViewActions.click())
-        Thread.sleep(200)
+        Thread.sleep(300)
         btnFav.check(matches(withTagValue(Matchers.equalTo(R.drawable.ic_baseline_favorite_24))))
 
         btnFav.perform(ViewActions.click())
-        Thread.sleep(200)
+        Thread.sleep(300)
         btnFav.check(matches(withTagValue(Matchers.equalTo(R.drawable.ic_baseline_favorite_border_24))))
 
     }
