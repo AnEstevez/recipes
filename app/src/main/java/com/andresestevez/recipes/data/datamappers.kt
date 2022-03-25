@@ -1,7 +1,6 @@
 package com.andresestevez.recipes.data
 
 import com.andresestevez.recipes.ui.common.RecipeItemUiState
-import java.util.*
 import com.andresestevez.domain.Recipe as DomainRecipe
 import com.andresestevez.recipes.data.database.RecipeEntity as RoomRecipe
 import com.andresestevez.recipes.data.server.RecipeDto as ServerRecipe
@@ -23,7 +22,7 @@ fun DomainRecipe.toEntity(): RoomRecipe = RoomRecipe(
     strSource,
     strTags,
     strYoutube,
-    dateModified?.time ?: System.currentTimeMillis()
+    dateModified
 )
 
 fun RoomRecipe.toDomain(): DomainRecipe = DomainRecipe(
@@ -42,7 +41,7 @@ fun RoomRecipe.toDomain(): DomainRecipe = DomainRecipe(
     strSource,
     strTags,
     strYoutube,
-    Date(dateModified)
+    dateModified
 )
 
 fun ServerRecipe.toDomain(): DomainRecipe {
@@ -151,12 +150,11 @@ fun ServerRecipe.toDomain(): DomainRecipe {
     )
 }
 
-fun DomainRecipe.toRecipeItemUiState(onBookmark: suspend () -> Unit): RecipeItemUiState {
+fun DomainRecipe.toRecipeItemUiState(onBookmark: suspend () -> Unit = {} ): RecipeItemUiState {
     return RecipeItemUiState(
         id = this.id,
         title = this.name,
         thumbnail = this.thumbnail,
-        bookmarked = this.favorite,
-        onBookmark = { onBookmark() }
-    )
+        bookmarked = this.favorite
+    ).apply { this.onBookmark = { onBookmark() } }
 }

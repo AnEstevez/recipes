@@ -10,6 +10,7 @@ import com.andresestevez.usecases.ToggleRecipeFavorite
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,6 +48,7 @@ class DetailViewModel @Inject constructor(
                     }
                 })
                 { throwable ->
+                    Timber.d(throwable)
                     _state.update {
                         it.copy(loading = false,
                             userMessage = throwable.getMessageFromThrowable())

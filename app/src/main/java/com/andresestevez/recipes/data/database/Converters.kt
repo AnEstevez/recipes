@@ -12,4 +12,14 @@ class Converters {
 
     @TypeConverter
     fun jsonStringToList(value: String) = Gson().fromJson(value, Array<String>::class.java).toList()
+
+    @TypeConverter
+    fun timestampToDate(value: Long?): Date? {
+        return value?.let { Date(it) }
+    }
+
+    @TypeConverter
+    fun dateToTimestamp(value: Date?): Long? {
+        return value?.time
+    }
 }
