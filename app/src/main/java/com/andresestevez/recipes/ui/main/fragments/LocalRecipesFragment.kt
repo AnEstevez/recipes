@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.FragmentLocalRecipesBinding
 import com.andresestevez.recipes.ui.common.PermissionRequester
@@ -33,6 +34,7 @@ class LocalRecipesFragment(private val permissionRequester: PermissionRequester)
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentLocalRecipesBinding.bind(view).apply {
             recycler.adapter = adapter
+            (recycler.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
