@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import java.util.*
 import com.andresestevez.domain.Recipe as DomainRecipe
 
 class RoomDataSource(db: RecipeDatabase) : LocalDataSource {
@@ -19,19 +20,19 @@ class RoomDataSource(db: RecipeDatabase) : LocalDataSource {
     override suspend fun saveRecipe(recipe: DomainRecipe?) {
         withContext(Dispatchers.IO) {
             recipe?.let {
-                recipeDao.insertAll(listOf(it.toEntity()))
+                recipeDao.insertAll(listOf(it.toEntity().copy(dateModified = Date())))
             }
         }
     }
 
     override suspend fun saveAll(recipes: List<DomainRecipe>) {
         withContext(Dispatchers.IO) {
-            recipeDao.insertAll(recipes.map { it.toEntity() })
+            recipeDao.insertAll(recipes.map { it.toEntity().copy(dateModified = Date()) })
         }
     }
 
     override suspend fun updateRecipe(recipe: DomainRecipe) = withContext(Dispatchers.IO) {
-        recipeDao.update(recipe.toEntity())
+        recipeDao.update(recipe.toEntity().copy(dateModified = Date()))
     }
 
     override fun getFavorites(): Flow<List<DomainRecipe>> =

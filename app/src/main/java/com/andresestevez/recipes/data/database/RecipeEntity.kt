@@ -3,6 +3,7 @@ package com.andresestevez.recipes.data.database
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.*
 
 @Entity(tableName = "recipe")
 data class RecipeEntity(
@@ -24,5 +25,5 @@ data class RecipeEntity(
     val strSource: String?,
     val strTags: String?,
     val strYoutube: String?,
-    val dateModified: Long
+    val dateModified: Date?
 )

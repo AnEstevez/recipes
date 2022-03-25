@@ -5,6 +5,7 @@ data class RecipeItemUiState(
     var title: String,
     var thumbnail: String,
     var bookmarked: Boolean = false,
-    var onBookmark: suspend () -> Unit,
-)
+) {
+    var onBookmark: suspend () -> Unit = {}
+}
 

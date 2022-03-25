@@ -40,6 +40,8 @@ allprojects {
                 fragmentKtx                      : "androidx.fragment:fragment-ktx:$fragment_version",
                 lifecycleViewmodelKtx            : "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version",
                 lifecycleRuntimeKtx              : "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version",
+                recycler                         : "androidx.recyclerview:recyclerview:1.2.1",
+
 
                 roomRuntime                      : "androidx.room:room-runtime:$room_version",
                 roomKtx                          : "androidx.room:room-ktx:$room_version",
