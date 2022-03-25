@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.FragmentSearchBinding
 import com.andresestevez.recipes.ui.common.hideKeyboard
@@ -33,6 +34,7 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchView.OnQueryTex
 
         val binding = FragmentSearchBinding.bind(view).apply {
             recycler.adapter = adapter
+            (recycler.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         }
 
         viewLifecycleOwner.lifecycleScope.launch {

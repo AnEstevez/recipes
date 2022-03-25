@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.FragmentFavBinding
 import com.andresestevez.recipes.ui.common.toast
@@ -30,6 +31,7 @@ class FavFragment : Fragment(R.layout.fragment_fav) {
 
         val binding = FragmentFavBinding.bind(view).apply {
             recycler.adapter = adapter
+            (recycler.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
