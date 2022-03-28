@@ -4,8 +4,8 @@ import android.Manifest
 import android.app.Activity
 import androidx.activity.ComponentActivity
 import com.andresestevez.recipes.R
-import com.andresestevez.recipes.ui.common.PermissionRequester
-import com.andresestevez.recipes.ui.common.toast
+import com.andresestevez.recipes.framework.PermissionRequester
+import com.andresestevez.recipes.presentation.common.toast
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.android.components.ActivityComponent

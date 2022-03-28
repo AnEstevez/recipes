@@ -6,11 +6,11 @@ import com.andresestevez.data.source.LocationDataSource
 import com.andresestevez.data.source.RemoteDataSource
 import com.andresestevez.recipes.BuildConfig
 import com.andresestevez.recipes.R
-import com.andresestevez.recipes.data.PlayServicesLocationDataSource
-import com.andresestevez.recipes.data.database.RecipeDatabase
-import com.andresestevez.recipes.data.database.RoomDataSource
-import com.andresestevez.recipes.data.server.MealDBDataSource
-import com.andresestevez.recipes.data.server.TheMealDbClient
+import com.andresestevez.recipes.framework.PlayServicesLocationDataSource
+import com.andresestevez.recipes.framework.database.RecipeDatabase
+import com.andresestevez.recipes.framework.database.RoomDataSource
+import com.andresestevez.recipes.framework.server.MealDBDataSource
+import com.andresestevez.recipes.framework.server.TheMealDbClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

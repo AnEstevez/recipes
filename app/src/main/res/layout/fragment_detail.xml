@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".ui.detail.DetailFragment">
+    tools:context=".presentation.detail.DetailFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -73,7 +73,7 @@
                     android:textStyle="italic" />
             </androidx.cardview.widget.CardView>
 
-            <com.andresestevez.recipes.ui.detail.RecipeIngredientsView
+            <com.andresestevez.recipes.presentation.detail.RecipeIngredientsView
                 android:id="@+id/ingredients"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

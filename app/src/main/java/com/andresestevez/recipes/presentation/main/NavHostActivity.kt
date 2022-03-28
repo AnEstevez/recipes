@@ -1,7 +1,8 @@
-package com.andresestevez.recipes
+package com.andresestevez.recipes.presentation.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.andresestevez.recipes.R
 import com.andresestevez.recipes.presentation.main.fragments.RecipesFragmentFactory
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -10,7 +11,8 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.components.ActivityComponent
 
 @AndroidEntryPoint
-class HiltTestActivity: AppCompatActivity() {
+class NavHostActivity : AppCompatActivity(R.layout.activity_nav_host) {
+
     @EntryPoint
     @InstallIn(ActivityComponent::class)
     interface RecipesFragmentFactoryEntryPoint {
