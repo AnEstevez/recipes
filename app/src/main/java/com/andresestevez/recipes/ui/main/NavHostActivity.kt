@@ -11,7 +11,7 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.components.ActivityComponent
 
 @AndroidEntryPoint
-class NavHostActivity : AppCompatActivity() {
+class NavHostActivity : AppCompatActivity(R.layout.activity_nav_host) {
 
     @EntryPoint
     @InstallIn(ActivityComponent::class)
@@ -27,6 +27,5 @@ class NavHostActivity : AppCompatActivity() {
         supportFragmentManager.fragmentFactory = entryPoint.getFragmentFactory()
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_nav_host)
     }
 }

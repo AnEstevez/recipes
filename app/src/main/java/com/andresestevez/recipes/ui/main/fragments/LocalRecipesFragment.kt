@@ -25,13 +25,13 @@ import kotlinx.coroutines.launch
 class LocalRecipesFragment(private val permissionRequester: PermissionRequester) :
     Fragment(R.layout.fragment_local_recipes) {
 
-    private val adapter = RecipesAdapter()
-
     @VisibleForTesting
     val viewModel: LocalRecipesViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val adapter = RecipesAdapter()
         val binding = FragmentLocalRecipesBinding.bind(view).apply {
             recycler.adapter = adapter
             (recycler.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
@@ -73,5 +73,10 @@ class LocalRecipesFragment(private val permissionRequester: PermissionRequester)
     override fun onPause() {
         super.onPause()
         viewModel.justSelected = false
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.clearUserMessage()
     }
 }

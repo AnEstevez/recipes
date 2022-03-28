@@ -24,11 +24,9 @@ class FavFragment : Fragment(R.layout.fragment_fav) {
 
     private val viewModel: FavViewModel by viewModels()
 
-    private val adapter = RecipesAdapter()
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        val adapter = RecipesAdapter()
         val binding = FragmentFavBinding.bind(view).apply {
             recycler.adapter = adapter
             (recycler.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
@@ -58,4 +56,8 @@ class FavFragment : Fragment(R.layout.fragment_fav) {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.clearUserMessage()
+    }
 }

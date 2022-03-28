@@ -56,4 +56,7 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    fun clearUserMessage() {
+        _state.update { it.copy(userMessage = null) }
+    }
 }
