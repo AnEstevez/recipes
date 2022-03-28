@@ -25,13 +25,12 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class SearchFragment : Fragment(R.layout.fragment_search), SearchView.OnQueryTextListener {
 
-    private val adapter = RecipesAdapter()
-
     private val viewModel: SearchViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val adapter = RecipesAdapter()
         val binding = FragmentSearchBinding.bind(view).apply {
             recycler.adapter = adapter
             (recycler.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
@@ -60,6 +59,11 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchView.OnQueryTex
             }
         }
         binding.searchView.setOnQueryTextListener(this)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.clearUserMessage()
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {

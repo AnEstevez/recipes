@@ -29,13 +29,16 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         tabMediator?.detach()
+        tabMediator = null
     }
 
     private fun setupViewPagerAndTab(binding: FragmentMainBinding) {
-        binding.viewPager.adapter = ViewPagerAdapter(childFragmentManager, requireActivity())
+
+        binding.viewPager.adapter =
+            ViewPagerAdapter(this, childFragmentManager, viewLifecycleOwner.lifecycle)
         val icons = listOf(
             R.drawable.ic_baseline_favorite_24,
             R.drawable.ic_baseline_search_24,
@@ -43,6 +46,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         )
 
         binding.viewPager.offscreenPageLimit = 2
+        binding.viewPager.registerOnPageChangeCallback(OnPageChangeCallback())
 
         tabMediator = TabLayoutMediator(
             binding.tabLayout,
@@ -51,7 +55,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             tab.setIcon(icons[position])
         }.also { it.attach() }
 
-        binding.viewPager.registerOnPageChangeCallback(OnPageChangeCallback())
     }
 
     inner class OnPageChangeCallback : ViewPager2.OnPageChangeCallback() {

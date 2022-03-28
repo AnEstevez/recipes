@@ -13,8 +13,6 @@ constructor(
 
     override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
         return when (className) {
-            FavFragment::class.java.name -> FavFragment()
-            SearchFragment::class.java.name -> SearchFragment()
             LocalRecipesFragment::class.java.name -> LocalRecipesFragment(permissionRequester)
             else -> super.instantiate(classLoader, className)
         }

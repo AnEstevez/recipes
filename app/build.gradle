@@ -60,6 +60,7 @@ dependencies {
     implementation androidLibs.values()
     implementation libs.values()
     kapt kaptLibs.values()
+    debugImplementation debugImplementationLibs.values()
 
     kaptTest kaptTestLibs.values()
     kaptAndroidTest kaptAndroidTestLibs.values()
