@@ -1,7 +1,9 @@
 package com.andresestevez.recipes.framework.server
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
+@Keep
 data class RecipeDto(
     @SerializedName("idMeal")
     val id: String,
