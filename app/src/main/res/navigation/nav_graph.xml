@@ -12,8 +12,9 @@
         <action
             android:id="@+id/action_mainFragment_to_detailFragment"
             app:destination="@id/detailFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:enterAnim="@anim/anim_slide_in_up"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popExitAnim="@anim/anim_zoom_out"
             app:popUpToInclusive="false" />
     </fragment>
     <fragment
