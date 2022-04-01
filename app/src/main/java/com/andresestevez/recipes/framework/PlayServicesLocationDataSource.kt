@@ -16,14 +16,21 @@ import kotlin.coroutines.resume
 
 class PlayServicesLocationDataSource(application: Application) : LocationDataSource {
 
-    private val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(application)
+    private val fusedLocationProviderClient =
+        LocationServices.getFusedLocationProviderClient(application)
     private val geocoder = Geocoder(application)
 
     @SuppressLint("MissingPermission")
     override suspend fun getLastLocationNationality(): String = withContext(Dispatchers.IO) {
         suspendCancellableCoroutine { continuation ->
             fusedLocationProviderClient.lastLocation.addOnCompleteListener {
-                continuation.resume(it.result.toCountryCode().toNationality())
+                continuation.resume(
+                    try {
+                        it.result.toCountryCode().toNationality()
+                    } catch (throwable: Throwable) {
+                        Timber.d(throwable)
+                        CountryCodeToNationality.XX.nationality
+                    })
             }
         }
     }
@@ -35,11 +42,11 @@ class PlayServicesLocationDataSource(application: Application) : LocationDataSou
         var result = DEFAULT_COUNTRY_CODE
 
         try {
-        result = geocoder.getFromLocation(
-            this.latitude,
-            this.longitude,
-            1)?.firstOrNull()?.countryCode ?: DEFAULT_COUNTRY_CODE
-        } catch (e : IOException) {
+            result = geocoder.getFromLocation(
+                this.latitude,
+                this.longitude,
+                1)?.firstOrNull()?.countryCode ?: DEFAULT_COUNTRY_CODE
+        } catch (e: IOException) {
             Timber.e(e)
         }
 
@@ -49,9 +56,10 @@ class PlayServicesLocationDataSource(application: Application) : LocationDataSou
     private fun String?.toNationality(): String {
         Timber.d("Country code [%s]", this)
 
-        val result =  if (CountryCodeToNationality.values()
+        val result = if (CountryCodeToNationality.values()
                 .map { country -> country.name }
-                .contains(this))
+                .contains(this)
+        )
             CountryCodeToNationality.valueOf(this!!).nationality
         else CountryCodeToNationality.XX.nationality
 
