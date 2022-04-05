@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.FragmentFavBinding
@@ -24,9 +25,13 @@ class FavFragment : Fragment(R.layout.fragment_fav) {
 
     private val viewModel: FavViewModel by viewModels()
 
+    private val adapter = RecipesAdapter().apply {
+        stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = RecipesAdapter()
+
         val binding = FragmentFavBinding.bind(view).apply {
             recycler.adapter = adapter
             (recycler.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
