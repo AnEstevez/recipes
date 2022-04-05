@@ -18,7 +18,7 @@
 
         <com.andresestevez.recipes.presentation.common.AspectRatioImageView
             android:id="@+id/imageViewBg"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:foreground="@drawable/black_shadow"
             android:scaleType="centerCrop"
@@ -27,7 +27,7 @@
 
         <TextView
             android:id="@+id/textViewRecipe"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:ellipsize="end"
