@@ -11,6 +11,9 @@ import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.ViewItemBinding
 import com.andresestevez.recipes.presentation.common.RecipeItemUiState
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.facebook.shimmer.Shimmer
+import com.facebook.shimmer.ShimmerDrawable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,13 +38,30 @@ class RecipesAdapter : ListAdapter<RecipeItemUiState, RecipesAdapter.ViewHolder>
         fun bind(recipe: RecipeItemUiState) {
             with(binding) {
                 textViewRecipe.text = recipe.title
-                Glide.with(root.context).load(recipe.thumbnail).into(imageViewBg)
+                val shimmer = Shimmer.AlphaHighlightBuilder()
+                    .setDuration(1500)
+                    .setBaseAlpha(0.9f)
+                    .setHighlightAlpha(1f)
+                    .setDirection(Shimmer.Direction.LEFT_TO_RIGHT)
+                    .setAutoStart(true)
+                    .build()
+                val shimmerDrawable = ShimmerDrawable().apply {
+                    setShimmer(shimmer)
+                }
+                Glide.with(imageViewBg.context)
+                    .load(recipe.thumbnail)
+                    .apply(
+                        RequestOptions.fitCenterTransform()
+                            .placeholder(shimmerDrawable)
+                            .error((R.drawable.ic_error))
+                    ).centerCrop()
+                    .into(imageViewBg)
                 val icon = if (recipe.bookmarked) R.drawable.ic_baseline_favorite_24
                 else R.drawable.ic_baseline_favorite_border_24
                 btnFav.setBackgroundResource(icon)
                 btnFav.tag = icon
                 btnFav.setOnClickListener {
-                    CoroutineScope(Dispatchers.IO) .launch{
+                    CoroutineScope(Dispatchers.IO).launch {
                         recipe.onBookmark()
                     }
                 }

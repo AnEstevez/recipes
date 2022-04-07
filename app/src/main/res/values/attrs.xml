@@ -5,4 +5,6 @@
         <attr name="ratio" format="float"/>
     </declare-styleable>
 
+    <attr name="glideErrorColor" format="reference"/>
+
 </resources>

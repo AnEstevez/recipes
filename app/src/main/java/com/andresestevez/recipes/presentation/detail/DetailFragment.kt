@@ -15,6 +15,9 @@ import com.andresestevez.recipes.R
 import com.andresestevez.recipes.databinding.FragmentDetailBinding
 import com.andresestevez.recipes.presentation.common.toast
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.facebook.shimmer.Shimmer
+import com.facebook.shimmer.ShimmerDrawable
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -60,7 +63,25 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private fun FragmentDetailBinding.updateUI(recipe: Recipe) {
         recipe.let {
-            Glide.with(this@DetailFragment).load(it.thumbnail).into(imageView)
+            val shimmer = Shimmer.AlphaHighlightBuilder()
+                .setDuration(1500)
+                .setBaseAlpha(0.9f)
+                .setHighlightAlpha(1f)
+                .setDirection(Shimmer.Direction.LEFT_TO_RIGHT)
+                .setAutoStart(true)
+                .build()
+
+            val shimmerDrawable = ShimmerDrawable().apply {
+                setShimmer(shimmer)
+            }
+            Glide.with(imageView.context)
+                .load(it.thumbnail)
+                .apply(
+                    RequestOptions.fitCenterTransform()
+                        .placeholder(shimmerDrawable)
+                        .error(R.drawable.ic_error)
+                ).centerCrop()
+                .into(imageView)
             toolbar.title = it.name
             ingredients.setIngredients(it)
             instructions.text = it.instructions

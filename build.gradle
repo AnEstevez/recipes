@@ -68,7 +68,8 @@ allprojects {
                 retrofit2ConverterGson: 'com.squareup.retrofit2:converter-gson:2.9.0',
                 okhttpLoginInterceptor: 'com.squareup.okhttp3:logging-interceptor:4.9.2',
                 timber                : 'com.jakewharton.timber:timber:5.0.1',
-                spinkit               : 'com.github.ybq:Android-SpinKit:1.4.0'
+                spinkit               : 'com.github.ybq:Android-SpinKit:1.4.0',
+                shimer                : 'com.facebook.shimmer:shimmer:0.5.0'
         ]
 
         // To use Kotlin annotation processing tool (kapt)
