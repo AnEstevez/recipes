@@ -8,9 +8,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.util.*
+import javax.inject.Inject
 import com.andresestevez.domain.Recipe as DomainRecipe
 
-class RoomDataSource(db: RecipeDatabase) : LocalDataSource {
+class RoomDataSource @Inject constructor(db: RecipeDatabase) : LocalDataSource {
 
     private val recipeDao = db.recipeDao()
 

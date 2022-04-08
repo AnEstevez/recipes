@@ -85,16 +85,15 @@ class FakeRemoteDataSource() : RemoteDataSource {
 
     var recipes: MutableList<Recipe> = defaultFakeRecipes
 
-    override suspend fun findById(apiKey: String, recipeId: String): Result<Recipe> =
+    override suspend fun findById(recipeId: String): Result<Recipe> =
         Result.success(recipes.first { it.id == recipeId })
 
     override suspend fun listMealsByNationality(
-        apiKey: String,
         nationality: String,
     ): Result<List<Recipe>> =
         Result.success(recipes.filter { it.country == nationality })
 
-    override suspend fun listMealsByName(apiKey: String, name: String): Result<List<Recipe>> =
+    override suspend fun listMealsByName(name: String): Result<List<Recipe>> =
         Result.success(recipes.filter { it.name.contains(name) })
 }
 

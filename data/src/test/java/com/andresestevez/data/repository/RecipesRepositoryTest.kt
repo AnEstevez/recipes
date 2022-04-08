@@ -32,14 +32,13 @@ class RecipesRepositoryTest {
 
     @Mock
     lateinit var locationDataSource: LocationDataSource
-    private val apiKey: String = "123456"
 
     private lateinit var recipesRepository: RecipesRepository
 
     @Before
     fun setUp() {
         recipesRepository =
-            RecipesRepository(localDataSource, remoteDataSource, locationDataSource, apiKey)
+            RecipesRepository(localDataSource, remoteDataSource, locationDataSource)
     }
 
     @Test
@@ -55,7 +54,7 @@ class RecipesRepositoryTest {
 
             // THEN
             verify(localDataSource, times(1)).findById(id)
-            verify(remoteDataSource, times(0)).findById(anyString(), anyString())
+            verify(remoteDataSource, times(0)).findById(anyString())
             assertEquals(Result.success(recipe), result)
         }
     }
@@ -72,14 +71,14 @@ class RecipesRepositoryTest {
             val remoteRecipe = mockedRecipe.copy(id = id)
 
             whenever(localDataSource.findById(id)).thenReturn(flowOf(localRecipe))
-            whenever(remoteDataSource.findById(apiKey, id)).thenReturn(Result.success(remoteRecipe))
+            whenever(remoteDataSource.findById(id)).thenReturn(Result.success(remoteRecipe))
 
             // WHEN
             recipesRepository.findRecipeById(id).collect()
 
             // THEN
             verify(localDataSource, times(1)).findById(id)
-            verify(remoteDataSource, times(1)).findById(apiKey, id)
+            verify(remoteDataSource, times(1)).findById(id)
             verify(localDataSource, times(1)).updateRecipe(remoteRecipe)
 
         }
@@ -94,17 +93,17 @@ class RecipesRepositoryTest {
             val spanishRecipes = listOf(mockedRecipe.copy(id = "tortilla"))
 
             val nationality = "spanish"
-            whenever(remoteDataSource.listMealsByNationality(apiKey, nationality)).thenReturn(
+            whenever(remoteDataSource.listMealsByNationality(nationality)).thenReturn(
                 Result.success(spanishRecipesWithoutCountry))
             whenever(locationDataSource.getLastLocationNationality()).thenReturn(nationality)
             whenever(localDataSource.searchByCountry(nationality)).thenReturn(flowOf(spanishRecipes))
 
             // WHEN
-            var result = recipesRepository.getRecipesByRegion().last()
+            val result = recipesRepository.getRecipesByRegion().last()
 
             // THEN
             verify(locationDataSource).getLastLocationNationality()
-            verify(remoteDataSource).listMealsByNationality(apiKey, nationality)
+            verify(remoteDataSource).listMealsByNationality(nationality)
             verify(localDataSource).saveAll(spanishRecipes)
             verify(localDataSource).searchByCountry(nationality)
             assertEquals(Result.success(spanishRecipes), result)
@@ -115,22 +114,18 @@ class RecipesRepositoryTest {
     fun `GIVEN localDataSource and remoteDataSource empty WHEN getRecipesByRegion THEN NoDataFoundException`() {
         runBlockingTest {
             // GIVEN
-            val spanishRecipesWithoutCountry =
-                listOf(mockedRecipe.copy(id = "tortilla", country = ""))
-            val spanishRecipes = listOf(mockedRecipe.copy(id = "tortilla"))
-
             val nationality = "spanish"
-            whenever(remoteDataSource.listMealsByNationality(apiKey, nationality)).thenReturn(
+            whenever(remoteDataSource.listMealsByNationality(nationality)).thenReturn(
                 Result.failure(NoDataFoundException()))
             whenever(locationDataSource.getLastLocationNationality()).thenReturn(nationality)
             whenever(localDataSource.searchByCountry(nationality)).thenReturn(flowOf(emptyList()))
 
             // WHEN
-            var result = recipesRepository.getRecipesByRegion().last()
+            val result = recipesRepository.getRecipesByRegion().last()
 
             // THEN
             verify(locationDataSource).getLastLocationNationality()
-            verify(remoteDataSource).listMealsByNationality(apiKey, nationality)
+            verify(remoteDataSource).listMealsByNationality(nationality)
             verify(localDataSource).searchByCountry(nationality)
             assertTrue(result.fold({}) { it } is NoDataFoundException)
             assertEquals("No data found", result.fold({}) { it.message })
@@ -146,7 +141,7 @@ class RecipesRepositoryTest {
                 mockedRecipe.copy(id = "rec00004", name = "Fried Eggs"))
 
             val name = "eggs"
-            whenever(remoteDataSource.listMealsByName(apiKey, name)).thenReturn(Result.success(
+            whenever(remoteDataSource.listMealsByName(name)).thenReturn(Result.success(
                 remoteRecipes))
             whenever(localDataSource.searchByName(name)).thenReturn(flowOf(localRecipes))
 
@@ -155,7 +150,7 @@ class RecipesRepositoryTest {
 
             // THEN
             verify(localDataSource).searchByName(name)
-            verify(remoteDataSource).listMealsByName(apiKey, name)
+            verify(remoteDataSource).listMealsByName(name)
             verify(localDataSource).saveAll(remoteRecipes)
         }
     }
@@ -164,9 +159,8 @@ class RecipesRepositoryTest {
     fun `GIVEN localDataSource and remoteDataSource empty WHEN getRecipesByName THEN NoDataFoundException`() {
         runBlockingTest {
             // GIVEN
-            val recipes = listOf(mockedRecipe.copy(id = "rec00003", name = "Eggs Benedict"))
             val name = "eggs"
-            whenever(remoteDataSource.listMealsByName(apiKey, name)).thenReturn(Result.failure(
+            whenever(remoteDataSource.listMealsByName(name)).thenReturn(Result.failure(
                 NoDataFoundException()))
             whenever(localDataSource.searchByName(name)).thenReturn(flowOf(emptyList()))
 
@@ -174,7 +168,7 @@ class RecipesRepositoryTest {
             val result = recipesRepository.getRecipesByName(name).last()
 
             // THEN
-            verify(remoteDataSource).listMealsByName(apiKey, name)
+            verify(remoteDataSource).listMealsByName(name)
             verify(localDataSource).searchByName(name)
             assertTrue(result.fold({}) { it } is NoDataFoundException)
             assertEquals("No data found", result.fold({}) { it.message })

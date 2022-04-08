@@ -10,7 +10,7 @@ import com.andresestevez.recipes.framework.PlayServicesLocationDataSource
 import com.andresestevez.recipes.framework.database.RecipeDatabase
 import com.andresestevez.recipes.framework.database.RoomDataSource
 import com.andresestevez.recipes.framework.server.MealDBDataSource
-import com.andresestevez.recipes.framework.server.TheMealDbClient
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,7 +29,8 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun dataBaseProvider(application: Application) = RecipeDatabase.getDatabase(application)
+    fun dataBaseProvider(application: Application): RecipeDatabase =
+        RecipeDatabase.getDatabase(application)
 
     @Provides
     @Singleton
@@ -37,21 +38,19 @@ class AppModule {
     fun baseUrlProvider(application: Application): String =
         application.getString(R.string.mealdb_base_url)
 
-    @Provides
-    @Singleton
-    fun mealDBClientProvider(
-        @Named("baseUrl") baseUrl: String,
-    ): TheMealDbClient = TheMealDbClient(baseUrl)
+}
 
-    @Provides
-    fun localDataSourceProvider(db: RecipeDatabase): LocalDataSource = RoomDataSource(db)
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class AppDataModule {
 
-    @Provides
-    fun remoteDataSourceProvider(mealDbClient: TheMealDbClient): RemoteDataSource =
-        MealDBDataSource(mealDbClient)
+    @Binds
+    abstract fun bindLocalDataSource(localDataSource: RoomDataSource): LocalDataSource
 
-    @Provides
-    fun locationDataSourceProvider(application: Application): LocationDataSource =
-        PlayServicesLocationDataSource(application)
+    @Binds
+    abstract fun bindRemoteDataSource(remoteDataSource: MealDBDataSource): RemoteDataSource
+
+    @Binds
+    abstract fun bindLocationDataSource(locationDataSource: PlayServicesLocationDataSource): LocationDataSource
 
 }

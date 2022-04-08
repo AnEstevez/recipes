@@ -35,7 +35,6 @@ class SearchViewModelTest {
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
-    private var apiKey: String = "1"
     private var localDataSource: LocalDataSource = FakeLocalDataSource()
     private var remoteDataSource: RemoteDataSource = FakeRemoteDataSource()
     private var locationDataSource: LocationDataSource = FakeLocationDataSource()
@@ -52,7 +51,7 @@ class SearchViewModelTest {
         Dispatchers.setMain(testDispatcher)
 
         recipesRepository =
-            RecipesRepository(localDataSource, remoteDataSource, locationDataSource, apiKey)
+            RecipesRepository(localDataSource, remoteDataSource, locationDataSource)
         getRecipesByName = GetRecipesByName(recipesRepository)
         toggleRecipeFavorite = ToggleRecipeFavorite(recipesRepository)
         vm = SearchViewModel(getRecipesByName, toggleRecipeFavorite)

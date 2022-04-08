@@ -5,9 +5,7 @@ import androidx.fragment.app.FragmentFactory
 import com.andresestevez.recipes.framework.PermissionRequester
 import javax.inject.Inject
 
-class RecipesFragmentFactory
-@Inject
-constructor(
+class RecipesFragmentFactory @Inject constructor(
     private val permissionRequester: PermissionRequester,
 ) : FragmentFactory() {
 

@@ -4,12 +4,12 @@
     android:fillEnabled="true"
     android:interpolator="@android:anim/accelerate_decelerate_interpolator">
     <alpha
-        android:duration="400"
+        android:duration="300"
         android:fromAlpha="0.0"
         android:toAlpha="1.0" />
 
     <scale
-        android:duration="400"
+        android:duration="300"
         android:fromXScale=".5"
         android:fromYScale=".5"
         android:pivotX="50%"

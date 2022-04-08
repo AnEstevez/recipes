@@ -26,7 +26,7 @@ android {
         }
 
         // Please ensure you have a valid API KEY for themealdb.com to use this app
-        // A valid key will need to be entered
+        // Put the key in gradle.properties
         buildConfigField("String", "API_KEY", API_KEY)
     }
 

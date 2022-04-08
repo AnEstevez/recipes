@@ -12,9 +12,11 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.IOException
+import javax.inject.Inject
 import kotlin.coroutines.resume
 
-class PlayServicesLocationDataSource(application: Application) : LocationDataSource {
+class PlayServicesLocationDataSource @Inject constructor(application: Application) :
+    LocationDataSource {
 
     private val fusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(application)

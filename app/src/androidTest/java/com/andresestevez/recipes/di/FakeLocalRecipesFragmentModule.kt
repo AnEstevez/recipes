@@ -13,7 +13,7 @@ import dagger.hilt.testing.TestInstallIn
 
 @Module
 @TestInstallIn(components = [ActivityComponent::class], replaces = [LocalRecipesFragmentModule::class])
-object FakeMainFragmentModule {
+object FakeLocalRecipesFragmentModule {
 
     @Provides
     fun permissionRequesterProvider(activity: Activity) = PermissionRequester(activity as ComponentActivity,

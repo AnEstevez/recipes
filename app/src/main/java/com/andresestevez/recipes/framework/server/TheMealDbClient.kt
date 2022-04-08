@@ -4,8 +4,10 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
+import javax.inject.Named
 
-class TheMealDbClient(baseUrl: String) {
+class TheMealDbClient @Inject constructor(@Named("baseUrl") baseUrl: String) {
 
     val okHttpClient = HttpLoggingInterceptor().run {
         level = HttpLoggingInterceptor.Level.BODY

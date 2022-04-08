@@ -36,7 +36,6 @@ class LocalRecipesViewModelTest {
 
     private val testDispatcher = TestCoroutineDispatcher()
 
-    private var apiKey: String = "1"
     private var localDataSource: LocalDataSource = FakeLocalDataSource()
     private var remoteDataSource: RemoteDataSource = FakeRemoteDataSource()
     private var locationDataSource: LocationDataSource = FakeLocationDataSource()
@@ -52,7 +51,7 @@ class LocalRecipesViewModelTest {
         Dispatchers.setMain(testDispatcher)
 
         recipesRepository =
-            RecipesRepository(localDataSource, remoteDataSource, locationDataSource, apiKey)
+            RecipesRepository(localDataSource, remoteDataSource, locationDataSource)
         getLocalRecipes = GetLocalRecipes(recipesRepository)
         toggleRecipeFavorite = ToggleRecipeFavorite(recipesRepository)
         vm = LocalRecipesViewModel(getLocalRecipes, toggleRecipeFavorite)

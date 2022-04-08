@@ -29,7 +29,6 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class FavViewModelTest {
 
-    private var apiKey: String = "1"
     var localDataSource: LocalDataSource = FakeLocalDataSource()
     var remoteDataSource: RemoteDataSource = FakeRemoteDataSource()
     var locationDataSource: LocationDataSource = FakeLocationDataSource()
@@ -49,7 +48,7 @@ class FavViewModelTest {
         Dispatchers.setMain(testDispatcher)
 
         recipesRepository =
-            RecipesRepository(localDataSource, remoteDataSource, locationDataSource, apiKey)
+            RecipesRepository(localDataSource, remoteDataSource, locationDataSource)
         getFavoriteRecipes = GetFavoriteRecipes(recipesRepository)
         toggleRecipeFavorite = ToggleRecipeFavorite(recipesRepository)
     }

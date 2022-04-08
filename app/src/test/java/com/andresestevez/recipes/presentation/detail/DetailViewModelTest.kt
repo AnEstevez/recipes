@@ -37,7 +37,6 @@ class DetailViewModelTest {
 
     private val testDispatcher = TestCoroutineDispatcher()
 
-    private var apiKey: String = "1"
     var localDataSource: LocalDataSource = FakeLocalDataSource()
     var remoteDataSource: RemoteDataSource = FakeRemoteDataSource()
     var locationDataSource: LocationDataSource = FakeLocationDataSource()
@@ -56,7 +55,7 @@ class DetailViewModelTest {
         Dispatchers.setMain(testDispatcher)
 
         recipesRepository =
-            RecipesRepository(localDataSource, remoteDataSource, locationDataSource, apiKey)
+            RecipesRepository(localDataSource, remoteDataSource, locationDataSource)
         getRecipeById = GetRecipeById(recipesRepository)
         toggleRecipeFavorite = ToggleRecipeFavorite(recipesRepository)
     }

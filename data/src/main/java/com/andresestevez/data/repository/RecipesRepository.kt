@@ -8,18 +8,18 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class RecipesRepository(
+class RecipesRepository @Inject constructor(
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: RemoteDataSource,
     private val locationDataSource: LocationDataSource,
-    private val apiKey: String,
 ) {
 
     fun findRecipeById(recipeId: String): Flow<Result<Recipe>> = flow {
         localDataSource.findById(recipeId).collect {
             if (it.instructions.isEmpty()) {
-                val remoteResult = remoteDataSource.findById(apiKey, recipeId)
+                val remoteResult = remoteDataSource.findById(recipeId)
                 if (remoteResult.isSuccess) {
                     localDataSource.updateRecipe(remoteResult.getOrThrow()
                         .copy(favorite = it.favorite))
@@ -43,7 +43,7 @@ class RecipesRepository(
                     emit(Result.success(recipes))
                 }
 
-                val remoteResult = remoteDataSource.listMealsByNationality(apiKey, nationality)
+                val remoteResult = remoteDataSource.listMealsByNationality(nationality)
                 if (remoteResult.isSuccess) {
                     // listMealsByNationality doesn't return the country
                     localDataSource.saveAll(remoteResult.getOrThrow()
@@ -68,7 +68,7 @@ class RecipesRepository(
                     emit(Result.success(it))
                 }
 
-                val remoteResult = remoteDataSource.listMealsByName(apiKey, recipeName)
+                val remoteResult = remoteDataSource.listMealsByName(recipeName)
                 if (remoteResult.isSuccess) {
                     localDataSource.saveAll(remoteResult.getOrThrow())
                 } else {
