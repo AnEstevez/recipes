@@ -16,14 +16,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.andresestevez.recipes.presentation.common.AspectRatioImageView
-            android:id="@+id/imageViewBg"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:foreground="@drawable/black_shadow"
-            android:scaleType="centerCrop"
-            app:ratio="1"
-            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/imageViewBg"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="1:1"
+                android:foreground="@drawable/black_shadow"
+                android:scaleType="centerCrop"
+                tools:srcCompat="@tools:sample/backgrounds/scenic"
+                tools:ignore="ContentDescription,MissingConstraints" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/textViewRecipe"
@@ -55,7 +60,8 @@
             android:contextClickable="false"
             android:focusable="false"
             android:foreground="@android:color/transparent"
-            android:longClickable="false"/>
+            android:longClickable="false"
+            tools:ignore="ContentDescription" />
 
     </FrameLayout>
 
