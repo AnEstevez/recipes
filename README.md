@@ -1,11 +1,16 @@
-<img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" align="center" />
+<p align="center">
+<img src="app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png" align="center" />
+</p>
+
 <h1 align="center">Recipes</h1>
 
 <p align="center">  
 Recipes is a simple demo app based on modern Android application tech-stacks and CLEAN architecture.
 </p>
 
-<img src="previews/fav_day.png" width="25%"/> <img src="previews/fav_night.png" width="25%"/> <img src="previews/detail_day.png" width="25%"/> <img src="previews/detail_night.png" width="25%"/>
+<p align="center">
+<img src="previews/fav_day.png" width="20%"/> <img src="previews/fav_night.png" width="20%"/> <img src="previews/detail_day.png" width="20%"/> <img src="previews/detail_night.png" width="20%"/>
+</p>
 
 ## Tech stack & Open-source libraries
 
