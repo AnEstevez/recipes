@@ -40,7 +40,7 @@ Recipes is a simple demo app based on modern Android application tech-stacks and
 - CLEAN Architecture
 - MVVM Architecture
 
-<p align="center">
+<p align="left">
  <img src="previews/architecture_1.png" width="70%"/>
 </p>
 
