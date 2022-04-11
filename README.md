@@ -9,7 +9,7 @@ Recipes is a simple demo app based on modern Android application tech-stacks and
 </p>
 
 <p align="center">
-<img src="previews/fav_day.png" width="20%"/> <img src="previews/fav_night.png" width="20%"/> <img src="previews/detail_day.png" width="20%"/> <img src="previews/detail_night.png" width="20%"/>
+<img src="previews/fav_day.png" width="24%"/> <img src="previews/fav_night.png" width="24%"/> <img src="previews/detail_day.png" width="24%"/> <img src="previews/detail_night.png" width="24%"/>
 </p>
 
 ## Tech stack & Open-source libraries
@@ -39,8 +39,8 @@ Recipes is a simple demo app based on modern Android application tech-stacks and
 - MVVM Architecture
 
 <p align="center">
-<img src="previews/clean.png" width="40%"/> <img src="previews/architecture_1.png" width="40%"/>
-
+<img src="previews/clean.png" width="20%"/> <img src="previews/architecture_1.png" width="70%"/>
+</p>
 
 ## Features
 
