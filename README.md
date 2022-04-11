@@ -41,26 +41,33 @@ Recipes is a simple demo app based on modern Android application tech-stacks and
   <img src="previews/clean.png" width="35%" />
 </p>
 
-- MVVM Architecture & Repository pattern
+- MVVM Architecture & Repository Pattern
 
 <p align="center">
  <img src="previews/architecture_1.png" width="75%"/>
 </p>
 
 ## Features
-- ViewPager2 + TabLayout 
+- ViewPager2 + TabLayout
   - Fragment 1 - Bookmarked recipes.
   - Fragment 2 - Search recipes by name.
   - Fragment 3 - Search recipes by country if ACCESS_COARSE_LOCATION permission granted.
-  
+
 - [Single source of truth (Room)](https://developer.android.com/jetpack/guide/data-layer#source-of-truth)
 - [Unidirectional Data Flow](https://developer.android.com/jetpack/guide/ui-layer#udf)
-- [Error handling](https://developer.android.com/jetpack/guide/data-layer#expose-errors)
-- Offline mode
+- [Error handling (Result<T>)](https://developer.android.com/jetpack/guide/data-layer#expose-errors)
+- Off-line mode
 - [User events in ItemUIState](https://developer.android.com/jetpack/guide/ui-layer/events?continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fandroid-architecture%23article-https%3A%2F%2Fdeveloper.android.com%2Fjetpack%2Fguide%2Fui-layer%2Fevents#recyclerview-events)
 - [Fragment constructor injection with FragmentFactory + Hilt](https://medium.com/supercharges-mobile-product-guide/fragmentfactory-with-dagger-and-hilt-31ee17babf73#14ad)
+- CollapsingToolbarLayout
 - Day/Night theme
 - Orientation changes support
+- Multi-module project. One module per CLEAN Architecture layer.
+- Unit Tests with Flow
+- UI Tests
+  - Navigation
+  - Drawable changes
+  - Fragments with FragmentFactory + Hilt
 
 ## Preview
 
