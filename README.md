@@ -16,6 +16,7 @@ Recipes is a simple demo app based on modern Android application tech-stacks and
 
 - ViewBinding - Allows to more easily write code that interacts with views.
 - ViewModel - State Holder. Responsible for the production of UI state, contains the necessary logic for that task.
+- Lifecycle - 
 - Navigation - In-app navigation.
 - SafeArgs - Passing data while navigating between fragments.
 - Room - Database.
@@ -25,12 +26,21 @@ Recipes is a simple demo app based on modern Android application tech-stacks and
 - Kotlin Flows - 
 - Retrofit2 & OkHttp3 - REST API consumption.
 - GSON - Deserialization of the returned JSON to Kotlin data objects.
+- Google Play Services Location - 
 - Timber - Logs.
+- SpinKit - 
+- Shimer - 
+- Mockito - 
+- Leakcanary - 
 
-## Architecture:
+## Architecture
 
 - CLEAN Architecture
 - MVVM Architecture
+
+<p align="center">
+<img src="previews/clean.png" width="40%"/> <img src="previews/architecture_1.png" width="40%"/>
+
 
 ## Features
 
@@ -38,7 +48,7 @@ Recipes is a simple demo app based on modern Android application tech-stacks and
 
 ## Preview
 
-## MAD Scorecard
+## MAD Scorecards
 <img src="previews/summary.png"/>
 <img src="previews/kotlin.png"/>
 <img src="previews/jetpack.png"/>
