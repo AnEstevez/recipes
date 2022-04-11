@@ -35,12 +35,13 @@ Recipes is a simple demo app based on modern Android application tech-stacks and
 - [Leakcanary](https://square.github.io/leakcanary/getting_started/) - A memory leak detection library.
 
 ## Architecture
+<img src="previews/clean.png" align="right" width="30%" />
 
 - CLEAN Architecture
 - MVVM Architecture
 
 <p align="center">
-<img src="previews/clean.png" align="center" width="25%" /> <img src="previews/architecture_1.png" width="70%"/>
+ <img src="previews/architecture_1.png" width="70%"/>
 </p>
 
 ## Features
