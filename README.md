@@ -48,7 +48,7 @@ Recipes is a simple demo app based on modern Android application tech-stacks and
  <img src="previews/architecture_1.png" width="75%"/>
 </p>
 <br><br>
-<h3 align="center">Single Source Of True & Offline Mode</h3>
+<h3 align="center">Single Source Of Truth & Offline Mode</h3>
 <br>
 <p align="center">
  <img src="previews/architecture_2.png" width="90%"/>
