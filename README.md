@@ -7,7 +7,7 @@
 <p align="center">  
 Recipes is a simple demo app based on modern Android application tech-stacks and CLEAN architecture.
 </p>
-
+<br>
 <p align="center">
 <img src="previews/fav_day.png" width="24%"/> <img src="previews/fav_night.png" width="24%"/> <img src="previews/detail_day.png" width="24%"/> <img src="previews/detail_night.png" width="24%"/>
 </p>
@@ -36,24 +36,24 @@ Recipes is a simple demo app based on modern Android application tech-stacks and
 
 ## Architecture
 
-<h4 align="center">CLEAN Architecture</h4>
-<br><br>
+<h3 align="center">CLEAN Architecture</h3>
+<br>
 <p align="center">
   <img src="previews/clean.png" width="35%" />
 </p>
-<br><br><br>
-<h4 align="center">MVVM Architecture & Repository Pattern</h4>
 <br><br>
+<h3 align="center">MVVM Architecture & Repository Pattern</h3>
+<br>
 <p align="center">
  <img src="previews/architecture_1.png" width="75%"/>
 </p>
-<br><br><br>
-<h4 align="center">Single Source Of True & Off-line mode</h4>
 <br><br>
+<h3 align="center">Single Source Of True & Off-line mode</h3>
+<br>
 <p align="center">
  <img src="previews/architecture_2.png" width="90%"/>
 </p>
-<br><br><br>
+<br><br>
 
 ## Features
 - ViewPager2 + TabLayout
@@ -84,5 +84,6 @@ Recipes is a simple demo app based on modern Android application tech-stacks and
 <img src="previews/jetpack.png"/>
 
 ## API
-
+TheMealDB is an open, crowd-sourced database of Recipes from around the world.
+They also offer a free JSON API for anyone wanting to use it, with additional features for subscribers.
 Recipes uses the TheMealDB API. Obtain your API_KEY [TheMealDB](https://www.themealdb.com/api.php) and paste it to the gradle.properties file to try the app.
