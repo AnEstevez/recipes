@@ -48,7 +48,7 @@ Recipes is a simple demo app based on modern Android application tech-stacks and
  <img src="previews/architecture_1.png" width="75%"/>
 </p>
 <br><br>
-<h3 align="center">Single Source Of True & Off-line mode</h3>
+<h3 align="center">Single Source Of True & Offline Mode</h3>
 <br>
 <p align="center">
  <img src="previews/architecture_2.png" width="90%"/>
@@ -63,7 +63,7 @@ Recipes is a simple demo app based on modern Android application tech-stacks and
 - [Single source of truth (Room)](https://developer.android.com/jetpack/guide/data-layer#source-of-truth)
 - [Unidirectional Data Flow](https://developer.android.com/jetpack/guide/ui-layer#udf)
 - [Error handling (Result<T>)](https://developer.android.com/jetpack/guide/data-layer#expose-errors)
-- Off-line mode
+- Offline mode
 - [User events in ItemUIState](https://developer.android.com/jetpack/guide/ui-layer/events?continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fandroid-architecture%23article-https%3A%2F%2Fdeveloper.android.com%2Fjetpack%2Fguide%2Fui-layer%2Fevents#recyclerview-events)
 - [Fragment constructor injection with FragmentFactory + Hilt](https://medium.com/supercharges-mobile-product-guide/fragmentfactory-with-dagger-and-hilt-31ee17babf73#14ad)
 - CollapsingToolbarLayout
