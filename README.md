@@ -20,9 +20,9 @@ Recipes is a simple demo app based on modern Android application tech-stacks and
 - Navigation - In-app navigation.
 - SafeArgs - Passing data while navigating between fragments.
 - Room - Database.
-- Dagger-Hilt - Dependency injection.
 - Kotlin Coroutines - A concurrency design pattern to simplify code that executes asynchronously.
 - Kotlin Flows - In coroutines, a flow is a type that can emit multiple values sequentially, as opposed to suspend functions that return only a single value. For example, you can use a flow to receive live updates from a database.
+- [Dagger-Hilt](https://dagger.dev/hilt/gradle-setup) - Dependency injection.
 - [Glide](https://github.com/bumptech/glide) - Image loading.
 - [Retrofit2 & Gson](https://github.com/square/retrofit) - REST API consumption.
 - [OkHttp3](https://github.com/square/okhttp) - Implementing interceptor and mocking web server.
@@ -35,16 +35,22 @@ Recipes is a simple demo app based on modern Android application tech-stacks and
 - [Leakcanary](https://square.github.io/leakcanary/getting_started/) - A memory leak detection library.
 
 ## Architecture
-- CLEAN Architecture
+#### CLEAN Architecture
 
 <p align="center">
   <img src="previews/clean.png" width="35%" />
 </p>
 
-- MVVM Architecture & Repository Pattern
+#### MVVM Architecture & Repository Pattern
 
 <p align="center">
  <img src="previews/architecture_1.png" width="75%"/>
+</p>
+
+#### Single Source Of True & Off-line mode
+
+<p align="center">
+ <img src="previews/architecture_2.png" width="90%"/>
 </p>
 
 ## Features
