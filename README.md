@@ -35,30 +35,31 @@ Recipes is a simple demo app based on modern Android application tech-stacks and
 - [Leakcanary](https://square.github.io/leakcanary/getting_started/) - A memory leak detection library.
 
 ## Architecture
-#### CLEAN Architecture
 
+<h4 align="center">CLEAN Architecture</h4>
+<br><br>
 <p align="center">
   <img src="previews/clean.png" width="35%" />
 </p>
-
-#### MVVM Architecture & Repository Pattern
-
+<br><br><br>
+<h4 align="center">MVVM Architecture & Repository Pattern</h4>
+<br><br>
 <p align="center">
  <img src="previews/architecture_1.png" width="75%"/>
 </p>
-
-#### Single Source Of True & Off-line mode
-
+<br><br><br>
+<h4 align="center">Single Source Of True & Off-line mode</h4>
+<br><br>
 <p align="center">
  <img src="previews/architecture_2.png" width="90%"/>
 </p>
+<br><br><br>
 
 ## Features
 - ViewPager2 + TabLayout
   - Fragment 1 - Bookmarked recipes.
   - Fragment 2 - Search recipes by name.
   - Fragment 3 - Search recipes by country if ACCESS_COARSE_LOCATION permission granted.
-
 - [Single source of truth (Room)](https://developer.android.com/jetpack/guide/data-layer#source-of-truth)
 - [Unidirectional Data Flow](https://developer.android.com/jetpack/guide/ui-layer#udf)
 - [Error handling (Result<T>)](https://developer.android.com/jetpack/guide/data-layer#expose-errors)
