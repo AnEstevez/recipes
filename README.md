@@ -9,11 +9,10 @@ Recipes is a simple demo app based on modern Android application tech-stacks and
 </p>
 <br>
 <p align="center">
-<img src="previews/fav_day.png" width="24%"/> <img src="previews/fav_night.png" width="24%"/> <img src="previews/detail_day.png" width="24%"/> <img src="previews/detail_night.png" width="24%"/>
+<img src="previews/fav_day.png" width="24%"/> <img src="previews/detail_day.png" width="24%"/> <img src="previews/fav_night.png" width="24%"/>  <img src="previews/detail_night.png" width="24%"/>
 </p>
 
 ## Tech stack & Open-source libraries
-
 - ViewBinding - Allows to more easily write code that interacts with views.
 - ViewModel - State Holder. Responsible for the production of UI state, contains the necessary logic for that task.
 - Lifecycle - Lifecycle-aware components.
@@ -25,7 +24,8 @@ Recipes is a simple demo app based on modern Android application tech-stacks and
 - [Dagger-Hilt](https://dagger.dev/hilt/gradle-setup) - Dependency injection.
 - [Glide](https://github.com/bumptech/glide) - Image loading.
 - [Retrofit2 & Gson](https://github.com/square/retrofit) - REST API consumption.
-- [OkHttp3](https://github.com/square/okhttp) - Implementing interceptor and mocking web server.
+- [MockWebServer](https://github.com/square/okhttp/tree/master/mockwebserver) - A scriptable web server for testing HTTP clients.
+- [OkHttp Idling Resource](https://github.com/JakeWharton/okhttp-idling-resource) - An Espresso IdlingResource for OkHttp.
 - [Google Play Services Location](https://developers.google.com/android/guides/setup) - Fused location provider.
 - [Timber](https://github.com/JakeWharton/timber) - A logger with a small, extensible API which provides utility on top of Android's normal Log class.
 - [SpinKit](https://github.com/ybq/Android-SpinKit) - Loading animations.
@@ -34,8 +34,7 @@ Recipes is a simple demo app based on modern Android application tech-stacks and
 - [Mockito](https://github.com/mockito/mockito-kotlin) - Mocking framework for unit tests.
 - [Leakcanary](https://square.github.io/leakcanary/getting_started/) - A memory leak detection library.
 
-## Architecture
-
+## Architectur
 <h3 align="center">CLEAN Architecture</h3>
 <br>
 <p align="center">
@@ -77,6 +76,23 @@ Recipes is a simple demo app based on modern Android application tech-stacks and
   - Fragments with FragmentFactory + Hilt
 
 ## Preview
+<table style="margin-left: auto; margin-right: auto; border: 0;">
+   <tr>
+      <td><H4 align="center">Normal Internet Connection</H4>
+      <p align="center">
+      <img src="previews/preview_1.gif" />
+      </p></td>
+      <td><H4 align="center">Slow Internet Connection</H4>
+      <p align="center">
+      <img src="previews/preview_2.gif" />
+      </p></td>
+      <td><H4 align="center">No Internet Connection</H4>
+      <p align="center">
+      <img src="previews/preview_3.gif" />
+      </p></td>
+   </tr>
+</table>
+
 
 ## MAD Scorecards
 <img src="previews/summary.png"/>
