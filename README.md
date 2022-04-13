@@ -76,23 +76,20 @@ Recipes is a simple demo app based on modern Android application tech-stacks and
   - Fragments with FragmentFactory + Hilt
 
 ## Preview
-<table style="margin-left: auto; margin-right: auto; border: 0;">
-   <tr>
-      <td><H4 align="center">Normal Internet Connection</H4>
-      <p align="center">
-      <img src="previews/preview_1.gif" />
-      </p></td>
-      <td><H4 align="center">Slow Internet Connection</H4>
-      <p align="center">
-      <img src="previews/preview_2.gif" />
-      </p></td>
-      <td><H4 align="center">No Internet Connection</H4>
-      <p align="center">
-      <img src="previews/preview_3.gif" />
-      </p></td>
-   </tr>
-</table>
+<H4 align="center">Normal Internet Connection</H4>
+<p align="center">
+<img src="previews/preview_1.gif" />
+</p>
 
+<H4 align="center">Slow Internet Connection</H4>
+<p align="center">
+<img src="previews/preview_2.gif" />
+</p>
+
+<H4 align="center">No Internet Connection</H4>
+<p align="center">
+<img src="previews/preview_3.gif" />
+</p>
 
 ## MAD Scorecards
 <img src="previews/summary.png"/>
