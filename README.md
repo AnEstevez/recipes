@@ -34,7 +34,7 @@ Recipes is a simple demo app based on modern Android application tech-stacks and
 - [Mockito](https://github.com/mockito/mockito-kotlin) - Mocking framework for unit tests.
 - [Leakcanary](https://square.github.io/leakcanary/getting_started/) - A memory leak detection library.
 
-## Architectur
+## Architecture
 <h3 align="center">CLEAN Architecture</h3>
 <br>
 <p align="center">
