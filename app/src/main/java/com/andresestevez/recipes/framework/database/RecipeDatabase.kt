@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 
 @Database(entities = [RecipeEntity::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
-abstract class RecipeDatabase : RoomDatabase() {
+internal abstract class RecipeDatabase : RoomDatabase() {
 
     abstract fun recipeDao(): RecipeDao
 

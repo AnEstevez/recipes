@@ -15,7 +15,7 @@ import java.io.IOException
 import javax.inject.Inject
 import kotlin.coroutines.resume
 
-class PlayServicesLocationDataSource @Inject constructor(application: Application) :
+internal class PlayServicesLocationDataSource @Inject constructor(application: Application) :
     LocationDataSource {
 
     private val fusedLocationProviderClient =

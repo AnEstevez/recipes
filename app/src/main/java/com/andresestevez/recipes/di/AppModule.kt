@@ -29,7 +29,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun dataBaseProvider(application: Application): RecipeDatabase =
+    internal fun dataBaseProvider(application: Application): RecipeDatabase =
         RecipeDatabase.getDatabase(application)
 
     @Provides
@@ -45,12 +45,12 @@ class AppModule {
 abstract class AppDataModule {
 
     @Binds
-    abstract fun bindLocalDataSource(localDataSource: RoomDataSource): LocalDataSource
+    internal abstract fun bindLocalDataSource(localDataSource: RoomDataSource): LocalDataSource
 
     @Binds
-    abstract fun bindRemoteDataSource(remoteDataSource: MealDBDataSource): RemoteDataSource
+    internal abstract fun bindRemoteDataSource(remoteDataSource: MealDBDataSource): RemoteDataSource
 
     @Binds
-    abstract fun bindLocationDataSource(locationDataSource: PlayServicesLocationDataSource): LocationDataSource
+    internal abstract fun bindLocationDataSource(locationDataSource: PlayServicesLocationDataSource): LocationDataSource
 
 }

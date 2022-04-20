@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import java.util.*
 
 
-class Converters {
+internal class Converters {
 
     @TypeConverter
     fun listToJsonString(value: List<String>?): String = Gson().toJson(value)

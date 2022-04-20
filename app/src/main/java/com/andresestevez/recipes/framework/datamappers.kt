@@ -6,7 +6,7 @@ import com.andresestevez.recipes.framework.database.RecipeEntity as RoomRecipe
 import com.andresestevez.recipes.framework.server.RecipeDto as ServerRecipe
 
 
-fun DomainRecipe.toEntity(): RoomRecipe = RoomRecipe(
+internal fun DomainRecipe.toEntity(): RoomRecipe = RoomRecipe(
     id,
     name,
     thumbnail,
@@ -25,7 +25,7 @@ fun DomainRecipe.toEntity(): RoomRecipe = RoomRecipe(
     dateModified
 )
 
-fun RoomRecipe.toDomain(): DomainRecipe = DomainRecipe(
+internal fun RoomRecipe.toDomain(): DomainRecipe = DomainRecipe(
     id,
     name,
     thumbnail,
@@ -44,7 +44,7 @@ fun RoomRecipe.toDomain(): DomainRecipe = DomainRecipe(
     dateModified
 )
 
-fun ServerRecipe.toDomain(): DomainRecipe {
+internal fun ServerRecipe.toDomain(): DomainRecipe {
 
     val ingredientsList: MutableList<String> = mutableListOf()
     val measuresList: MutableList<String> = mutableListOf()
@@ -150,7 +150,7 @@ fun ServerRecipe.toDomain(): DomainRecipe {
     )
 }
 
-fun DomainRecipe.toRecipeItemUiState(onBookmark: suspend () -> Unit = {} ): RecipeItemUiState {
+internal fun DomainRecipe.toRecipeItemUiState(onBookmark: suspend () -> Unit = {} ): RecipeItemUiState {
     return RecipeItemUiState(
         id = this.id,
         title = this.name,

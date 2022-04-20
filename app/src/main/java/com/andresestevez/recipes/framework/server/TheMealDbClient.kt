@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 import javax.inject.Named
 
-class TheMealDbClient @Inject constructor(@Named("baseUrl") baseUrl: String) {
+internal class TheMealDbClient @Inject constructor(@Named("baseUrl") baseUrl: String) {
 
     val okHttpClient = HttpLoggingInterceptor().run {
         level = HttpLoggingInterceptor.Level.BODY

@@ -11,7 +11,7 @@ import java.util.*
 import javax.inject.Inject
 import com.andresestevez.domain.Recipe as DomainRecipe
 
-class RoomDataSource @Inject constructor(db: RecipeDatabase) : LocalDataSource {
+internal class RoomDataSource @Inject constructor(db: RecipeDatabase) : LocalDataSource {
 
     private val recipeDao = db.recipeDao()
 

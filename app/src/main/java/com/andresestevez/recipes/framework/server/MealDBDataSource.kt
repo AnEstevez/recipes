@@ -10,7 +10,7 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
-class MealDBDataSource @Inject constructor(
+internal class MealDBDataSource @Inject constructor(
     private val mealDbClient: TheMealDbClient,
     @Named("apiKey") private val apiKey: String,
 ) : RemoteDataSource {
